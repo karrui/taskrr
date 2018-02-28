@@ -38,6 +38,7 @@ db.connect();
 // =====================================
 // PASSPORT (AUTH) FUNCTIONS ===========
 // =====================================
+var loggedIn = false;
 require('./config/passport')(passport); // pass passport for configuration
 
 // required for passport
@@ -49,8 +50,10 @@ app.use(passport.session()); // persistent login sessions
 function isLoggedIn(req, res, next) {
 
     // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
+    if (req.isAuthenticated()) {
+        loggedIn = true;
         return next();
+    }
 
     // if they aren't redirect them to the home page
     res.redirect('/');
@@ -60,7 +63,7 @@ function isLoggedIn(req, res, next) {
 // ** ROUTES BEGIN HERE ** =============
 // =====================================
 app.get("/", function(req, res) {
-    res.render("landing");
+    res.render("landing", {loggedIn: loggedIn});
 });
 
 // =====================================
@@ -68,8 +71,11 @@ app.get("/", function(req, res) {
 // =====================================
 // show the login form
 app.get('/login', function(req, res) {
+    if (loggedIn) {
+        res.redirect('/');
+    }
     // render the page and pass in any flash data if it exists
-    res.render('login', { message: req.flash('loginMessage') });
+    res.render('login', { message: req.flash('loginMessage'), loggedIn: loggedIn });
 });
 
 // process the login form
@@ -97,7 +103,10 @@ function login_validation(req, res, next){
 
 
 app.get("/signup", function(req, res) {
-    res.render('signup', { message: req.flash('signupMessage') });
+    if (loggedIn) {
+        res.redirect('/');
+    }
+    res.render('signup', { loggedIn: loggedIn, message: req.flash('signupMessage') });
 })
 
 // process the signup form
@@ -130,7 +139,8 @@ function signup_validation(req, res, next){
 // we will use route middleware to verify this (the isLoggedIn function)
 app.get('/profile', isLoggedIn, function(req, res) {
     res.render('profile', {
-        user : req.user // get the user out of session and pass to template
+        user : req.user, // get the user out of session and pass to template
+        loggedIn: loggedIn
     });
 });
 
@@ -139,6 +149,7 @@ app.get('/profile', isLoggedIn, function(req, res) {
 // =====================================
 app.get('/logout', function(req, res) {
     req.logout();
+    loggedIn = false;
     res.redirect('/');
 });
 
@@ -154,7 +165,7 @@ app.get("/tasks", function(req, res) {
     var promise = executer.getAllTasks();
     promise.then(results => {
         var tasks = results.rows;
-        res.render("tasks", {tasks: tasks});
+        res.render("tasks", {loggedIn: loggedIn, tasks: tasks});
     });
 });
 
@@ -179,7 +190,7 @@ app.get("/tasks/new", function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {
         var categories = results.rows;
-        res.render("new", {categories: categories});
+        res.render("new", {categories: categories, loggedIn: loggedIn});
     });
 });
 
@@ -189,7 +200,7 @@ app.get("/categories", function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {
         var categories = results.rows;
-        res.render("categories", {categories: categories});
+        res.render("categories", {categories: categories, loggedIn: loggedIn});
     });
 });
 

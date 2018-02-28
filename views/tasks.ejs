@@ -7,7 +7,12 @@
             <h1>Tasks</h1>
             <p>Not sure what to work on? Choose one from here!</p>
             <p>
-                <a class="btn btn-primary btn-lg" href="/tasks/new">Add new tasks</a>
+                <% if (loggedIn) { %>
+                    <a class="btn btn-primary btn-lg" href="/tasks/new">Add new tasks</a>
+                <% } else { %>
+                    <a class="btn btn-primary btn-lg" href="/login">Login to add new tasks!</a>
+                    <a href="/signup">Or sign up now!</a>
+                <% } %>
             </p>
         </div>
     </header>
