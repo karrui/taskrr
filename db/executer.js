@@ -24,15 +24,15 @@ function execute(query, args) {
 
 exports.addTask = function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {
     console.log('Attemping to add task: ' + title + ' under ' + requester);
-    return execute(queries.ADD_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
+    return execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
 }
 
 exports.getCategories = function getCategories() {
     console.log('Attempting to get all categories');
-    return execute(queries.GET_CATEGORIES);
+    return execute(queries.get.ALL_CATEGORIES);
 }
 
 exports.getAllTasks = function getAllTasks() {
     console.log('Attempting to get all tasks');
-    return execute(queries.GET_ALL_TASKS);
+    return execute(queries.get.ALL_TASKS);
 }
