@@ -176,7 +176,11 @@ app.post("/tasks", function(req, res) {
 });
 
 app.get("/tasks/new", function(req, res) {
-    res.render("new");
+    var promise = executer.getCategories();
+    promise.then(results => {
+        var categories = results.rows;
+        res.render("new", {categories: categories});
+    });
 });
 
 
