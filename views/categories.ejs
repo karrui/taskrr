@@ -1,0 +1,24 @@
+<% include partials/header %>
+
+<div class="container">
+    <header class="jumbotron">
+        <div class="container">
+            <!--shamelessly stolen from fiverr-->
+            <h1>Take The First Step</h1>
+            <p>Whatever your goal, here are a few places to get started</p>
+        </div>
+    </header>
+    
+    <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+        <% categories.forEach(function(category) { %>
+            <div class="col-md-3 col-sm-6">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <a href="./categories/<%= category.id %>"><%= category.name %></a>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</div>
+<% include partials/footer %>

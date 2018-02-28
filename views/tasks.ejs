@@ -1,0 +1,37 @@
+<% include partials/header %>
+
+<div class="container">
+    
+    <header class="jumbotron">
+        <div class="container">
+            <h1>Tasks</h1>
+            <p>Not sure what to work on? Choose one from here!</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="/tasks/new">Add new tasks</a>
+            </p>
+        </div>
+    </header>
+    <!--Each Task has:-->
+    <!-- * id-->
+    <!-- * DISPLAYED - title-->
+    <!-- * DISPLAYED - description-->
+    <!-- * category_id-->
+    <!-- * location-->
+    <!-- * DISPLAYED - requester-->
+    <!-- * start_dt-->
+    <!-- * end_dt-->
+    <!-- * DISPLAYED - price-->
+    <!-- * status_task-->
+    <!-- * assignee-->
+    
+    <% tasks.forEach(function(task) { %>
+        <div>
+            <h1><%= task.title %></h3>
+            <h3><%= task.description %></h3>
+            <h3><%= task.requester %></h3>
+            <p><%= task.price %></p>
+        </div>
+    <% }); %>
+</div>
+
+<% include partials/footer %>
