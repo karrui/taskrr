@@ -1,5 +1,7 @@
 const { Pool, Client } = require('pg');
 const queries = require('./queries');
+var fs = require('fs');
+var csv = require('fast-csv');
 
 // new db client
 var client = new Pool({
@@ -36,6 +38,32 @@ exports.createAllViews = function createAllViews() {
     execute(queries.create.VIEW_PERSON_ALL_INFO);
     execute(queries.create.VIEW_ALL_TASK);
     execute(queries.create.VIEW_ALL_CATEGORY);
+}
+
+exports.populateTasks = function populateTasks() {
+    let csvStream = csv.fromPath('./csv/tasks.csv')
+    .on('data', function(record) {
+        csvPause();
+        
+        let title = record.title;
+        let description = record.description;
+        let category_id = record.category_id;
+        let location = record.location;
+        let requester = record.requester;
+        let start_dt = record.start_dt;
+        let end_dt = record.end_dt;
+        let price = record.price;
+        
+        addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
+        
+        csvResume();
+    })
+    .on('end', function() {
+        console.log('Populating tasks done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
 }
 
 exports.addTask = function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {
