@@ -12,7 +12,7 @@
 //======================================================================================================================
 // 1. Table
 
-exports.CREATE_TABLE_PERSON = `
+exports.TABLE_PERSON = `
 CREATE TABLE IF NOT EXISTS person (
     id               SERIAL             PRIMARY KEY,
 	username         VARCHAR(25)        UNIQUE NOT NULL,
@@ -23,20 +23,20 @@ CREATE TABLE IF NOT EXISTS person (
 );
 `
 
-exports.CREATE_TABLE_CATEGORY = `
+exports.TABLE_CATEGORY = `
 CREATE TABLE IF NOT EXISTS category (
 	id			     SERIAL	       		PRIMARY KEY,
 	name			 TEXT		      	UNIQUE NOT NULL
 );
 `
 
-exports.CREATE_TABLE_TASK_STATUS = `
+exports.TABLE_TASK_STATUS = `
 CREATE TABLE IF NOT EXISTS task_status (
 	status	    	 VARCHAR(8)		    PRIMARY KEY
 );
 `
 
-exports.CREATE_TABLE_TASK = `
+exports.TABLE_TASK = `
 CREATE TABLE IF NOT EXISTS task (
 	id 			     CHAR(6)			PRIMARY KEY,
 	title 		     TEXT 			    NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS task (
 );
 `
 
-exports.CREATE_TABLE_OFFER = `
+exports.TABLE_OFFER = `
 CREATE TABLE IF NOT EXISTS offer (
 	id		         CHAR(6)			PRIMARY KEY,
 	task_id		     CHAR(6)			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS offer (
 // 2. View
 
 // This view is for user login check
-exports.CREATE_VIEW_PERSON_LOGIN = `
+exports.VIEW_PERSON_LOGIN = `
 CREATE OR REPLACE VIEW view_person_login AS (
 	SELECT
         person.id,
@@ -78,7 +78,7 @@ CREATE OR REPLACE VIEW view_person_login AS (
 );
 `
 // This view is for Admin management, not showing person.password
-exports.CREATE_VIEW_PERSON_ALL_INFO = `
+exports.VIEW_PERSON_ALL_INFO = `
 CREATE OR REPLACE VIEW view_person_all_info AS (
 	SELECT
         person.id,
@@ -90,7 +90,7 @@ CREATE OR REPLACE VIEW view_person_all_info AS (
 );
 `
 
-exports.CREATE_VIEW_ALL_TASK = `
+exports.VIEW_ALL_TASK = `
 CREATE OR REPLACE VIEW view_all_task AS (
 	SELECT
         task.id,
@@ -108,7 +108,7 @@ CREATE OR REPLACE VIEW view_all_task AS (
 );
 `
 
-exports.CREATE_VIEW_ALL_CATEGORY = `
+exports.VIEW_ALL_CATEGORY = `
 CREATE OR REPLACE VIEW view_all_category AS (
     SELECT
         category.id,
