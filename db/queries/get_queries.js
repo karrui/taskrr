@@ -10,3 +10,13 @@ exports.ALL_CATEGORIES =
 exports.ALL_TASKS =
     'SELECT * FROM task ' +
     'ORDER BY start_dt';
+
+exports.USER_BY_ID =
+    'SELECT * ' +
+    'FROM person ' +
+    'WHERE id = $1';
+
+exports.USER_BY_NAME = 
+    'SELECT * ' +
+    'FROM person ' +
+    'WHERE username = $1';

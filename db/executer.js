@@ -16,8 +16,9 @@ function execute(query, args) {
     let promise = client.query(query, args).then(result => {
         console.log("DONE: %s \n Returned %d rows.", query, result.rowCount);
         return result;
-    }).catch(e => {
+    }).catch(err => {
         console.log("FAIL: %s \n Reason: %s %s", query, e.name, e.message);
+        throw err;
     });
     return promise;
 }
@@ -35,4 +36,19 @@ exports.getCategories = function getCategories() {
 exports.getAllTasks = function getAllTasks() {
     console.log('Attempting to get all tasks');
     return execute(queries.get.ALL_TASKS);
+}
+
+exports.addUser = function addUser(username, password, email, created_dt) {
+    console.log('Attempting to add user: ' + '');
+    return execute(queries.insert.ONE_USER, [username, password, email, created_dt]);
+}
+
+exports.findUserById = function findUserById(id) {
+    console.log('Attempting to find user by id: ' + id);
+    return execute(queries.get.USER_BY_ID, [id]);
+}
+
+exports.findUserByName = function findUserByName(username) {
+    console.log('Attempting to find user by name: ' + username);
+    return execute(queries.get.USER_BY_NAME, [username]);
 }

@@ -1,25 +1,24 @@
 const { Pool, Client } = require('pg');
 
-var bcrypt   = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt-nodejs');
 
-// new db client
-var client = new Pool({
-    user: 'webapp',
-    host: 'localhost',
-    database: 'cs2102',
-    password: 'sonTerK@r',
-    port: 63333,
-})
-
-
+const executer = require('../db/executer');
 
 function User(){
     this.id = 0;
-    this.username ='';
+    this.username = "";
     this.email = "";
-    this.password= ""; //need to declare the things that i want to be remembered for each user in the database
+    this.password = ""; 
+    this.created_dt = "";   //need to declare the things that i want to be remembered for each user in the database
 
     this.save = function(callback) {
+        var client = new Client({
+            user: 'webapp',
+            host: 'localhost',
+            database: 'cs2102',
+            password: 'sonTerK@r',
+            port: 63333,
+        });
         client.connect();
 
         console.log(this.username + ' + ' + this.email +' will be saved');
@@ -32,99 +31,66 @@ function User(){
                 return console.error('error running query', err);
             }
             console.log(result.rows);
-            //console.log(this.email);
         });
+        
         client.query('SELECT * FROM person ORDER BY id desc limit 1', null, function(err, result){
-
             if(err){
                 return callback(null);
             }
             //if no rows were returned from query, then new user
             if (result.rows.length > 0){
-                console.log(result.rows[0] + ' is found!');
                 var user = new User();
+                user.id = result.rows[0]['id'];
                 user.username = result.rows[0]['username'];
                 user.password = result.rows[0]['password'];
-                user.id = result.rows[0]['id'];
                 user.created_dt = result.rows[0]['created_dt'];
-                console.log(user.username);
                 client.end();
                 return callback(user);
             }
         });
-
-
-
-            //whenever we call 'save function' to object USER we call the insert query which will save it into the database.
-        //});
     };
-        //User.connect
-
-    //this.findById = function(u_id, callback){
-    //    console.log("we are in findbyid");
-    //    var user = new User();
-    //    user.email= 'carol';
-    //    user.password='gah';
-    //    console.log(user);
-    //
-    //    return callback(null, user);
-    //
-    //};
-
 }
 
 User.findOne = function(username, callback) {
-    var isNotAvailable = false; //we are assuming the email is taking
-    console.log(username + ' is in the findOne function test');
+    var isNotAvailable = false; //we are assuming the username is taken
+    console.log('Finding username: ' + username);
+
     //check if there is a user available for this username;
-    
-    client.connect();
-    client.query('SELECT * FROM person WHERE username = $1', [username], function(err, result){
-        if(err){
-            return callback(err, isNotAvailable, this);
-        }
+    executer.findUserByName(username)
+    .then(result => {
         //if no rows were returned from query, then new user
-        if (result.rows.length > 0){
+        if (result.rows.length > 0){    // means there is already a user with this username
             isNotAvailable = true; // update the user for return in callback
-            ///email = email;
-            // password = result.rows[0].password;
             var user = new User();
             user.username= result.rows[0]['username'];
             user.password = result.rows[0]['password'];
             user.email = result.rows[0]['email'];
             user.id = result.rows[0]['id'];
-            console.log(username + ' is not available!');
+            console.log(username + ' already exists...');
             return callback(false, isNotAvailable, user);
         }
         else{
             isNotAvailable = false;
-            console.log(username + ' is available');
+            console.log(username + ' is available, added into database...');
         }
         //the callback has 3 parameters:
         // parameter err: false if there is no error
-        //parameter isNotAvailable: whether the email is available or not
+        // parameter isNotAvailable: whether the email is available or not
         // parameter this: the User object;
-
-        client.end();
         return callback(false, isNotAvailable, this);
-
-
+    })
+    .catch(err => {
+        return callback(err, isNotAvailable, this);
     });
-//});
 };
 
 User.findById = function(id, callback){
-    console.log("we are in findbyid");
+    console.log("Finding user by id...");
 
-    client.connect();
-    client.query("SELECT * from person where id=$1", [id], function(err, result){
-
-        if(err){
-            return callback(err, null);
-        }
-        //if no rows were returned from query, then new user
-        if (result.rows.length > 0){
-            console.log(result.rows[0] + ' is achieved!');
+    executer.findUserById(id)
+    .then(result => {
+        // check if user exists
+        if (result.rows.length > 0){    
             var user = new User();
             user.username= result.rows[0]['username'];
             user.password = result.rows[0]['password'];
@@ -133,16 +99,11 @@ User.findById = function(id, callback){
             console.log(user.username);
             return callback(null, user);
         }
+    })
+    .catch(err => {
+        return callback(err, null);
     });
 };
-
-//User.connect = function(callback){
-//    return callback (false);
-//};
-
-//User.save = function(callback){
-//    return callback (false);
-//};
 
 // generating a hash
 User.generateHash = function(password) {
