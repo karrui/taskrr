@@ -3,11 +3,11 @@ const queries = require('./queries');
 
 // new db client
 var client = new Pool({
-  user: 'webapp',
-  host: '128.199.75.94',
-  database: 'cs2102',
-  password: 'sonTerK@r',
-  port: 5432,
+    user: 'webapp',
+    host: 'localhost',
+    database: 'cs2102',
+    password: 'sonTerK@r',
+    port: 63333,
 });
 
 // example way to call queries

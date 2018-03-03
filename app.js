@@ -21,22 +21,6 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + '/public'));
 
 // =====================================
-// DATABASE SETUP ======================
-// =====================================
-const { Pool, Client } = require('pg');
-
-// new db client
-const db = new Client({
-  user: 'webapp',
-  host: '128.199.75.94',
-  database: 'cs2102',
-  password: 'sonTerK@r',
-  port: 5432,
-})
-
-db.connect();
-
-// =====================================
 // PASSPORT (AUTH) FUNCTIONS ===========
 // =====================================
 var loggedIn = false;
@@ -205,7 +189,8 @@ app.get("/categories", function(req, res) {
     });
 });
 
-
-app.listen(process.env.PORT, process.env.IP, function() {
+// BEFORE YOU START THIS SERVER RUN IN NEW TERMINAL TAB TO ESTABLISH LINK
+// ssh -L 63333:localhost:5432 webapp@128.199.75.94
+app.listen(5000, 'localhost', function() {
     console.log("Taskrr server has started!");
 });
