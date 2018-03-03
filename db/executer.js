@@ -50,9 +50,9 @@ exports.createAllFunctions = function createAllFunctions() {
 }
 
 exports.populateTasks = function populateTasks() {
-    let csvStream = csv.fromPath('./csv/tasks.csv')
+    let csvStream = csv.fromPath('./db/csv/tasks.csv', {headers: true})
     .on('data', function(record) {
-        csvPause();
+        csvStream.pause();
         
         let title = record.title;
         let description = record.description;
@@ -63,9 +63,10 @@ exports.populateTasks = function populateTasks() {
         let end_dt = record.end_dt;
         let price = record.price;
         
-        addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
-        
-        csvResume();
+        console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
+        execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
+
+        csvStream.resume();
     })
     .on('end', function() {
         console.log('Populating tasks done!');
@@ -75,9 +76,37 @@ exports.populateTasks = function populateTasks() {
     })
 }
 
+exports.deletePopulatedTasks = function deletePopulatedTasks() {
+    let csvStream = csv.fromPath('./db/csv/tasks.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let title = record.title;
+        let description = record.description;
+        
+        console.log('Attemping to delete task: \"%s\"', title);
+        execute(queries.delete.ONE_POPULATED_TASK, [title, description]);
+        
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Deleting populated tasks done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
+
+
 exports.addTask = function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {
     console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
     return execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
+}
+
+exports.deleteTask = function deleteTask(title, description) {
+    console.log('Attemping to delete task: \"%s\"', title);
+    return execute(queries.delete.ONE_TASK, [title, description]);
 }
 
 exports.getCategories = function getCategories() {

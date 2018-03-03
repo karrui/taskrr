@@ -16,7 +16,7 @@ app.use(morgan('dev')); // log every request to the console
 // get information from html forms
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 
 // validate forms
@@ -48,13 +48,13 @@ app.use(passport.session()); // persistent login sessions
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
+    
     // if user is authenticated in the session, carry on
     if (req.isAuthenticated()) {
         loggedIn = true;
         return next();
     }
-
+    
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
@@ -65,10 +65,13 @@ function isLoggedIn(req, res, next) {
 const executer = require('./db/executer');
 
 // Creates Tables + Views + Functions when server starts
-executer.createAllTables();
-executer.createAllViews();
-executer.createAllFunctions();
+// executer.createAllTables();
+// executer.createAllViews();
+// executer.createAllFunctions();
 
+// Toggle methods to populate or delete populated tasks
+// executer.populateTasks();
+// executer.deletePopulatedTasks();
 
 app.get("/", function(req, res) {
     res.render("landing", {loggedIn: loggedIn});
@@ -98,10 +101,10 @@ app.post('/login', login_validation, passport.authenticate('local-login', {
 function login_validation(req, res, next){
     req.checkBody('username', 'Username is Required').notEmpty();
     req.checkBody('password', 'Password is required').notEmpty();
-
+    
     //validate
     var errors = req.validationErrors();
-
+    
     if (errors) {
         res.render('login', { message: errors[0].msg });
     } else {
@@ -129,7 +132,7 @@ function signup_validation(req, res, next){
     req.checkBody('email', 'Email is required').notEmpty();
     req.checkBody('email', 'Email is not valid').isEmail();
     req.checkBody('password', 'Password is required').notEmpty();
-
+    
     //validate
     var errors = req.validationErrors();
     if (errors) {
@@ -185,7 +188,7 @@ app.post("/tasks", function(req, res) {
     var start_dt = req.body.start_dt;
     var end_dt = req.body.end_dt;
     var price = req.body.price;
-
+    
     var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
     promise.then(function() {
         res.redirect('/tasks'); // to project page
