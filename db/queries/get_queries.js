@@ -4,42 +4,50 @@
 
 exports.ALL_CATEGORIES = `
 SELECT
-    category.id,
-    category.name
-FROM category
+    view_all_category.id,
+    view_all_category.name
+FROM view_all_category
 ORDER BY
-    category.id
+    view_all_category.id
 ;
 `
 exports.ALL_TASKS = `
 SELECT
-    task.id,
-    task.title,
-    task.description,
-    task.category_id,
-    task.location,
-    task.requester,
-    task.start_dt,
-    task.end_dt,
-    task.price,
-    task.status_task,
-    task.assignee
-FROM task
+    view_all_task.id,
+    view_all_task.title,
+    view_all_task.description,
+    view_all_task.category_id,
+    view_all_task.location,
+    view_all_task.requester,
+    view_all_task.start_dt,
+    view_all_task.end_dt,
+    view_all_task.price,
+    view_all_task.status_task,
+    view_all_task.assignee
+FROM view_all_task
 ORDER BY
-    task.start_dt
+    view_all_task.start_dt
 ;
 `
 exports.USER_BY_ID = `
-SELECT *
-FROM person
+SELECT
+    view_person_login.id,
+    view_person_login.username,
+    view_person_login.password,
+    view_person_login.role
+FROM view_person_login
 WHERE 1=1
-    AND id = $1
+    AND view_person_login.id = $1
 ;
 `
 exports.USER_BY_NAME = `
-SELECT *
-FROM person
+SELECT
+    view_person_login.id,
+    view_person_login.username,
+    view_person_login.password,
+    view_person_login.role
+FROM view_person_login
 WHERE 1=1
-    AND username = $1
+    AND view_person_login.username = $1
 ;
 `
