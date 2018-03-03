@@ -1,24 +1,34 @@
 require('dotenv').config()
-var express  = require('express');
-var app      = express();
-var passport = require('passport');
-var morgan       = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var session      = require('express-session');
-var flash    = require('connect-flash');
+var express          = require('express');
+var app              = express();
+var passport         = require('passport');
+var morgan           = require('morgan');
+var bodyParser       = require('body-parser');
+var session          = require('express-session');
+var flash            = require('connect-flash');
 var expressValidator = require('express-validator');
 
 // =====================================
 // APP SETUP ===========================
 // =====================================
 app.use(morgan('dev')); // log every request to the console
-app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser()); // get information from html forms
+
+// get information from html forms
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// validate forms
 app.use(expressValidator());
+
+// display messages
 app.use(flash());
-app.use(bodyParser.urlencoded({extended: true}));
+
+// set default view engine
 app.set("view engine", "ejs");
+
+// set default css
 app.use(express.static(__dirname + '/public'));
 
 // =====================================
@@ -28,7 +38,11 @@ var loggedIn = false;
 require('./config/passport')(passport); // pass passport for configuration
 
 // required for passport
-app.use(session({ secret: 'cs2102isthebestmodule' })); // session secret
+app.use(session({ 
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 

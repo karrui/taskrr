@@ -9,7 +9,8 @@ function User(){
     this.username = "";
     this.email = "";
     this.password = ""; 
-    this.created_dt = "";   //need to declare the things that i want to be remembered for each user in the database
+    this.created_dt = "";
+    this.role = "";
 
     this.save = function(callback) {
         var client = new Client({
@@ -44,6 +45,7 @@ function User(){
                 user.username = result.rows[0]['username'];
                 user.password = result.rows[0]['password'];
                 user.created_dt = result.rows[0]['created_dt'];
+                user.role = result.rows[0]['role'];
                 client.end();
                 return callback(user);
             }
@@ -66,12 +68,13 @@ User.findOne = function(username, callback) {
             user.password = result.rows[0]['password'];
             user.email = result.rows[0]['email'];
             user.id = result.rows[0]['id'];
+            user.role = result.rows[0]['role'];
             console.log(username + ' already exists...');
             return callback(false, isNotAvailable, user);
         }
         else{
             isNotAvailable = false;
-            console.log(username + ' is available, added into database...');
+            console.log(username + ' not found in database');
         }
         //the callback has 3 parameters:
         // parameter err: false if there is no error
@@ -96,6 +99,7 @@ User.findById = function(id, callback){
             user.password = result.rows[0]['password'];
             user.email = result.rows[0]['email'];
             user.id = result.rows[0]['id'];
+            user.role = result.rows[0]['role'];
             console.log(user.username);
             return callback(null, user);
         }
