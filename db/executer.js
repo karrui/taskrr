@@ -17,10 +17,25 @@ function execute(query, args) {
         console.log("DONE: %s \n Returned %d rows.", query, result.rowCount);
         return result;
     }).catch(err => {
-        console.log("FAIL: %s \n Reason: %s %s", query, e.name, e.message);
+        console.log("FAIL: %s \n Reason: %s %s", query, err.name, err.message);
         throw err;
     });
     return promise;
+}
+
+exports.createAllTables = function createAllTables() {
+    execute(queries.create.TABLE_PERSON);
+    execute(queries.create.TABLE_CATEGORY);
+    execute(queries.create.TABLE_TASK_STATUS);
+    execute(queries.create.TABLE_TASK);
+    execute(queries.create.TABLE_OFFER);
+}
+
+exports.createAllViews = function createAllViews() {
+    execute(queries.create.VIEW_PERSON_LOGIN);
+    execute(queries.create.VIEW_PERSON_ALL_INFO);
+    execute(queries.create.VIEW_ALL_TASK);
+    execute(queries.create.VIEW_ALL_CATEGORY);
 }
 
 exports.addTask = function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {

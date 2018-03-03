@@ -48,6 +48,8 @@ function isLoggedIn(req, res, next) {
 // =====================================
 // ** ROUTES BEGIN HERE ** =============
 // =====================================
+const executer = require('./db/executer');
+
 app.get("/", function(req, res) {
     res.render("landing", {loggedIn: loggedIn});
 });
@@ -143,8 +145,6 @@ app.get('/logout', function(req, res) {
 // =====================================
 // MAIN APIs ===========================
 // =====================================
-const executer = require('./db/executer');
-
 
 // placeholder tasks
 app.get("/tasks", function(req, res) {

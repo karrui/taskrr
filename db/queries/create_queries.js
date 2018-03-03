@@ -112,6 +112,6 @@ exports.VIEW_ALL_CATEGORY = `
 CREATE OR REPLACE VIEW view_all_category AS (
     SELECT
         category.id,
-        category.name,
-    from category
-;`
+        category.name
+    FROM category
+);`
