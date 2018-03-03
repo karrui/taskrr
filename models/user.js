@@ -8,7 +8,7 @@ function User(){
     this.id = 0;
     this.username = "";
     this.email = "";
-    this.password = ""; 
+    this.password = "";
     this.created_dt = "";
     this.role = "";
 
@@ -23,7 +23,7 @@ function User(){
         client.connect();
 
         console.log(this.username + ' + ' + this.email +' will be saved');
-		
+
 		const text = 'INSERT INTO person(username, password, email, created_dt) VALUES($1, $2, $3, $4)';
     	const values = [this.username, this.password, this.email, this.created_dt];
         client.query(text, values, function (err, result) {
@@ -33,7 +33,7 @@ function User(){
             }
             console.log(result.rows);
         });
-        
+
         client.query('SELECT * FROM person ORDER BY id desc limit 1', null, function(err, result){
             if(err){
                 return callback(null);
@@ -93,14 +93,14 @@ User.findById = function(id, callback){
     executer.findUserById(id)
     .then(result => {
         // check if user exists
-        if (result.rows.length > 0){    
+        if (result.rows.length > 0){
             var user = new User();
             user.username= result.rows[0]['username'];
             user.password = result.rows[0]['password'];
             user.email = result.rows[0]['email'];
             user.id = result.rows[0]['id'];
             user.role = result.rows[0]['role'];
-            console.log(user.username);
+            console.log("User found: %s", user.username);
             return callback(null, user);
         }
     })
@@ -113,7 +113,7 @@ User.findById = function(id, callback){
 User.generateHash = function(password) {
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(password, salt);
-    
+
     return hash;
 };
 

@@ -12,9 +12,9 @@ var client = new Pool({
 
 // example way to call queries
 function execute(query, args) {
-    console.log("EXECUTING: %s", query);
+    //console.log("EXECUTING: %s", query);
     let promise = client.query(query, args).then(result => {
-        console.log("DONE: %s \n Returned %d rows.", query, result.rowCount);
+        //console.log("DONE: %s \n Returned %d rows.", query, result.rowCount);
         return result;
     }).catch(err => {
         console.log("FAIL: %s \n Reason: %s %s", query, err.name, err.message);
@@ -24,6 +24,7 @@ function execute(query, args) {
 }
 
 exports.createAllTables = function createAllTables() {
+    console.log("Creating tables.");
     execute(queries.create.TABLE_PERSON);
     execute(queries.create.TABLE_CATEGORY);
     execute(queries.create.TABLE_TASK_STATUS);
@@ -32,14 +33,21 @@ exports.createAllTables = function createAllTables() {
 }
 
 exports.createAllViews = function createAllViews() {
+    console.log("Creating views.");
     execute(queries.create.VIEW_PERSON_LOGIN);
     execute(queries.create.VIEW_PERSON_ALL_INFO);
     execute(queries.create.VIEW_ALL_TASK);
     execute(queries.create.VIEW_ALL_CATEGORY);
 }
 
+exports.createAllFunctions = function createAllFunctions() {
+    console.log("Creating functions.");
+    execute(queries.create.FUNCTION_INSERT_ONE_TASK);
+    execute(queries.create.FUNCTION_INSERT_ONE_PERSON);
+}
+
 exports.addTask = function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {
-    console.log('Attemping to add task: ' + title + ' under ' + requester);
+    console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
     return execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
 }
 
@@ -55,7 +63,7 @@ exports.getAllTasks = function getAllTasks() {
 
 exports.addUser = function addUser(username, password, email, created_dt) {
     console.log('Attempting to add user: ' + '');
-    return execute(queries.insert.ONE_USER, [username, password, email, created_dt]);
+    return execute(queries.insert.ONE_PERSON, [username, password, email, created_dt]);
 }
 
 exports.findUserById = function findUserById(id) {
