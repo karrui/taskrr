@@ -5,11 +5,11 @@ var LocalStrategy = require('passport-local').Strategy;
 const { Pool, Client } = require('pg');
 
 var client = new Client({
-  user: 'webapp',
-  host: '128.199.75.94',
-  database: 'cs2102',
-  password: 'sonTerK@r',
-  port: 5432,
+    user: 'webapp',
+    host: 'localhost',
+    database: 'cs2102',
+    password: 'sonTerK@r',
+    port: 63333,
 })
 
 // load up the user model

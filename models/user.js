@@ -3,12 +3,12 @@ const { Pool, Client } = require('pg');
 var bcrypt   = require('bcrypt-nodejs');
 
 // new db client
-var client = new Client({
-  user: 'webapp',
-  host: '128.199.75.94',
-  database: 'cs2102',
-  password: 'sonTerK@r',
-  port: 5432,
+var client = new Pool({
+    user: 'webapp',
+    host: 'localhost',
+    database: 'cs2102',
+    password: 'sonTerK@r',
+    port: 63333,
 })
 
 
@@ -20,13 +20,6 @@ function User(){
     this.password= ""; //need to declare the things that i want to be remembered for each user in the database
 
     this.save = function(callback) {
-        var client = new Client({
-          user: 'webapp',
-          host: '128.199.75.94',
-          database: 'cs2102',
-          password: 'sonTerK@r',
-          port: 5432,
-        })
         client.connect();
 
         console.log(this.username + ' + ' + this.email +' will be saved');
@@ -81,13 +74,6 @@ function User(){
 }
 
 User.findOne = function(username, callback) {
-    var client = new Client({
-      user: 'webapp',
-      host: '128.199.75.94',
-      database: 'cs2102',
-      password: 'sonTerK@r',
-      port: 5432,
-    })
     var isNotAvailable = false; //we are assuming the email is taking
     console.log(username + ' is in the findOne function test');
     //check if there is a user available for this username;
@@ -129,14 +115,6 @@ User.findOne = function(username, callback) {
 
 User.findById = function(id, callback){
     console.log("we are in findbyid");
-    
-    var client = new Client({
-      user: 'webapp',
-      host: '128.199.75.94',
-      database: 'cs2102',
-      password: 'sonTerK@r',
-      port: 5432,
-    })
 
     client.connect();
     client.query("SELECT * from person where id=$1", [id], function(err, result){
