@@ -41,7 +41,7 @@ exports.TABLE_TASK_STATUS = `
 
 exports.TABLE_TASK = `
     CREATE TABLE IF NOT EXISTS task (
-	    id 			     CHAR(6)			PRIMARY KEY,
+	    id 			     SERIAL			    PRIMARY KEY,
 	    title 		     TEXT 			    NOT NULL,
 	    description	     TEXT		       	NOT NULL,
 	    category_id	     INTEGER			NOT NULL 					REFERENCES category (id) ON UPDATE CASCADE,
@@ -58,8 +58,8 @@ exports.TABLE_TASK = `
 
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
-	    id		         CHAR(6)			PRIMARY KEY,
-	    task_id		     CHAR(6)			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
+	    id		         SERIAL		      	PRIMARY KEY,
+	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
 	    price			 MONEY			    NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
