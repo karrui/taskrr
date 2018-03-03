@@ -1,6 +1,6 @@
 {
   "name": "taskrr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Get tasks done.",
   "main": "app.js",
   "scripts": {
@@ -12,19 +12,15 @@
     "bcrypt": "^1.0.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
-    "capitalize": "^1.0.0",
     "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.4.3",
+    "dotenv": "^5.0.1",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "express-validator": "^5.0.0",
-    "moment": "^2.20.1",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "pg": "^7.4.1",
-    "pg-promise": "^7.4.1",
-    "rx": "^4.1.0"
+    "pg": "^7.4.1"
   }
 }

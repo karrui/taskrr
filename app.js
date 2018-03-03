@@ -1,40 +1,35 @@
-var express  = require('express');
-var app      = express();
-var passport = require('passport');
-var morgan       = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var session      = require('express-session');
-var flash    = require('connect-flash');
+require('dotenv').config()
+var express          = require('express');
+var app              = express();
+var passport         = require('passport');
+var morgan           = require('morgan');
+var bodyParser       = require('body-parser');
+var session          = require('express-session');
+var flash            = require('connect-flash');
 var expressValidator = require('express-validator');
 
 // =====================================
 // APP SETUP ===========================
 // =====================================
 app.use(morgan('dev')); // log every request to the console
-app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser()); // get information from html forms
+
+// get information from html forms
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// validate forms
 app.use(expressValidator());
+
+// display messages
 app.use(flash());
-app.use(bodyParser.urlencoded({extended: true}));
+
+// set default view engine
 app.set("view engine", "ejs");
+
+// set default css
 app.use(express.static(__dirname + '/public'));
-
-// =====================================
-// DATABASE SETUP ======================
-// =====================================
-const { Pool, Client } = require('pg');
-
-// new db client
-const db = new Client({
-  user: 'webapp',
-  host: '128.199.75.94',
-  database: 'cs2102',
-  password: 'sonTerK@r',
-  port: 5432,
-})
-
-db.connect();
 
 // =====================================
 // PASSPORT (AUTH) FUNCTIONS ===========
@@ -43,7 +38,11 @@ var loggedIn = false;
 require('./config/passport')(passport); // pass passport for configuration
 
 // required for passport
-app.use(session({ secret: 'cs2102isthebestmodule' })); // session secret
+app.use(session({ 
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
@@ -63,6 +62,8 @@ function isLoggedIn(req, res, next) {
 // =====================================
 // ** ROUTES BEGIN HERE ** =============
 // =====================================
+const executer = require('./db/executer');
+
 app.get("/", function(req, res) {
     res.render("landing", {loggedIn: loggedIn});
 });
@@ -158,8 +159,6 @@ app.get('/logout', function(req, res) {
 // =====================================
 // MAIN APIs ===========================
 // =====================================
-const executer = require('./db/executer');
-
 
 // placeholder tasks
 app.get("/tasks", function(req, res) {
@@ -205,7 +204,8 @@ app.get("/categories", function(req, res) {
     });
 });
 
-
-app.listen(process.env.PORT, process.env.IP, function() {
+// BEFORE YOU START THIS SERVER RUN IN NEW TERMINAL TAB TO ESTABLISH LINK
+// ssh -L 63333:localhost:5432 webapp@128.199.75.94
+app.listen(5000, 'localhost', function() {
     console.log("Taskrr server has started!");
 });

@@ -2,15 +2,6 @@
 
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
-const { Pool, Client } = require('pg');
-
-var client = new Client({
-  user: 'webapp',
-  host: '128.199.75.94',
-  database: 'cs2102',
-  password: 'sonTerK@r',
-  port: 5432,
-})
 
 // load up the user model
 var User = require('../models/user');
@@ -26,13 +17,13 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        console.log(user.id +" was seralized");
+        console.log(user.id + " was serialized");
         done(null, user.id);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        console.log(id + "is deserialized");
+        console.log(id + " is deserialized");
         User.findById(id, function(err, user) {
             done(err, user);
         });
@@ -56,6 +47,7 @@ module.exports = function(passport) {
         process.nextTick(function(callback) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
+
             User.findOne(username, function(err, isNotAvailable, user) {
                 // if there are any errors, return the error
                 if (err)
@@ -80,7 +72,6 @@ module.exports = function(passport) {
                         console.log("the object user is: ", newUser);
                         passport.authenticate();
                         return done(null, newUser);
-                        //newUser.password = newUser.generateHash(password);
                     });
                 }
     
