@@ -13,11 +13,11 @@ function User(){
 
     this.save = function(callback) {
         var client = new Client({
-            user: 'webapp',
-            host: 'localhost',
-            database: 'cs2102',
-            password: 'sonTerK@r',
-            port: 63333,
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,
+            database: process.env.DB_DATABASE,
+            password: process.env.DB_PASS,
+            port: process.env.DB_PORT,
         });
         client.connect();
 
