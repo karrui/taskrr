@@ -67,14 +67,21 @@
                 <div class="col-md-12">
                     <h3>Requester:</h3>
                     <p class="requester">
+                        <% if (loggedIn && currentUser.username == task.requester) { %>
+                            You!
+                        <% } else { %>
                         <%= task.requester %>
+                        <% } %>
                     </p>
                 </div>
             </div>
                 
                 <% if (loggedIn) { %>
-                    <a class="btn btn-info" href="#">Offer to help!</a>
-                <% } else { %>
+                    <% if (currentUser.username == task.requester) { %>
+                        <a class="btn btn-primary" href="#">Edit this task</a>
+                        <% } else { %>
+                        <a class="btn btn-info" href="#">Offer to help!</a>
+                <% } } else { %>
                     <a class="btn btn-info" href="/login">Login to offer!</a>
                     <a href="/signup">Or sign up now!</a>
                 <% } %>

@@ -46,6 +46,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
+app.use(function(req,res,next){
+    res.locals.currentUser = req.user;
+    next();
+})
+
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
