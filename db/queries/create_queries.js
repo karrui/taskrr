@@ -56,6 +56,13 @@ exports.TABLE_TASK = `
     ;
 `
 
+exports.TABLE_OFFER_STATUS = `
+    CREATE TABLE IF NOT EXISTS offer_status (
+        status           VARCHAR(8)         PRIMARY KEY
+    )
+    ;
+`
+
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
 	    id		         SERIAL		      	PRIMARY KEY,
@@ -63,7 +70,7 @@ exports.TABLE_OFFER = `
 	    price			 MONEY			    NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
-	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL
+	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE
     )
     ;
 `

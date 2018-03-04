@@ -42,6 +42,7 @@ exports.createAllTables = async function createAllTables() {
     execute(queries.create.TABLE_CATEGORY);
     execute(queries.create.TABLE_TASK_STATUS);
     execute(queries.create.TABLE_TASK);
+    execute(queries.create.TABLE_OFFER_STATUS);
     execute(queries.create.TABLE_OFFER);
 }
 
