@@ -16,7 +16,7 @@ app.use(morgan('dev')); // log every request to the console
 // get information from html forms
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 
 // validate forms
@@ -69,6 +69,11 @@ executer.createAllTables();
 executer.createAllViews();
 executer.createAllFunctions();
 
+// executer.dropTables();
+
+// Toggle methods to populate or delete populated tasks
+// executer.populateTasks();
+// executer.deletePopulatedTasks();
 
 app.get("/", function(req, res) {
     res.render("landing", {loggedIn: loggedIn});
@@ -200,8 +205,6 @@ app.get("/tasks/new", function(req, res) {
     });
 });
 
-
-// placeholder categories
 app.get("/categories", function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {
