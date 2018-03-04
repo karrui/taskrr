@@ -26,3 +26,7 @@ body {
 .navbar {
     margin-bottom: 0;
 }
+
+.breadcrumb {
+    background: transparent;
+}
