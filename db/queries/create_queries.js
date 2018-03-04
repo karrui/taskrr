@@ -218,8 +218,8 @@ exports.FUNCTION_CREATE_INDEX_PERSON = `
     RETURNS void AS
     $BODY$
         BEGIN
-            CREATE INDEX IF NOT EXISTS idx_person_role          ON person (role DESC);
-            CREATE INDEX IF NOT EXISTS idx_person_created_dt    ON person (created_dt DESC);
+            CREATE INDEX IF NOT EXISTS idx_person_role          ON person (role             DESC);
+            CREATE INDEX IF NOT EXISTS idx_person_created_dt    ON person (created_dt       DESC);
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE
@@ -233,9 +233,9 @@ exports.FUNCTION_CREATE_INDEX_TASK = `
     $BODY$
         BEGIN
             CREATE INDEX IF NOT EXISTS idx_task_category_id     ON task (category_id);
-            CREATE INDEX IF NOT EXISTS idx_task_requester       ON task (requester DESC);
-            CREATE INDEX IF NOT EXISTS idx_task_status_task     ON task (status_task DESC);
-            CREATE INDEX IF NOT EXISTS idx_task_assignee        ON task (assignee NULLS LAST);
+            CREATE INDEX IF NOT EXISTS idx_task_requester       ON task (requester          DESC);
+            CREATE INDEX IF NOT EXISTS idx_task_status_task     ON task (status_task        DESC);
+            CREATE INDEX IF NOT EXISTS idx_task_assignee        ON task (assignee           NULLS LAST);
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE
