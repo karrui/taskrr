@@ -213,6 +213,14 @@ app.get("/categories", function(req, res) {
     });
 });
 
+app.get("/categories/:id", function(req, res) {
+    var promise = executer.getTasksByCategoryId(req.params['id']);
+    promise.then(results => {
+        var tasks = results.rows;
+        res.render("tasks", {loggedIn: loggedIn, tasks: tasks});
+    });
+});
+
 // BEFORE YOU START THIS SERVER RUN IN NEW TERMINAL TAB TO ESTABLISH LINK
 // ssh -L 63333:localhost:5432 webapp@128.199.75.94
 app.listen(5000, 'localhost', function() {
