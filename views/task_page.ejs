@@ -2,10 +2,12 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="/landing">Home</a>
-        <a class="breadcrumb-item" href="/categories">Categories</a>
-        <a class="breadcrumb-item" href="javascript:history.back()">Back</a>
-        <span class="breadcrumb-item active"><%= task.title %></span>
+        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+        You are currently at:
+        <a class="breadcrumb-item" href="/">Home</a> >
+        <a class="breadcrumb-item" href="/categories">Categories</a> >
+        <a class="breadcrumb-item" href="/tasks">Tasks</a> >
+        <span class="breadcrumb-item active"> <%= task.title %></span>
     </nav>
     
     <div class="container">

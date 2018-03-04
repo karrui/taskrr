@@ -2,11 +2,13 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="/">Home</a>
-        <a class="breadcrumb-item" href="/categories">Categories</a>
-        <span class="breadcrumb-item active">Tasks</span>
+        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+        You are currently at:
+        <a class="breadcrumb-item" href="/">Home</a> >
+        <a class="breadcrumb-item" href="/categories">Categories</a> >
+        <span class="breadcrumb-item active"> Tasks</span>
     </nav>
-
+    
     <header class="jumbotron">
         <div class="container">
             <h1>Tasks</h1>
@@ -14,41 +16,41 @@
             <p>
                 <% if (loggedIn) { %>
                     <a class="btn btn-primary btn-lg" href="/tasks/new">Add new tasks</a>
-                <% } else { %>
-                    <a class="btn btn-primary btn-lg" href="/login">Login to add new tasks!</a>
-                    <a href="/signup">Or sign up now!</a>
-                <% } %>
-            </p>
-        </div>
-    </header>
-    <!--Each Task has:-->
-    <!-- * id-->
-    <!-- * DISPLAYED - title-->
-    <!-- * DISPLAYED - description-->
-    <!-- * category_id-->
-    <!-- * location-->
-    <!-- * DISPLAYED - requester-->
-    <!-- * start_dt-->
-    <!-- * end_dt-->
-    <!-- * DISPLAYED - price-->
-    <!-- * status_task-->
-    <!-- * assignee-->
-
-    <div class="row">
-        <% tasks.forEach(function(task) { %>
-            <div class="thumbnail">
-                <div class="caption">
-                    <h3><%= task.title %></h3>
-                    <p><%= task.description %></p>
-                    <p><%= task.start_dt %></p>
-                    <p><%= task.end_dt %></p>
-                    <p><%= task.requester %></p>
-                    <p><%= task.status_task %></p>
-                    <p><%= task.price %></p>
-                    <a class="btn btn-info" href="./tasks/<%= task.id %>">Help with this task!</a>
+                    <% } else { %>
+                        <a class="btn btn-primary btn-lg" href="/login">Login to add new tasks!</a>
+                        <a href="/signup">Or sign up now!</a>
+                        <% } %>
+                    </p>
                 </div>
-            </div>
-        <% }); %>
-    </div>
-
-<% include partials/footer %>
+            </header>
+            <!--Each Task has:-->
+            <!-- * id-->
+            <!-- * DISPLAYED - title-->
+            <!-- * DISPLAYED - description-->
+            <!-- * category_id-->
+            <!-- * location-->
+            <!-- * DISPLAYED - requester-->
+            <!-- * start_dt-->
+            <!-- * end_dt-->
+            <!-- * DISPLAYED - price-->
+            <!-- * status_task-->
+            <!-- * assignee-->
+            
+            <div class="row">
+                <% tasks.forEach(function(task) { %>
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <h3><%= task.title %></h3>
+                            <p><%= task.description %></p>
+                            <p><%= task.start_dt %></p>
+                            <p><%= task.end_dt %></p>
+                            <p><%= task.requester %></p>
+                            <p><%= task.status_task %></p>
+                            <p><%= task.price %></p>
+                            <a class="btn btn-info" href="./tasks/<%= task.id %>">Help with this task!</a>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+                
+                <% include partials/footer %>

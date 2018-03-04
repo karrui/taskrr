@@ -1,3 +1,7 @@
+body {
+    font-family: "Lato";
+}
+
 #landing {
     background: url(https://i.imgur.com/ThMB6BV.jpg);
     background-size: cover;

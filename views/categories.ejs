@@ -2,8 +2,10 @@
 
 <div class="container">
     <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="/">Home</a>
-        <span class="breadcrumb-item active">Categories</span>
+        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+        You are currently at:
+        <a class="breadcrumb-item" href="/">Home</a> >
+        <span class="breadcrumb-item active"> Categories</span>
     </nav>
     <header class="jumbotron">
         <div class="container">
@@ -22,7 +24,7 @@
                     </div>
                 </div>
             </div>
-        <% }); %>
+            <% }); %>
+        </div>
     </div>
-</div>
-<% include partials/footer %>
+    <% include partials/footer %>
