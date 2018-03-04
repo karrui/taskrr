@@ -109,6 +109,16 @@ exports.deletePopulatedTasks = async function deletePopulatedTasks() {
     })
 }
 
+exports.dropTables = async function dropTables() {
+    execute(queries.drop.TABLE_PERSON);
+    execute(queries.drop.TABLE_OFFER);
+    execute(queries.drop.TABLE_TASK);
+    execute(queries.drop.TABLE_TASK_STATUS);
+    execute(queries.drop.VIEW_ALL_CATEGORY);
+    execute(queries.drop.VIEW_ALL_TASK);
+    execute(queries.drop.VIEW_PERSON_ALL_INFO);
+    execute(queries.drop.VIEW_PERSON_LOGIN);
+}
 
 
 exports.addTask = async function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {

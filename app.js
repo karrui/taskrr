@@ -69,6 +69,8 @@ const executer = require('./db/executer');
 // executer.createAllViews();
 // executer.createAllFunctions();
 
+// executer.dropTables();
+
 // Toggle methods to populate or delete populated tasks
 // executer.populateTasks();
 // executer.deletePopulatedTasks();
