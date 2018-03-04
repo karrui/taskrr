@@ -65,7 +65,7 @@ exports.populateTasks = async function populateTasks() {
     let csvStream = csv.fromPath('./db/csv/tasks.csv', {headers: true})
     .on('data', function(record) {
         csvStream.pause();
-        
+
         let title = record.title;
         let description = record.description;
         let category_id = record.category_id;
@@ -74,10 +74,10 @@ exports.populateTasks = async function populateTasks() {
         let start_dt = record.start_dt;
         let end_dt = record.end_dt;
         let price = record.price;
-        
+
         console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
         execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
-        
+
         csvStream.resume();
     })
     .on('end', function() {
@@ -92,13 +92,13 @@ exports.deletePopulatedTasks = async function deletePopulatedTasks() {
     let csvStream = csv.fromPath('./db/csv/tasks.csv', {headers: true})
     .on('data', function(record) {
         csvStream.pause();
-        
+
         let title = record.title;
         let description = record.description;
-        
+
         console.log('Attemping to delete task: \"%s\"', title);
         execute(queries.delete.ONE_POPULATED_TASK, [title, description]);
-        
+
         csvStream.resume();
     })
     .on('end', function() {
@@ -113,7 +113,6 @@ exports.dropTables = async function dropTables() {
     execute(queries.drop.TABLE_PERSON);
     execute(queries.drop.TABLE_OFFER);
     execute(queries.drop.TABLE_TASK);
-    execute(queries.drop.TABLE_TASK_STATUS);
     execute(queries.drop.VIEW_ALL_CATEGORY);
     execute(queries.drop.VIEW_ALL_TASK);
     execute(queries.drop.VIEW_PERSON_ALL_INFO);
@@ -139,6 +138,11 @@ exports.getCategories = async function getCategories() {
 exports.getAllTasks = async function getAllTasks() {
     console.log('Attempting to get all tasks');
     return execute(queries.get.ALL_TASKS);
+}
+
+exports.getTasksByCategoryId = async function getTasksByCategoryId(category_id) {
+    console.log('Attempting to get tasks by category_id: %s', category_id);
+    return execute(queries.get.TASK_BY_CATEGORY_ID, [category_id]);
 }
 
 exports.addUser = async function addUser(username, password, email, created_dt) {
