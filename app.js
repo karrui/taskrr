@@ -181,6 +181,14 @@ app.get("/tasks/", function(req, res) {
     });
 });
 
+app.get("/tasks/new", function(req, res) {
+    var promise = executer.getCategories();
+    promise.then(results => {
+        var categories = results.rows;
+        res.render("new", {categories: categories, loggedIn: loggedIn});
+    });
+});
+
 app.get("/categories/tasks/:id", function(req, res) {
     var promise = executer.getTaskById(req.params['id']);
     promise.then(results => {
@@ -211,14 +219,6 @@ app.post("/tasks", function(req, res) {
     var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
     promise.then(function() {
         res.redirect('/tasks'); // to project page
-    });
-});
-
-app.get("/tasks/new", function(req, res) {
-    var promise = executer.getCategories();
-    promise.then(results => {
-        var categories = results.rows;
-        res.render("new", {categories: categories, loggedIn: loggedIn});
     });
 });
 
