@@ -144,6 +144,11 @@ exports.getTasksByCategoryId = async function getTasksByCategoryId(category_id) 
     return execute(queries.get.TASK_BY_CATEGORY_ID, [category_id]);
 }
 
+exports.getTaskById = async function getTaskById(task_id) {
+    console.log('Attempting to get task by its id: %s', task_id);
+    return execute(queries.get.TASK_BY_ID, [task_id]);
+}
+
 exports.addUser = async function addUser(username, password, email, created_dt) {
     console.log('Attempting to add user: ' + '');
     return execute(queries.insert.ONE_PERSON, [username, password, email, created_dt]);

@@ -84,9 +84,6 @@ app.get("/", function(req, res) {
 // =====================================
 // show the login form
 app.get('/login', function(req, res) {
-    if (loggedIn) {
-        res.redirect('/');
-    }
     // render the page and pass in any flash data if it exists
     res.render('login', { message: req.flash('loginMessage'), loggedIn: loggedIn });
 });
@@ -116,9 +113,6 @@ function login_validation(req, res, next){
 
 
 app.get("/signup", function(req, res) {
-    if (loggedIn) {
-        res.redirect('/');
-    }
     res.render('signup', { loggedIn: loggedIn, message: req.flash('signupMessage') });
 })
 
@@ -170,15 +164,32 @@ app.get('/logout', function(req, res) {
 // =====================================
 // MAIN APIs ===========================
 // =====================================
-
-// placeholder tasks
-app.get("/tasks", function(req, res) {
+app.get("/tasks/", function(req, res) {
     var promise = executer.getAllTasks();
     promise.then(results => {
         var tasks = results.rows;
-        res.render("tasks", {loggedIn: loggedIn, tasks: tasks});
+        res.render("tasks", {
+            loggedIn: loggedIn, 
+            tasks: tasks
+        });
     });
 });
+
+app.get("/categories/tasks/:id", function(req, res) {
+    var promise = executer.getTaskById(req.params['id']);
+    promise.then(results => {
+        var task = results.rows[0];
+        res.render("task_page", {loggedIn: loggedIn, task: task});
+    });
+})
+
+app.get("/tasks/:id", function(req, res) {
+    var promise = executer.getTaskById(req.params['id']);
+    promise.then(results => {
+        var task = results.rows[0];
+        res.render("task_page", {loggedIn: loggedIn, task: task});
+    });
+})
 
 app.post("/tasks", function(req, res) {
     // get data from form and add to tasks array
