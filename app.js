@@ -65,9 +65,9 @@ function isLoggedIn(req, res, next) {
 const executer = require('./db/executer');
 
 // Creates Tables + Views + Functions when server starts
-// executer.createAllTables();
-// executer.createAllViews();
-// executer.createAllFunctions();
+executer.createAllTables();
+executer.createAllViews();
+executer.createAllFunctions();
 
 // executer.dropTables();
 
@@ -205,8 +205,6 @@ app.get("/tasks/new", function(req, res) {
     });
 });
 
-
-// placeholder categories
 app.get("/categories", function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {

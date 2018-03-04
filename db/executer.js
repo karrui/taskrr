@@ -29,7 +29,6 @@ async function execute(query, args) {
             return result;
         }).catch(err => {
             console.log("FAIL: %s \n Reason: %s %s", query.substring(0, 40), err.name, err.message);
-            throw err;
         });
     } finally {
         client.release();
