@@ -42,6 +42,7 @@ exports.createAllTables = async function createAllTables() {
     execute(queries.create.TABLE_CATEGORY);
     execute(queries.create.TABLE_TASK_STATUS);
     execute(queries.create.TABLE_TASK);
+    execute(queries.create.TABLE_OFFER_STATUS);
     execute(queries.create.TABLE_OFFER);
 }
 
@@ -58,6 +59,16 @@ exports.createAllFunctions = async function createAllFunctions() {
     console.log("Creating functions.");
     execute(queries.create.FUNCTION_INSERT_ONE_TASK);
     execute(queries.create.FUNCTION_INSERT_ONE_PERSON);
+    execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
+    execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
+    execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
+}
+
+exports.createAllIndexes = async function createAllIndexes() {
+    console.log("Creating indexes.");
+    execute(queries.create.INDEX_TABLE_PERSON);
+    execute(queries.create.INDEX_TABLE_TASK);
+    execute(queries.create.INDEX_TABLE_OFFER);
 }
 
 exports.populateTasks = async function populateTasks() {

@@ -68,6 +68,7 @@ const executer = require('./db/executer');
 executer.createAllTables();
 executer.createAllViews();
 executer.createAllFunctions();
+executer.createAllIndexes();
 
 // executer.dropTables();
 

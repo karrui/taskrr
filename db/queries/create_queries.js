@@ -7,6 +7,7 @@
     1. Table
     2. View
     3. Functions
+    4. Function calls for Create
 */
 
 //======================================================================================================================
@@ -56,6 +57,13 @@ exports.TABLE_TASK = `
     ;
 `
 
+exports.TABLE_OFFER_STATUS = `
+    CREATE TABLE IF NOT EXISTS offer_status (
+        status           VARCHAR(8)         PRIMARY KEY
+    )
+    ;
+`
+
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
 	    id		         SERIAL		      	PRIMARY KEY,
@@ -63,7 +71,7 @@ exports.TABLE_OFFER = `
 	    price			 MONEY			    NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
-	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL
+	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE
     )
     ;
 `
@@ -202,5 +210,71 @@ exports.FUNCTION_INSERT_ONE_PERSON = `
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE
     COST 100
+    ;
+`
+
+exports.FUNCTION_CREATE_INDEX_PERSON = `
+    CREATE OR REPLACE FUNCTION create_index_table_person ()
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            CREATE INDEX IF NOT EXISTS idx_person_role          ON person (role             DESC);
+            CREATE INDEX IF NOT EXISTS idx_person_created_dt    ON person (created_dt       DESC);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_CREATE_INDEX_TASK = `
+    CREATE OR REPLACE FUNCTION create_index_table_task ()
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            CREATE INDEX IF NOT EXISTS idx_task_category_id     ON task (category_id);
+            CREATE INDEX IF NOT EXISTS idx_task_requester       ON task (requester          DESC);
+            CREATE INDEX IF NOT EXISTS idx_task_status_task     ON task (status_task        DESC);
+            CREATE INDEX IF NOT EXISTS idx_task_assignee        ON task (assignee           NULLS LAST);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_CREATE_INDEX_OFFER = `
+    CREATE OR REPLACE FUNCTION create_index_table_offer ()
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            CREATE INDEX IF NOT EXISTS idx_offer_task_id        ON offer (task_id);
+            CREATE INDEX IF NOT EXISTS idx_offer_assignee       ON offer (assignee);
+            CREATE INDEX IF NOT EXISTS idx_offer_status_offer   ON offer (status_offer);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+//======================================================================================================================
+// 4. Function calls for Create
+
+exports.INDEX_TABLE_PERSON = `
+    SELECT
+        create_index_table_person()
+    ;
+`
+
+exports.INDEX_TABLE_TASK = `
+    SELECT
+        create_index_table_task()
+    ;
+`
+
+exports.INDEX_TABLE_OFFER = `
+    SELECT
+        create_index_table_offer()
     ;
 `
