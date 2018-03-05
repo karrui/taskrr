@@ -70,6 +70,26 @@ exports.TASK_BY_ID = `
 ;
 `
 
+exports.TASK_BY_REQUESTER = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price,
+        view_all_task.status_task,
+        view_all_task.assignee
+    FROM view_all_task
+    WHERE 1=1
+        AND view_all_task.requester = $1
+    ORDER BY id DESC
+;
+`
+
 exports.USER_BY_ID = `
     SELECT
         view_person_login.id,

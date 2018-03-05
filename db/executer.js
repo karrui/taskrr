@@ -160,6 +160,11 @@ exports.getTaskById = async function getTaskById(task_id) {
     return execute(queries.get.TASK_BY_ID, [task_id]);
 }
 
+exports.getTasksByRequester = async function getTasksByRequester(requester) {
+    console.log('Attempting to get task by its requester: %s', requester);
+    return execute(queries.get.TASK_BY_REQUESTER, [requester]);
+}
+
 exports.addUser = async function addUser(username, password, email, created_dt) {
     console.log('Attempting to add user: ' + '');
     return execute(queries.insert.ONE_PERSON, [username, password, email, created_dt]);

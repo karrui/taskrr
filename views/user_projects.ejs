@@ -1,0 +1,36 @@
+<% include partials/header %>
+
+<div class="container">
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+        You are currently at:
+        <a class="breadcrumb-item" href="/">Home</a> >
+        <a class="breadcrumb-item" href="/profile">Profile</a> >
+        <span class="breadcrumb-item active"> My tasks</span>
+    </nav>
+
+    <div class="page-header text-center">
+            <h1><span class="fa fa-anchor"></span> Current tasks</h1>
+        </div>
+    
+    <div class="row">
+        <% tasks.forEach(function(task) { %>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><%= task.title %></h3>
+                </div>
+                <div class="panel-body">
+                    <p>Description: <%= task.description %></p>
+                    <p>Start: <%= task.start_dt %></p>
+                    <p>End: <%= task.end_dt %></p>
+                    <p>Status: <%= task.status_task %></p>
+                    <p>Starting offer: <%= task.price %></p>
+                    <a class="btn btn-info" href="./tasks/<%= task.id %>">Help with this task!</a>
+                </div>
+                <div class="panel-footer">Requested by: <%= task.requester %></div>
+            </div>
+            <% }); %>
+        </div>
+        
+        
+        <% include partials/footer %>

@@ -157,6 +157,22 @@ app.get('/profile', isLoggedIn, function(req, res) {
     });
 });
 
+app.get('/profile/tasks', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksByRequester(req.user.username);
+    promise.then(results => {
+        var tasks = results.rows;
+        res.render("user_projects", {
+            loggedIn: loggedIn, 
+            tasks: tasks
+        });
+    });
+});
+
+app.get('/profile/tasks/:id', isLoggedIn, function(req, res) {
+    let redirectUrl = '/tasks/' + req.params.id;
+    res.redirect(301, redirectUrl);
+})
+
 // =====================================
 // LOGOUT ==============================
 // =====================================
@@ -190,11 +206,8 @@ app.get("/tasks/new", function(req, res) {
 });
 
 app.get("/categories/tasks/:id", function(req, res) {
-    var promise = executer.getTaskById(req.params['id']);
-    promise.then(results => {
-        var task = results.rows[0];
-        res.render("task_page", {loggedIn: loggedIn, task: task});
-    });
+    let redirectUrl = '/tasks/' + req.params.id;
+    res.redirect(301, redirectUrl);
 })
 
 app.get("/tasks/:id", function(req, res) {
@@ -218,7 +231,7 @@ app.post("/tasks", function(req, res) {
 
     var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
     promise.then(function() {
-        res.redirect('/tasks'); // to project page
+        res.redirect('/profile/tasks'); // to user's projects page
     });
 });
 
