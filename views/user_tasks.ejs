@@ -25,6 +25,7 @@
                     <p>End: <%= task.end_dt %></p>
                     <p>Status: <%= task.status_task %></p>
                     <p>Starting offer: <%= task.price %></p>
+                    <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                     <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
                 </div>
             </div>

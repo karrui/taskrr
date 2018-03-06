@@ -88,7 +88,7 @@
 
                 <% if (loggedIn) { %>
                     <% if (currentUser.username == task.requester) { %>
-                        <a class="btn btn-primary" href="#">Edit this task</a>
+                        <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
                     <% } else if (typeof offerByUser != 'undefined') { %>
                         Thanks for offering for this task!
                         <form action="/edit/offer/<%=task.id%>" method="POST">

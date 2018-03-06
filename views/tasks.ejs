@@ -49,7 +49,8 @@
                             <p>Status: <%= task.status_task %></p>
                             <p>Starting offer: <%= task.price %></p>
                             <% if (loggedIn && currentUser.username == task.requester) { %>
-                                <a class="btn btn-warning" href="#">Edit this task</a>
+                                <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
+                                <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
                             <% } else { %>
                                 <a class="btn btn-info" href="/tasks/<%=task.id%>">Help with this task!</a>
                             <% } %>

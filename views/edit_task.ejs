@@ -4,7 +4,7 @@
     <div class="row">
         <h1 style="text-align: center;">Edit task</h1>
         <div style="width:40%; margin: 0 auto">
-                <form action="/edit/task/:id" method="POST">
+                <form action="/edit/task/<%=task.id%>" method="POST">
                 
                 <div class="form-group">
                     <input class="form-control" type="text" name="title" value="<%=task.title%>" aria-describedby="task-title">
@@ -35,7 +35,7 @@
                     <input type="text" class="form-control" name="price" value="<%=task.price%>">
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-default btn-block">Submit!</button>
+                    <button class="btn btn-primary btn-warning btn-block">Edit!</button>
                 </div>
             </form>
             <a href="/tasks">Go back</a>

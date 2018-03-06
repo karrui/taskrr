@@ -282,7 +282,7 @@ app.post("/edit/task/:id", isLoggedIn, function(req, res) {
 
     var promise = executer.updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price)
     .then(function() {
-        var redirectUrl = "/task/" + task_id;
+        var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // to updated task page
     })
     .catch(err => {
@@ -318,7 +318,7 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
     var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
     .then(function() {
         var redirectUrl = "/tasks/" + task_id;
-        res.redirect(redirectUrl, {message: "Successfully edited offer!"}); // back to task page
+        res.redirect(redirectUrl); // back to task page
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
