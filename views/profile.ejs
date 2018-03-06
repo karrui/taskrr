@@ -9,6 +9,12 @@
         <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
+    <% if (typeof prevUrl != 'undefined') { %>
+        <div class="row text-center">
+            <a href="<%=prevUrl%>" class="btn btn-success btn-lg">Back to where you were!</a>
+        </div>
+    <% } %>
+    <br>
     <div class="row">
 
         <!-- LOCAL INFORMATION -->

@@ -49,6 +49,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(function(req,res,next){
     res.locals.currentUser = req.user;
     res.locals.loggedIn = loggedIn;
+    res.locals.prevUrl = req.session.returnTo;
     next();
 })
 
@@ -78,15 +79,19 @@ app.get("/", function(req, res) {
 // =====================================
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
     // if user is authenticated in the session, carry on
     if (req.isAuthenticated()) {
         loggedIn = true;
         return next();
     }
-
     // if they aren't redirect them to the login page
     res.redirect('/login');
+}
+
+// save previous returnTo so user can seamlessly join back
+function redirection(req, res, next) {
+    req.session.returnTo = req.originalUrl; 
+    return next();
 }
 
 // show the login form
@@ -103,6 +108,10 @@ app.post('/login', login_validation, passport.authenticate('local-login', {
     failureRedirect : '/login', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
 }));
+
+// app.get('/hidden', isLoggedIn, function(req, res) {
+//     res.redirect(req.session.returnTo);
+// });
 
 function login_validation(req, res, next){
     req.checkBody('username', 'Username is Required').notEmpty();
@@ -125,7 +134,7 @@ app.get("/signup", function(req, res) {
 
 // process the signup form
 app.post('/signup', signup_validation, passport.authenticate('local-signup', {
-    successRedirect : '/profile', // redirect to the secure profile section
+    successReturnToOrRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/signup', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
 }));
@@ -189,7 +198,7 @@ app.get('/logout', function(req, res) {
 // =====================================
 // TASKS APIs ==========================
 // =====================================
-app.get("/tasks/", function(req, res) {
+app.get("/tasks/", redirection, function(req, res) {
     var promise = executer.getAllTasks()
     .then(results => {
         var tasks = results.rows;
@@ -211,7 +220,7 @@ app.get("/tasks/new", isLoggedIn, function(req, res) {
     });
 });
 
-app.get("/tasks/:id", function(req, res) {
+app.get("/tasks/:id", redirection, function(req, res) {
     var promise = executer.getTaskById(req.params['id'])
     .then(results => {
         var task = results.rows[0];
@@ -328,7 +337,7 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
 // =====================================
 // CATEGORIES APIs =====================
 // =====================================
-app.get("/categories", function(req, res) {
+app.get("/categories", redirection, function(req, res) {
     var promise = executer.getCategories()
     .then(results => {
         var categories = results.rows;
@@ -339,7 +348,7 @@ app.get("/categories", function(req, res) {
     });
 });
 
-app.get("/categories/:id", function(req, res) {
+app.get("/categories/:id", redirection, function(req, res) {
     var promise = executer.getTasksByCategoryId(req.params['id'])
     .then(results => {
         var tasks = results.rows;
