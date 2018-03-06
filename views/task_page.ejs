@@ -116,14 +116,15 @@
                             </div>
                         </form>
                         <a class="btn btn-info" id="offer_btn" href="#">Offer to help!</a>
-                    <% } } else { %>
-                        <a class="btn btn-info" href="/login">Login to offer!</a>
-                        <a href="/signup">Or sign up now!</a>
-                    <% } %>
+                    <% } } %>
                     <div class="row">
                         <div class="col-md-12">
                             <h3>Current offers:</h3>
                             <p class="offers">
+                                <% if (!loggedIn) { %>
+                                    <a class="btn btn-info" href="/login">Login to offer!</a>
+                                    <a href="/signup">Or sign up now!</a>
+                                <% } %>
                             
                             <% if (offers.length == 0) { %>
                                 <p>None :(</p>
