@@ -69,6 +69,23 @@ exports.TASK_BY_ID = `
         AND view_all_task.id = $1
 ;
 `
+exports.OFFERS_BY_TASKID = `
+    SELECT
+        *
+    FROM view_all_offer
+    WHERE 1=1
+        AND view_all_offer.task_id = $1
+        
+`
+
+exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
+    SELECT
+        *
+    FROM view_all_offer
+    where 1=1
+        AND view_all_offer.assignee = $1
+        AND view_all_offer.task_id = $2
+`
 
 exports.TASK_BY_REQUESTER = `
     SELECT

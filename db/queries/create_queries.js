@@ -135,6 +135,15 @@ exports.VIEW_ALL_CATEGORY = `
     ;
 `
 
+exports.VIEW_ALL_OFFER = `
+    CREATE OR REPLACE VIEW view_all_offer AS (
+        SELECT
+            *
+        FROM offer
+    )
+    ;
+`
+
 //======================================================================================================================
 // 3. Functions
 

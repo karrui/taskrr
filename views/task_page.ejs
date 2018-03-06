@@ -51,13 +51,13 @@
                     <div class="col-md-12">
                         <h3>Starts:</h3>
                         <p class="start_dt">
-                            <%= task.start_dt %>
+                            <%= new Date(task.start_dt + 'Z') %>
                         </p>
                     </div>
                     <div class="col-md-12">
                         <h3>Ends:</h3>
                         <p class="end_dt">
-                            <%= task.end_dt %>
+                            <%= new Date(task.end_dt + 'Z') %>
                         </p>
                     </div>
                 </div>
@@ -89,8 +89,22 @@
                 <% if (loggedIn) { %>
                     <% if (currentUser.username == task.requester) { %>
                         <a class="btn btn-primary" href="#">Edit this task</a>
+                    <% } else if (typeof offerByUser != 'undefined') { %>
+                        You have already offered!
+                        <form action="/edit/offer/<%=task.id%>" method="POST">
+                            <div class="form-group">
+                                <div id="offer_info" style="display:none;" class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="text" name="price" class="form-control" value="<%= offerByUser.price.substring(1) %>">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit">Submit!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <a class="btn btn-warning" id="offer_btn" href="#">Edit offer!</a>
                     <% } else { %>
-                        <form action="/tasks/<%=task.id%>" method="POST">
+                        <form action="/new/offer/<%=task.id%>" method="POST">
                             <div class="form-group">
                                 <div id="offer_info" style="display:none;" class="input-group">
                                     <span class="input-group-addon">$</span>
@@ -111,11 +125,17 @@
                             <h3>Current offers:</h3>
                             <p class="offers">
                             
-                            <% if (typeof offers == 'undefined') { %>
+                            <% if (offers.length == 0) { %>
                                 <p>None :(</p>
                             <% } else { %> 
                                 <% offers.forEach(function(offer) { %>
-                                    <p><%= offer.assignee %> offered <%= offer.price %> at <%= offer.offered_dt %></p>
+                                    <p> 
+                                        <% if (loggedIn && currentUser.username == offer.assignee) { %>
+                                            You offered <%= offer.price %> at <%= new Date(offer.offered_dt + 'Z') %>
+                                        <% } else { %>
+                                            <%= offer.assignee %> offered <%= offer.price %> at <%= new Date(offer.offered_dt + 'Z') %>
+                                        <% } %>
+                                        </p>
                                 <% }); %>
                             <% } %>
                             </p>

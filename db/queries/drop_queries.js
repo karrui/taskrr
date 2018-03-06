@@ -21,3 +21,6 @@ exports.VIEW_ALL_TASK = `
 
 exports.VIEW_ALL_CATEGORY = `
     DROP VIEW IF EXISTS view_all_category`;
+
+exports.VIEW_ALL_OFFER = `
+    DROP VIEW IF EXISTS view_all_offer`;

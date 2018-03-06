@@ -186,7 +186,6 @@ app.get('/logout', function(req, res) {
 // =====================================
 // TASKS APIs ==========================
 // =====================================
-
 app.get("/tasks/", function(req, res) {
     var promise = executer.getAllTasks();
     promise.then(results => {
@@ -195,7 +194,7 @@ app.get("/tasks/", function(req, res) {
     });
 });
 
-app.get("/tasks/new", function(req, res) {
+app.get("/tasks/new", isLoggedIn, function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {
         var categories = results.rows;
@@ -203,25 +202,25 @@ app.get("/tasks/new", function(req, res) {
     });
 });
 
-// app.get("/categories/tasks/:id", function(req, res) {
-//     let redirectUrl = '/tasks/' + req.params.id;
-//     res.redirect(301, redirectUrl);
-// })
-
 app.get("/tasks/:id", function(req, res) {
-    var task;
     var promise = executer.getTaskById(req.params['id'])
     .then(results => {
-        task = results.rows[0];
+        var task = results.rows[0];
+        promise = executer.getOffersByTaskId(task.id)
+        .then(results => {
+            var offers = results.rows;
+            if (loggedIn) {
+                promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
+                .then(results => {
+                    var offerByUser = results.rows[0];
+                    res.render("task_page", { task: task, offers: offers, offerByUser: offerByUser });
+                })
+            } else {
+                res.render("task_page", { task: task, offers: offers});
+            }
+        })
     });
-
-    var offers;
-    promise = executer.getOffersByTaskId(task.id)
-    .then(results => {
-        offers = results.rows;
-    })
     
-    res.render("task_page", { task: task, offers: offers });
 })
 
 app.post("/tasks", function(req, res) {
@@ -244,13 +243,8 @@ app.post("/tasks", function(req, res) {
 // =====================================
 // OFFER APIs ==========================
 // =====================================
-app.post("/tasks/:id", function(req, res) {
-    // get data from form
-    // _task_id INTEGER,
-    // _price MONEY,
-    // _assignee VARCHAR(25),
-    // _offered_dt TIMESTAMP
-    var task_id = req.params.id;
+app.post("/new/offer/:id", function(req, res) {
+    var task_id = req.params['id'];
     var price = req.body.price;
     var assignee = res.locals.currentUser.username;
     var offered_dt = new Date().toISOString();
