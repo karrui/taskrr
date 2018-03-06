@@ -74,7 +74,7 @@ app.get("/", function(req, res) {
 });
 
 // =====================================
-// LOGIN ===============================
+// LOGIN APIS ==========================
 // =====================================
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
@@ -147,7 +147,7 @@ function signup_validation(req, res, next){
 
 
 // =====================================
-// PROFILE SECTION =====================
+// PROFILE APIS ========================
 // =====================================
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
@@ -183,10 +183,10 @@ app.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
+// =====================================
+// TASKS APIs ==========================
+// =====================================
 
-// =====================================
-// MAIN APIs ===========================
-// =====================================
 app.get("/tasks/", function(req, res) {
     var promise = executer.getAllTasks();
     promise.then(results => {
@@ -199,21 +199,29 @@ app.get("/tasks/new", function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {
         var categories = results.rows;
-        res.render("new", { categories: categories });
+        res.render("new_task", { categories: categories });
     });
 });
 
-app.get("/categories/tasks/:id", function(req, res) {
-    let redirectUrl = '/tasks/' + req.params.id;
-    res.redirect(301, redirectUrl);
-})
+// app.get("/categories/tasks/:id", function(req, res) {
+//     let redirectUrl = '/tasks/' + req.params.id;
+//     res.redirect(301, redirectUrl);
+// })
 
 app.get("/tasks/:id", function(req, res) {
-    var promise = executer.getTaskById(req.params['id']);
-    promise.then(results => {
-        var task = results.rows[0];
-        res.render("task_page", { task: task });
+    var task;
+    var promise = executer.getTaskById(req.params['id'])
+    .then(results => {
+        task = results.rows[0];
     });
+
+    var offers;
+    promise = executer.getOffersByTaskId(task.id)
+    .then(results => {
+        offers = results.rows;
+    })
+    
+    res.render("task_page", { task: task, offers: offers });
 })
 
 app.post("/tasks", function(req, res) {
@@ -233,6 +241,30 @@ app.post("/tasks", function(req, res) {
     });
 });
 
+// =====================================
+// OFFER APIs ==========================
+// =====================================
+app.post("/tasks/:id", function(req, res) {
+    // get data from form
+    // _task_id INTEGER,
+    // _price MONEY,
+    // _assignee VARCHAR(25),
+    // _offered_dt TIMESTAMP
+    var task_id = req.params.id;
+    var price = req.body.price;
+    var assignee = res.locals.currentUser.username;
+    var offered_dt = new Date().toISOString();
+    
+    var promise = executer.addOffer(task_id, price, assignee, offered_dt);
+    promise.then(function() {
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to task page
+    });
+});
+
+// =====================================
+// CATEGORIES APIs =====================
+// =====================================
 app.get("/categories", function(req, res) {
     var promise = executer.getCategories();
     promise.then(results => {
@@ -249,6 +281,9 @@ app.get("/categories/:id", function(req, res) {
     });
 });
 
+// =====================================
+// MISC APIs ===========================
+// =====================================
 //404
 app.use(function(req, res, next){
     res.status(404).render('404', { title: "Sorry, page not found" });
