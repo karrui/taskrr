@@ -90,7 +90,7 @@
                     <% if (currentUser.username == task.requester) { %>
                         <a class="btn btn-primary" href="#">Edit this task</a>
                     <% } else if (typeof offerByUser != 'undefined') { %>
-                        You have already offered!
+                        Thanks for offering for this task!
                         <form action="/edit/offer/<%=task.id%>" method="POST">
                             <div class="form-group">
                                 <div id="offer_info" style="display:none;" class="input-group">

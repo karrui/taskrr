@@ -159,13 +159,16 @@ app.get('/profile', isLoggedIn, function(req, res) {
 });
 
 app.get('/profile/tasks', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksByRequester(req.user.username);
-    promise.then(results => {
+    var promise = executer.getTasksByRequester(req.user.username)
+    .then(results => {
         var tasks = results.rows;
         res.render("user_projects", {
             loggedIn: loggedIn, 
             tasks: tasks
         });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
@@ -187,18 +190,24 @@ app.get('/logout', function(req, res) {
 // TASKS APIs ==========================
 // =====================================
 app.get("/tasks/", function(req, res) {
-    var promise = executer.getAllTasks();
-    promise.then(results => {
+    var promise = executer.getAllTasks()
+    .then(results => {
         var tasks = results.rows;
         res.render("tasks", { tasks: tasks });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
 app.get("/tasks/new", isLoggedIn, function(req, res) {
-    var promise = executer.getCategories();
-    promise.then(results => {
+    var promise = executer.getCategories()
+    .then(results => {
         var categories = results.rows;
         res.render("new_task", { categories: categories });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
@@ -219,7 +228,10 @@ app.get("/tasks/:id", function(req, res) {
                 res.render("task_page", { task: task, offers: offers});
             }
         })
-    });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    })
     
 })
 
@@ -234,9 +246,12 @@ app.post("/tasks", function(req, res) {
     var end_dt = req.body.end_dt;
     var price = req.body.price;
 
-    var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
-    promise.then(function() {
+    var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price)
+    .then(function() {
         res.redirect('/profile/tasks'); // to user's projects page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
@@ -249,10 +264,13 @@ app.post("/new/offer/:id", function(req, res) {
     var assignee = res.locals.currentUser.username;
     var offered_dt = new Date().toISOString();
     
-    var promise = executer.addOffer(task_id, price, assignee, offered_dt);
-    promise.then(function() {
+    var promise = executer.addOffer(task_id, price, assignee, offered_dt)
+    .then(function() {
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to task page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
@@ -260,18 +278,24 @@ app.post("/new/offer/:id", function(req, res) {
 // CATEGORIES APIs =====================
 // =====================================
 app.get("/categories", function(req, res) {
-    var promise = executer.getCategories();
-    promise.then(results => {
+    var promise = executer.getCategories()
+    .then(results => {
         var categories = results.rows;
         res.render("categories", { categories: categories });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
 app.get("/categories/:id", function(req, res) {
-    var promise = executer.getTasksByCategoryId(req.params['id']);
-    promise.then(results => {
+    var promise = executer.getTasksByCategoryId(req.params['id'])
+    .then(results => {
         var tasks = results.rows;
         res.render("tasks", { tasks: tasks });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
