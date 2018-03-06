@@ -51,19 +51,6 @@ app.use(function(req,res,next){
     next();
 })
 
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
-
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated()) {
-        loggedIn = true;
-        return next();
-    }
-
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}
-
 // =====================================
 // ** ROUTES BEGIN HERE ** =============
 // =====================================
@@ -88,6 +75,19 @@ app.get("/", function(req, res) {
 // =====================================
 // LOGIN ===============================
 // =====================================
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated()) {
+        loggedIn = true;
+        return next();
+    }
+
+    // if they aren't redirect them to the login page
+    res.redirect('/login');
+}
+
 // show the login form
 app.get('/login', function(req, res) {
     // render the page and pass in any flash data if it exists
@@ -249,6 +249,11 @@ app.get("/categories/:id", function(req, res) {
         var tasks = results.rows;
         res.render("tasks", {loggedIn: loggedIn, tasks: tasks});
     });
+});
+
+//404
+app.use(function(req, res, next){
+    res.status(404).render('404', {title: "Sorry, page not found", loggedIn: loggedIn});
 });
 
 // BEFORE YOU START THIS SERVER RUN IN NEW TERMINAL TAB TO ESTABLISH LINK
