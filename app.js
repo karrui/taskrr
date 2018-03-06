@@ -274,6 +274,22 @@ app.post("/new/offer/:id", function(req, res) {
     });
 });
 
+app.post("/edit/offer/:id", function(req, res) {
+    var task_id = req.params['id'];
+    var assignee = res.locals.currentUser.username;
+    var newPrice = req.body.price;
+    var newOffered_dt = new Date().toISOString();
+    
+    var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
+    .then(function() {
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to task page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
 // =====================================
 // CATEGORIES APIs =====================
 // =====================================

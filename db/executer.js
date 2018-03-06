@@ -197,3 +197,8 @@ exports.findUserByName = async function findUserByName(username) {
     console.log('Attempting to find user by name: ' + username);
     return execute(queries.get.USER_BY_NAME, [username]);
 }
+
+exports.updateOfferByAssigneeAndTaskId = async function updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt) {
+    console.log('Attempting to update offer by assignee: %s and task_id: %s', assignee, task_id);
+    return execute(queries.update.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id, newPrice, newOffered_dt]);
+}
