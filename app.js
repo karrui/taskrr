@@ -162,7 +162,7 @@ app.get('/profile/tasks', isLoggedIn, function(req, res) {
     var promise = executer.getTasksByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_projects", {
+        res.render("user_tasks", {
             loggedIn: loggedIn, 
             tasks: tasks
         });
@@ -235,7 +235,7 @@ app.get("/tasks/:id", function(req, res) {
     
 })
 
-app.post("/tasks", function(req, res) {
+app.post("/tasks", isLoggedIn, function(req, res) {
     // get data from form and add to tasks array
     var title = req.body.title;
     var description = req.body.description;
@@ -255,10 +255,45 @@ app.post("/tasks", function(req, res) {
     });
 });
 
+app.get("/edit/task/:id", isLoggedIn, function(req, res) {
+    var promise = executer.getTaskById(req.params['id'])
+    .then(results => {
+        var task = results.rows[0];
+        promise = executer.getCategories()
+        .then(results => {
+            var categories = results.rows;
+            res.render("edit_task", { task: task, categories: categories });
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+})
+
+app.post("/edit/task/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.id;
+    var title = req.body.title;
+    var description = req.body.description;
+    var category_id = req.body.category_id;
+    var location = req.body.location;
+    var start_dt = req.body.start_dt;
+    var end_dt = req.body.end_dt;
+    var price = req.body.price;
+
+    var promise = executer.updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price)
+    .then(function() {
+        var redirectUrl = "/task/" + task_id;
+        res.redirect(redirectUrl); // to updated task page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+})
+
 // =====================================
 // OFFER APIs ==========================
 // =====================================
-app.post("/new/offer/:id", function(req, res) {
+app.post("/new/offer/:id", isLoggedIn, function(req, res) {
     var task_id = req.params['id'];
     var price = req.body.price;
     var assignee = res.locals.currentUser.username;
@@ -274,7 +309,7 @@ app.post("/new/offer/:id", function(req, res) {
     });
 });
 
-app.post("/edit/offer/:id", function(req, res) {
+app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
     var task_id = req.params['id'];
     var assignee = res.locals.currentUser.username;
     var newPrice = req.body.price;
@@ -283,7 +318,7 @@ app.post("/edit/offer/:id", function(req, res) {
     var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
     .then(function() {
         var redirectUrl = "/tasks/" + task_id;
-        res.redirect(redirectUrl); // back to task page
+        res.redirect(redirectUrl, {message: "Successfully edited offer!"}); // back to task page
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });

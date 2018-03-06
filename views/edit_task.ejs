@@ -1,0 +1,45 @@
+<% include partials/header %>
+
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center;">Edit task</h1>
+        <div style="width:40%; margin: 0 auto">
+                <form action="/edit/task/:id" method="POST">
+                
+                <div class="form-group">
+                    <input class="form-control" type="text" name="title" value="<%=task.title%>" aria-describedby="task-title">
+                    <input class="form-control" type="hidden" name="id" value="<%=task.id%>" readonly>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="5" name="description"><%=task.description%></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Category: </label>
+                    <select name="category_id">
+                        <% categories.forEach(function(category) { %>
+                            <% if (category.id == task.category_id) { %>
+                                <option selected value="<%= category.id %>"><%= category.name %></option>
+                            <% } else { %>
+                                <option value="<%= category.id %>"><%= category.name %></option>
+                        <%  } }); %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="location" value="<%=task.location%>">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="start_dt" value="<%=task.start_dt%>" id="datetimepicker">
+                    <input type="text" class="form-control" name="end_dt" value="<%=task.end_dt%>" id="datetimepicker">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="price" value="<%=task.price%>">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-default btn-block">Submit!</button>
+                </div>
+            </form>
+            <a href="/tasks">Go back</a>
+        </div>
+    </div>
+</div>
+<% include partials/footer %>

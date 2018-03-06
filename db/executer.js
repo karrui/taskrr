@@ -202,3 +202,8 @@ exports.updateOfferByAssigneeAndTaskId = async function updateOfferByAssigneeAnd
     console.log('Attempting to update offer by assignee: %s and task_id: %s', assignee, task_id);
     return execute(queries.update.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id, newPrice, newOffered_dt]);
 }
+
+exports.updateTaskById = async function updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price) {
+    console.log('Attempting to update task with task_id: %s', task_id);
+    return execute(queries.update.TASK_BY_ID, [task_id, title, description, category_id, location, start_dt, end_dt, price]);
+}
