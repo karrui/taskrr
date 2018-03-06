@@ -28,7 +28,7 @@ exports.ALL_TASKS = `
     FROM view_all_task
     ORDER BY
         view_all_task.start_dt
-;
+    ;
 `
 
 exports.TASK_BY_CATEGORY_ID = `
@@ -49,7 +49,7 @@ exports.TASK_BY_CATEGORY_ID = `
         AND view_all_task.category_id = $1
     ORDER BY
         view_all_task.start_dt
-;
+    ;
 `
 exports.TASK_BY_ID = `
     SELECT
@@ -71,20 +71,31 @@ exports.TASK_BY_ID = `
 `
 exports.OFFERS_BY_TASKID = `
     SELECT
-        *
+        view_all_offer.id,
+        view_all_offer.task_id,
+        view_all_offer.price,
+        view_all_offer.assignee,
+        view_all_offer.offered_dt,
+        view_all_offer.status_offer
     FROM view_all_offer
     WHERE 1=1
         AND view_all_offer.task_id = $1
-        
+    ;
 `
 
 exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
     SELECT
-        *
+        view_all_offer.id,
+        view_all_offer.task_id,
+        view_all_offer.price,
+        view_all_offer.assignee,
+        view_all_offer.offered_dt,
+        view_all_offer.status_offer
     FROM view_all_offer
     where 1=1
         AND view_all_offer.assignee = $1
         AND view_all_offer.task_id = $2
+    ;
 `
 
 exports.TASK_BY_REQUESTER = `
@@ -103,8 +114,9 @@ exports.TASK_BY_REQUESTER = `
     FROM view_all_task
     WHERE 1=1
         AND view_all_task.requester = $1
-    ORDER BY id DESC
-;
+    ORDER BY
+        id DESC
+    ;
 `
 
 exports.USER_BY_ID = `

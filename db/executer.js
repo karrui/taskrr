@@ -61,6 +61,8 @@ exports.createAllFunctions = async function createAllFunctions() {
     execute(queries.create.FUNCTION_INSERT_ONE_TASK);
     execute(queries.create.FUNCTION_INSERT_ONE_PERSON);
     execute(queries.create.FUNCTION_INSERT_ONE_OFFER);
+    execute(queries.create.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID);
+    execute(queries.create.FUNCTION_UPDATE_TASK_BY_ID);
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
