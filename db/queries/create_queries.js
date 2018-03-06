@@ -213,6 +213,37 @@ exports.FUNCTION_INSERT_ONE_PERSON = `
     ;
 `
 
+exports.FUNCTION_INSERT_ONE_OFFER = `
+    CREATE OR REPLACE FUNCTION insert_one_offer (
+        _task_id INTEGER,
+        _price MONEY,
+        _assignee VARCHAR(25),
+        _offered_dt TIMESTAMP
+    )
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            INSERT INTO offer
+                (
+                    task_id,
+                    price,
+                    assignee,
+                    offered_dt
+                )
+            VALUES(
+                _task_id,
+                _price,
+                _assignee,
+                _offered_dt
+            )
+            ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
 exports.FUNCTION_CREATE_INDEX_PERSON = `
     CREATE OR REPLACE FUNCTION create_index_table_person ()
     RETURNS void AS

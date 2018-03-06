@@ -59,6 +59,7 @@ exports.createAllFunctions = async function createAllFunctions() {
     console.log("Creating functions.");
     execute(queries.create.FUNCTION_INSERT_ONE_TASK);
     execute(queries.create.FUNCTION_INSERT_ONE_PERSON);
+    execute(queries.create.FUNCTION_INSERT_ONE_OFFER);
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
@@ -166,8 +167,13 @@ exports.getTasksByRequester = async function getTasksByRequester(requester) {
 }
 
 exports.addUser = async function addUser(username, password, email, created_dt) {
-    console.log('Attempting to add user: ' + '');
+    console.log('Attempting to add user: %s', username);
     return execute(queries.insert.ONE_PERSON, [username, password, email, created_dt]);
+}
+
+exports.addOffer = async function addOffer(task_id, price, assignee, offered_dt) {
+    console.log('Attempting to add offer of task id: %s', task_id);
+    return execute(queries.insert.ONE_OFFER, [task_id, price, assignee, offered_dt]);
 }
 
 exports.findUserById = async function findUserById(id) {
