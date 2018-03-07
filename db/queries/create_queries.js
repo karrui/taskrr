@@ -258,7 +258,7 @@ exports.FUNCTION_INSERT_ONE_OFFER = `
             SET
                 status_task = 'offered'
             WHERE 1=1
-                AND task_id = _task_id
+                AND id = _task_id
             ;
         END;
     $BODY$
