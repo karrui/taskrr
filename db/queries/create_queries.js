@@ -135,19 +135,33 @@ exports.VIEW_ALL_CATEGORY = `
     ;
 `
 
+exports.VIEW_ALL_OFFER = `
+    CREATE OR REPLACE VIEW view_all_offer AS (
+        SELECT
+            offer.id,
+            offer.task_id,
+            offer.price,
+            offer.assignee,
+            offer.offered_dt,
+            offer.status_offer
+        FROM offer
+    )
+    ;
+`
+
 //======================================================================================================================
 // 3. Functions
 
 exports.FUNCTION_INSERT_ONE_TASK = `
     CREATE OR REPLACE FUNCTION insert_one_task (
-        _title TEXT,
-        _description TEXT,
-        _category_id INTEGER,
-        _location TEXT,
-        _requester VARCHAR(25),
-        _start_dt TIMESTAMP,
-        _end_dt TIMESTAMP,
-        _price MONEY
+        _title          TEXT,
+        _description    TEXT,
+        _category_id    INTEGER,
+        _location       TEXT,
+        _requester      VARCHAR(25),
+        _start_dt       TIMESTAMP,
+        _end_dt         TIMESTAMP,
+        _price          MONEY
     )
     RETURNS void AS
     $BODY$
@@ -184,10 +198,10 @@ exports.FUNCTION_INSERT_ONE_TASK = `
 
 exports.FUNCTION_INSERT_ONE_PERSON = `
     CREATE OR REPLACE FUNCTION insert_one_person (
-        _username VARCHAR(25),
-        _password CHAR(100),
-        _email TEXT,
-        _created_dt TIMESTAMP
+        _username       VARCHAR(25),
+        _password       CHAR(100),
+        _email          TEXT,
+        _created_dt     TIMESTAMP
     )
     RETURNS void AS
     $BODY$
@@ -215,10 +229,10 @@ exports.FUNCTION_INSERT_ONE_PERSON = `
 
 exports.FUNCTION_INSERT_ONE_OFFER = `
     CREATE OR REPLACE FUNCTION insert_one_offer (
-        _task_id INTEGER,
-        _price MONEY,
-        _assignee VARCHAR(25),
-        _offered_dt TIMESTAMP
+        _task_id        INTEGER,
+        _price          MONEY,
+        _assignee       VARCHAR(25),
+        _offered_dt     TIMESTAMP
     )
     RETURNS void AS
     $BODY$
@@ -236,6 +250,64 @@ exports.FUNCTION_INSERT_ONE_OFFER = `
                 _assignee,
                 _offered_dt
             )
+            ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID = `
+    CREATE OR REPLACE FUNCTION update_offer_by_assignee_taskid (
+        _assignee       VARCHAR(25),
+        _task_id        INTEGER,
+        _price          MONEY,
+        _offered_dt     TIMESTAMP
+    )
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            UPDATE offer
+            SET
+                price = _price,
+                offered_dt = _offered_dt
+            WHERE 1=1
+                AND assignee = _assignee
+                AND task_id = _task_id
+            ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_UPDATE_TASK_BY_ID = `
+    CREATE OR REPLACE FUNCTION update_task_by_id (
+        _id             INTEGER,
+        _title          TEXT,
+        _description    TEXT,
+        _category_id    INTEGER,
+        _location       TEXT,
+        _start_dt       TIMESTAMP,
+        _end_dt         TIMESTAMP,
+        _price          MONEY
+    )
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            UPDATE task
+            SET
+                title = _title,
+                description = _description,
+                category_id = _category_id,
+                location = _location,
+                start_dt = _start_dt,
+                end_dt = _end_dt,
+                price = _price
+            WHERE 1=1
+                AND id = _id
             ;
         END;
     $BODY$

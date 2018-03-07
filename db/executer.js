@@ -52,6 +52,7 @@ exports.createAllViews = async function createAllViews() {
     execute(queries.create.VIEW_PERSON_ALL_INFO);
     execute(queries.create.VIEW_ALL_TASK);
     execute(queries.create.VIEW_ALL_CATEGORY);
+    execute(queries.create.VIEW_ALL_OFFER);
 }
 
 
@@ -60,6 +61,8 @@ exports.createAllFunctions = async function createAllFunctions() {
     execute(queries.create.FUNCTION_INSERT_ONE_TASK);
     execute(queries.create.FUNCTION_INSERT_ONE_PERSON);
     execute(queries.create.FUNCTION_INSERT_ONE_OFFER);
+    execute(queries.create.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID);
+    execute(queries.create.FUNCTION_UPDATE_TASK_BY_ID);
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
@@ -128,6 +131,7 @@ exports.dropTables = async function dropTables() {
     execute(queries.drop.VIEW_ALL_TASK);
     execute(queries.drop.VIEW_PERSON_ALL_INFO);
     execute(queries.drop.VIEW_PERSON_LOGIN);
+    execute(queries.drop.VIEW_ALL_OFFER);
 }
 
 
@@ -149,6 +153,16 @@ exports.getCategories = async function getCategories() {
 exports.getAllTasks = async function getAllTasks() {
     console.log('Attempting to get all tasks');
     return execute(queries.get.ALL_TASKS);
+}
+
+exports.getOffersByTaskId = async function getOffersByTaskId(task_id) {
+    console.log('Attempting to get offers by its task_id: %s', task_id);
+    return execute(queries.get.OFFERS_BY_TASKID, [task_id]);
+}
+
+exports.getOffersByAssigneeAndTaskId = async function getOffersByAssigneeAndTaskId(assignee, task_id) {
+    console.log('Attempting to get offer by assignee: %s and task_id: %s', assignee, task_id);
+    return execute(queries.get.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
 }
 
 exports.getTasksByCategoryId = async function getTasksByCategoryId(category_id) {
@@ -184,4 +198,14 @@ exports.findUserById = async function findUserById(id) {
 exports.findUserByName = async function findUserByName(username) {
     console.log('Attempting to find user by name: ' + username);
     return execute(queries.get.USER_BY_NAME, [username]);
+}
+
+exports.updateOfferByAssigneeAndTaskId = async function updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt) {
+    console.log('Attempting to update offer by assignee: %s and task_id: %s', assignee, task_id);
+    return execute(queries.update.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id, newPrice, newOffered_dt]);
+}
+
+exports.updateTaskById = async function updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price) {
+    console.log('Attempting to update task with task_id: %s', task_id);
+    return execute(queries.update.TASK_BY_ID, [task_id, title, description, category_id, location, start_dt, end_dt, price]);
 }

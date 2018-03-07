@@ -1,100 +1,156 @@
 <% include partials/header %>
 
-<div class="container">
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
-        You are currently at:
-        <a class="breadcrumb-item" href="/">Home</a> >
-        <a class="breadcrumb-item" href="/categories">Categories</a> >
-        <a class="breadcrumb-item" href="/tasks">Tasks</a> >
-        <span class="breadcrumb-item active"> <%= task.title %></span>
-    </nav>
-    
     <div class="container">
-        <div class="col-md-6" id="task">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1><%= task.title %></h1>
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="javascript:history.back()">
+                < Back</a> | You are currently at:
+                    <a class="breadcrumb-item" href="/">Home</a> >
+                    <a class="breadcrumb-item" href="/categories">Categories</a> >
+                    <a class="breadcrumb-item" href="/tasks">Tasks</a> >
+                    <span class="breadcrumb-item active">
+                        <%= task.title %>
+                    </span>
+        </nav>
+
+        <div class="container">
+            <div class="col-md-6" id="task">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>
+                            <%= task.title %>
+                        </h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="label label-primary">#
+                            <%= task.id %>
+                        </span>
+                        <span class="label label-info">
+                            <%= task.status_task %>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Description:</h3>
+                        <p class="description">
+                            <%= task.description %>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Location:</h3>
+                        <p class="location">
+                            <%= task.location %>
+                        </p>
+                    </div>
+                    <div class="col-md-12">
+                        <h3>Starts:</h3>
+                        <p class="start_dt">
+                            <%= new Date(task.start_dt + 'Z') %>
+                        </p>
+                    </div>
+                    <div class="col-md-12">
+                        <h3>Ends:</h3>
+                        <p class="end_dt">
+                            <%= new Date(task.end_dt + 'Z') %>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Opening offer:</h3>
+                        <p class="task_price">
+                            <%= task.price %>
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="label label-primary">#<%= task.id %></span>
-                    <span class="label label-info"><%= task.status_task %></span>
+
+            <div class="col-md-6" id="requester-info">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Requester:</h3>
+                        <p class="requester">
+                            <% if (loggedIn && currentUser.username == task.requester) { %>
+                                You!
+                            <% } else { %>
+                                <%= task.requester %>
+                            <% } %>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Description:</h3>
-                    <p class="description">
-                        <%= task.description %>
-                    </p>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Location:</h3>
-                    <p class="location">
-                        <%= task.location %>
-                    </p>
-                </div>
-                <div class="col-md-12">
-                    <h3>Starts:</h3>
-                    <p class="start_dt">
-                        <%= task.start_dt %>
-                    </p>
-                </div>
-                <div class="col-md-12">
-                    <h3>Ends:</h3>
-                    <p class="end_dt">
-                        <%= task.end_dt %>
-                    </p>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Opening offer:</h3>
-                    <p class="task_price">
-                        <%= task.price %>
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6" id="requester-info">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Requester:</h3>
-                    <p class="requester">
-                        <% if (loggedIn && currentUser.username == task.requester) { %>
-                            You!
-                        <% } else { %>
-                        <%= task.requester %>
-                        <% } %>
-                    </p>
-                </div>
-            </div>
-                
+
                 <% if (loggedIn) { %>
                     <% if (currentUser.username == task.requester) { %>
-                        <a class="btn btn-primary" href="#">Edit this task</a>
-                        <% } else { %>
-                        <a class="btn btn-info" href="#">Offer to help!</a>
-                <% } } else { %>
-                    <a class="btn btn-info" href="/login">Login to offer!</a>
-                    <a href="/signup">Or sign up now!</a>
-                <% } %>
+                        <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
+                    <% } else if (typeof offerByUser != 'undefined') { %>
+                        Thanks for offering for this task!
+                        <form action="/edit/offer/<%=task.id%>" method="POST">
+                            <div class="form-group">
+                                <div id="offer_info" style="display:none;" class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="text" name="price" class="form-control" value="<%= offerByUser.price.substring(1) %>">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit">Submit!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <a class="btn btn-warning" id="offer_btn" href="#">Edit offer!</a>
+                    <% } else { %>
+                        <form action="/new/offer/<%=task.id%>" method="POST">
+                            <div class="form-group">
+                                <div id="offer_info" style="display:none;" class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="text" name="price" class="form-control" placeholder="<%= task.price.substring(1) %>">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit">Submit!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <a class="btn btn-info" id="offer_btn" href="#">Offer to help!</a>
+                    <% } } %>
                     <div class="row">
-                <div class="col-md-12">
-                        <h3>Current offers:</h3>
-                        <p class="offers">
-                            None
-                        </p>
-                </div>
-                </div>
+                        <div class="col-md-12">
+                            <h3>Current offers:</h3>
+                            <p class="offers">
+                                <% if (!loggedIn) { %>
+                                    <a class="btn btn-info" href="/login">Login to offer!</a>
+                                    <a href="/signup">Or sign up now!</a>
+                                <% } %>
+                            
+                            <% if (offers.length == 0) { %>
+                                <p>None :(</p>
+                            <% } else { %> 
+                                <% offers.forEach(function(offer) { %>
+                                    <p> 
+                                        <% if (loggedIn && currentUser.username == offer.assignee) { %>
+                                            You offered <%= offer.price %> at <%= new Date(offer.offered_dt + 'Z') %>
+                                        <% } else { %>
+                                            <%= offer.assignee %> offered <%= offer.price %> at <%= new Date(offer.offered_dt + 'Z') %>
+                                        <% } %>
+                                        </p>
+                                <% }); %>
+                            <% } %>
+                            </p>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
+
+
+    <script>
+        $(function () {
+            $("#offer_btn").click(function () {
+                $("#offer_info").toggle();
+            });
+        });
+    </script>

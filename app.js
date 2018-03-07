@@ -49,6 +49,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(function(req,res,next){
     res.locals.currentUser = req.user;
     res.locals.loggedIn = loggedIn;
+    res.locals.prevUrl = req.session.returnTo;
     next();
 })
 
@@ -74,19 +75,23 @@ app.get("/", function(req, res) {
 });
 
 // =====================================
-// LOGIN ===============================
+// LOGIN APIS ==========================
 // =====================================
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
     // if user is authenticated in the session, carry on
     if (req.isAuthenticated()) {
         loggedIn = true;
         return next();
     }
-
     // if they aren't redirect them to the login page
     res.redirect('/login');
+}
+
+// save previous returnTo so user can seamlessly join back
+function redirection(req, res, next) {
+    req.session.returnTo = req.originalUrl; 
+    return next();
 }
 
 // show the login form
@@ -103,6 +108,10 @@ app.post('/login', login_validation, passport.authenticate('local-login', {
     failureRedirect : '/login', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
 }));
+
+// app.get('/hidden', isLoggedIn, function(req, res) {
+//     res.redirect(req.session.returnTo);
+// });
 
 function login_validation(req, res, next){
     req.checkBody('username', 'Username is Required').notEmpty();
@@ -125,7 +134,7 @@ app.get("/signup", function(req, res) {
 
 // process the signup form
 app.post('/signup', signup_validation, passport.authenticate('local-signup', {
-    successRedirect : '/profile', // redirect to the secure profile section
+    successReturnToOrRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/signup', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
 }));
@@ -147,7 +156,7 @@ function signup_validation(req, res, next){
 
 
 // =====================================
-// PROFILE SECTION =====================
+// PROFILE APIS ========================
 // =====================================
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
@@ -159,13 +168,16 @@ app.get('/profile', isLoggedIn, function(req, res) {
 });
 
 app.get('/profile/tasks', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksByRequester(req.user.username);
-    promise.then(results => {
+    var promise = executer.getTasksByRequester(req.user.username)
+    .then(results => {
         var tasks = results.rows;
-        res.render("user_projects", {
+        res.render("user_tasks", {
             loggedIn: loggedIn, 
             tasks: tasks
         });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
@@ -183,40 +195,56 @@ app.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
-
 // =====================================
-// MAIN APIs ===========================
+// TASKS APIs ==========================
 // =====================================
-app.get("/tasks/", function(req, res) {
-    var promise = executer.getAllTasks();
-    promise.then(results => {
+app.get("/tasks/", redirection, function(req, res) {
+    var promise = executer.getAllTasks()
+    .then(results => {
         var tasks = results.rows;
         res.render("tasks", { tasks: tasks });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
-app.get("/tasks/new", function(req, res) {
-    var promise = executer.getCategories();
-    promise.then(results => {
+app.get("/tasks/new", isLoggedIn, function(req, res) {
+    var promise = executer.getCategories()
+    .then(results => {
         var categories = results.rows;
-        res.render("new", { categories: categories });
+        res.render("new_task", { categories: categories });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
-app.get("/categories/tasks/:id", function(req, res) {
-    let redirectUrl = '/tasks/' + req.params.id;
-    res.redirect(301, redirectUrl);
-})
-
-app.get("/tasks/:id", function(req, res) {
-    var promise = executer.getTaskById(req.params['id']);
-    promise.then(results => {
+app.get("/tasks/:id", redirection, function(req, res) {
+    var promise = executer.getTaskById(req.params['id'])
+    .then(results => {
         var task = results.rows[0];
-        res.render("task_page", { task: task });
-    });
+        promise = executer.getOffersByTaskId(task.id)
+        .then(results => {
+            var offers = results.rows;
+            if (loggedIn) {
+                promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
+                .then(results => {
+                    var offerByUser = results.rows[0];
+                    res.render("task_page", { task: task, offers: offers, offerByUser: offerByUser });
+                })
+            } else {
+                res.render("task_page", { task: task, offers: offers});
+            }
+        })
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    })
+    
 })
 
-app.post("/tasks", function(req, res) {
+app.post("/tasks", isLoggedIn, function(req, res) {
     // get data from form and add to tasks array
     var title = req.body.title;
     var description = req.body.description;
@@ -227,28 +255,113 @@ app.post("/tasks", function(req, res) {
     var end_dt = req.body.end_dt;
     var price = req.body.price;
 
-    var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price);
-    promise.then(function() {
+    var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price)
+    .then(function() {
         res.redirect('/profile/tasks'); // to user's projects page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
-app.get("/categories", function(req, res) {
-    var promise = executer.getCategories();
-    promise.then(results => {
+app.get("/edit/task/:id", isLoggedIn, function(req, res) {
+    var promise = executer.getTaskById(req.params['id'])
+    .then(results => {
+        var task = results.rows[0];
+        promise = executer.getCategories()
+        .then(results => {
+            var categories = results.rows;
+            res.render("edit_task", { task: task, categories: categories });
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+})
+
+app.post("/edit/task/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.id;
+    var title = req.body.title;
+    var description = req.body.description;
+    var category_id = req.body.category_id;
+    var location = req.body.location;
+    var start_dt = req.body.start_dt;
+    var end_dt = req.body.end_dt;
+    var price = req.body.price;
+
+    var promise = executer.updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price)
+    .then(function() {
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // to updated task page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+})
+
+// =====================================
+// OFFER APIs ==========================
+// =====================================
+app.post("/new/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.params['id'];
+    var price = req.body.price;
+    var assignee = res.locals.currentUser.username;
+    var offered_dt = new Date().toISOString();
+    
+    var promise = executer.addOffer(task_id, price, assignee, offered_dt)
+    .then(function() {
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to task page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.params['id'];
+    var assignee = res.locals.currentUser.username;
+    var newPrice = req.body.price;
+    var newOffered_dt = new Date().toISOString();
+    
+    var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
+    .then(function() {
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to task page
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+// =====================================
+// CATEGORIES APIs =====================
+// =====================================
+app.get("/categories", redirection, function(req, res) {
+    var promise = executer.getCategories()
+    .then(results => {
         var categories = results.rows;
         res.render("categories", { categories: categories });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
-app.get("/categories/:id", function(req, res) {
-    var promise = executer.getTasksByCategoryId(req.params['id']);
-    promise.then(results => {
+app.get("/categories/:id", redirection, function(req, res) {
+    var promise = executer.getTasksByCategoryId(req.params['id'])
+    .then(results => {
         var tasks = results.rows;
         res.render("tasks", { tasks: tasks });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
 
+// =====================================
+// MISC APIs ===========================
+// =====================================
 //404
 app.use(function(req, res, next){
     res.status(404).render('404', { title: "Sorry, page not found" });
