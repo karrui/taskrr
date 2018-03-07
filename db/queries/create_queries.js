@@ -52,7 +52,9 @@ exports.TABLE_TASK = `
 	    end_dt		     TIMESTAMP		    NOT NULL,
 	    price			 MONEY		       	NOT NULL,
 	    status_task	     VARCHAR(8)	       	DEFAULT 'open' NOT NULL		REFERENCES task_status (status) ON UPDATE CASCADE,
-	    assignee		 VARCHAR(25)		DEFAULT NULL 				REFERENCES person (username) ON DELETE SET NULL
+	    assignee		 VARCHAR(25)		DEFAULT NULL 				REFERENCES person (username) ON DELETE SET NULL,
+        CHECK (start_dt <= end_dt),
+        CHECK (price >= 0)
     )
     ;
 `
@@ -71,7 +73,9 @@ exports.TABLE_OFFER = `
 	    price			 MONEY			    NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
-	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE
+	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE,
+        UNIQUE (task_id, assignee),
+        CHECK (price >= 0)
     )
     ;
 `
