@@ -72,6 +72,35 @@ exports.TASK_BY_ID = `
         AND view_all_task.id = $1
 ;
 `
+
+exports.TASK_WITH_OFFER_BY_OFFER_ASSIGNEE = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.category_name,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price AS task_price,
+        view_all_task.status_task,
+        view_all_task.assignee AS task_assignee,
+        view_all_offer.id AS offer_id,
+        view_all_offer.price AS offer_price,
+        view_all_offer.assignee AS offer_assignee,
+        view_all_offer.offered_dt,
+        view_all_offer.status_offer
+    FROM view_all_task
+    INNER JOIN view_all_offer
+        ON view_all_offer.task_id = view_all_task.id
+    WHERE 1=1
+        AND view_all_offer.assignee = $1
+    ;
+
+`
+
 exports.OFFERS_BY_TASKID = `
     SELECT
         view_all_offer.id,

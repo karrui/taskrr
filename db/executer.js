@@ -165,6 +165,11 @@ exports.getOffersByAssigneeAndTaskId = async function getOffersByAssigneeAndTask
     return execute(queries.get.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
 }
 
+exports.getTasksWithOffersByOfferAssignee = async function getTasksWithOffersByOfferAssignee(offer_assignee) {
+    console.log('Attempting to get tasks and offers by assignee: %s', offer_assignee);
+    return execute(queries.get.TASK_WITH_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
+}
+
 exports.getTasksByCategoryId = async function getTasksByCategoryId(category_id) {
     console.log('Attempting to get tasks by category_id: %s', category_id);
     return execute(queries.get.TASK_BY_CATEGORY_ID, [category_id]);
