@@ -254,6 +254,12 @@ exports.FUNCTION_INSERT_ONE_OFFER = `
                 _offered_dt
             )
             ;
+            UPDATE task
+            SET
+                status_task = 'offered'
+            WHERE 1=1
+                AND task_id = _task_id
+            ;
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE
