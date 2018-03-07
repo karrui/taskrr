@@ -113,6 +113,7 @@ exports.VIEW_ALL_TASK = `
             task.title,
             task.description,
             task.category_id,
+            category.name as category_name,
             task.location,
             task.requester,
             task.start_dt,
@@ -121,6 +122,8 @@ exports.VIEW_ALL_TASK = `
             task.status_task,
             task.assignee
 	    FROM task
+        INNER JOIN category
+            ON category.id = task.category_id
     )
     ;
 `
