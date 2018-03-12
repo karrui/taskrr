@@ -181,10 +181,62 @@ app.get('/profile/tasks', isLoggedIn, function(req, res) {
     });
 });
 
+app.get('/profile/tasks/open', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOpenStatusByRequester(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/tasks/offered', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOfferedStatusByRequester(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithAcceptedStatusByRequester(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/offers', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
 app.get('/profile/tasks/:id', isLoggedIn, function(req, res) {
     let redirectUrl = '/tasks/' + req.params.id;
     res.redirect(301, redirectUrl);
-})
+});
 
 // =====================================
 // LOGOUT ==============================

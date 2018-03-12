@@ -6,7 +6,7 @@
                 < Back</a> | You are currently at:
                     <a class="breadcrumb-item" href="/">Home</a> >
                     <a class="breadcrumb-item" href="/categories">Categories</a> >
-                    <a class="breadcrumb-item" href="/tasks">Tasks</a> >
+                    <a class="breadcrumb-item" href="/categories/<%= task.category_id %>"><%= task.category_name %></a> >
                     <span class="breadcrumb-item active">
                         <%= task.title %>
                     </span>
@@ -16,6 +16,7 @@
             <div class="col-md-6" id="task">
                 <div class="row">
                     <div class="col-md-12">
+                        <h3><a href="/categories/<%= task.category_id %>"><%= task.category_name %></a></h3>
                         <h1>
                             <%= task.title %>
                         </h1>
