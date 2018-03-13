@@ -1,4 +1,5 @@
 <% include partials/header %>
+<link href="/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
 
 <div class="container">
     <% if (currentUser.username != task.requester)  { %>
@@ -21,18 +22,21 @@
     <div class="row">
         <h1 style="text-align: center;">Edit task</h1>
         <div style="width:40%; margin: 0 auto">
+             <!-- show any errors from invalid query -->
+             <% if (typeof message != 'undefined' && message.length > 0) { %>
+                <div class="alert alert-danger"><%= message %></div>
+            <% } %>
                 <form action="/edit/task/<%=task.id%>" method="POST">
                 
                 <div class="form-group">
-                    <input class="form-control" type="text" name="title" value="<%=task.title%>" aria-describedby="task-title">
+                    <input class="form-control" type="text" name="title" value="<%=task.title%>" aria-describedby="task-title" required="true">
                     <input class="form-control" type="hidden" name="id" value="<%=task.id%>" readonly>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control" rows="5" name="description"><%=task.description%></textarea>
+                    <textarea class="form-control" rows="5" name="description" required="true"><%=task.description%></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Category: </label>
-                    <select name="category_id">
+                    <select class="form-control" name="category_id" required="true">
                         <% categories.forEach(function(category) { %>
                             <% if (category.id == task.category_id) { %>
                                 <option selected value="<%= category.id %>"><%= category.name %></option>
@@ -42,21 +46,67 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="location" value="<%=task.location%>">
+                    <input type="text" class="form-control" name="location" value="<%=task.location%>" required="true">
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="start_dt" value="<%=task.start_dt%>" id="datetimepicker">
-                    <input type="text" class="form-control" name="end_dt" value="<%=task.end_dt%>" id="datetimepicker">
+                    <div class='input-group date' id='datetimepicker_start_grp'>
+                        <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="<%=task.start_dt.toLocaleString()%>" value="<%=task.start_dt.toLocaleString()%>" required="true">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div class='input-group date' id='datetimepicker_end_grp'>
+                        <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="<%=task.end_dt.toLocaleString()%>" value="<%=task.end_dt.toLocaleString()%>" required="true">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="price" value="<%=task.price%>">
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="text" name="price" class="form-control" value="<%= task.price.substring(1) %>" required="true">
+                    </div>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-warning btn-block">Edit!</button>
                 </div>
             </form>
-            <a href="/tasks">Go back</a>
+            <% if (typeof prevUrl != 'undefined') { %>
+                <a href="<%=prevUrl%>">Go back</a>
+            <% } %>
         </div>
+        <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker_start_grp').datetimepicker({
+                    minDate: moment(), 
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#datetimepicker_start').datetimepicker({
+                    minDate: moment(), 
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#datetimepicker_end_grp').datetimepicker({
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#datetimepicker_end').datetimepicker({
+                    useCurrent: false //Important! See issue #1075
+                });
+                $("#datetimepicker_start").on("dp.change", function (e) {
+                    $('#datetimepicker_end').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker_end").on("dp.change", function (e) {
+                    $('#datetimepicker_start').data("DateTimePicker").maxDate(e.date);
+                });
+                $("#datetimepicker_start_grp").on("dp.change", function (e) {
+                    $('#datetimepicker_end_grp').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker_end_grp").on("dp.change", function (e) {
+                    $('#datetimepicker_start_grp').data("DateTimePicker").maxDate(e.date);
+                });
+            });
+        </script>
     </div>
     <% } %>
 </div>

@@ -52,13 +52,13 @@
                     <div class="col-md-12">
                         <h3>Starts:</h3>
                         <p class="start_dt">
-                            <%= new Date(task.start_dt + 'Z') %>
+                            <%= new Date(task.start_dt) %>
                         </p>
                     </div>
                     <div class="col-md-12">
                         <h3>Ends:</h3>
                         <p class="end_dt">
-                            <%= new Date(task.end_dt + 'Z') %>
+                            <%= new Date(task.end_dt) %>
                         </p>
                     </div>
                 </div>
@@ -86,6 +86,11 @@
                         </p>
                     </div>
                 </div>
+
+                 <!-- show any error messages -->
+                <% if (typeof message != 'undefined' && message.length > 0) { %>
+                    <div class="alert alert-danger"><%= message %></div>
+                <% } %>
 
                 <% if (loggedIn) { %>
                     <% if (currentUser.username == task.requester) { %>
