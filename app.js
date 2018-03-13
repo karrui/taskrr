@@ -181,10 +181,62 @@ app.get('/profile/tasks', isLoggedIn, function(req, res) {
     });
 });
 
+app.get('/profile/tasks/open', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOpenStatusByRequester(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/tasks/offered', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOfferedStatusByRequester(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithAcceptedStatusByRequester(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/offers', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
 app.get('/profile/tasks/:id', isLoggedIn, function(req, res) {
     let redirectUrl = '/tasks/' + req.params.id;
     res.redirect(301, redirectUrl);
-})
+});
 
 // =====================================
 // LOGOUT ==============================
@@ -213,7 +265,7 @@ app.get("/tasks/new", isLoggedIn, function(req, res) {
     var promise = executer.getCategories()
     .then(results => {
         var categories = results.rows;
-        res.render("new_task", { categories: categories });
+        res.render("new_task", { categories: categories, message: req.flash('message') });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -231,7 +283,10 @@ app.get("/tasks/:id", redirection, function(req, res) {
                 promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
                 .then(results => {
                     var offerByUser = results.rows[0];
-                    res.render("task_page", { task: task, offers: offers, offerByUser: offerByUser });
+                    res.render("task_page", {   task: task, 
+                                                offers: offers, 
+                                                offerByUser: offerByUser,
+                                                message: req.flash('message')});
                 })
             } else {
                 res.render("task_page", { task: task, offers: offers});
@@ -260,7 +315,9 @@ app.post("/tasks", isLoggedIn, function(req, res) {
         res.redirect('/profile/tasks'); // to user's projects page
     })
     .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        req.flash('message', err.message);
+        var redirectUrl = "/tasks/new";
+        res.redirect(redirectUrl); // to updated task page
     });
 });
 
@@ -271,7 +328,7 @@ app.get("/edit/task/:id", isLoggedIn, function(req, res) {
         promise = executer.getCategories()
         .then(results => {
             var categories = results.rows;
-            res.render("edit_task", { task: task, categories: categories });
+            res.render("edit_task", { task: task, categories: categories, message: req.flash('message') });
         });
     })
     .catch(err => {
@@ -295,7 +352,9 @@ app.post("/edit/task/:id", isLoggedIn, function(req, res) {
         res.redirect(redirectUrl); // to updated task page
     })
     .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        req.flash('message', err.message)
+        var redirectUrl = "/edit/task/" + task_id;
+        res.redirect(redirectUrl); // to updated task page
     });
 })
 
@@ -314,7 +373,9 @@ app.post("/new/offer/:id", isLoggedIn, function(req, res) {
         res.redirect(redirectUrl); // back to task page
     })
     .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // to updated task page
     });
 });
 
@@ -330,7 +391,9 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
         res.redirect(redirectUrl); // back to task page
     })
     .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
     });
 });
 

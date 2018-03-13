@@ -29,6 +29,7 @@ async function execute(query, args) {
             return result;
         }).catch(err => {
             console.log("FAIL: %s \n Reason: %s %s", query.substring(0, 40), err.name, err.message);
+            throw err;
         });
     } finally {
         client.release();
@@ -163,6 +164,11 @@ exports.getOffersByTaskId = async function getOffersByTaskId(task_id) {
 exports.getOffersByAssigneeAndTaskId = async function getOffersByAssigneeAndTaskId(assignee, task_id) {
     console.log('Attempting to get offer by assignee: %s and task_id: %s', assignee, task_id);
     return execute(queries.get.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
+}
+
+exports.getTasksWithOffersByOfferAssignee = async function getTasksWithOffersByOfferAssignee(offer_assignee) {
+    console.log('Attempting to get tasks and offers by assignee: %s', offer_assignee);
+    return execute(queries.get.TASK_WITH_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
 }
 
 exports.getTasksByCategoryId = async function getTasksByCategoryId(category_id) {

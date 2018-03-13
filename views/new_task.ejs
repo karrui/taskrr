@@ -1,41 +1,91 @@
 <% include partials/header %>
+<link href="/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
 
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Create a new task</h1>
         <div style="width:40%; margin: 0 auto">
+            <!-- show any errors from invalid query -->
+            <% if (typeof message != 'undefined' && message.length > 0) { %>
+                <div class="alert alert-danger"><%= message %></div>
+            <% } %>
                 <form action="/tasks" method="POST">
                 
                 <div class="form-group">
-                    <input class="form-control" type="text" name="title" placeholder="title" aria-describedby="task-title">
+                    <input class="form-control" type="text" name="title" placeholder="title" aria-describedby="task-title" required="true">
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control" rows="5" name="description" placeholder="Give a brief description of what task this is"></textarea>
+                    <textarea class="form-control" rows="5" name="description" placeholder="Give a brief description of what task this is" required="true"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Category: </label>
-                    <select name="category_id">
+                    <select class="form-control" name="category_id" required>
+                        <option value="" selected disabled>Choose a category</option>
                         <% categories.forEach(function(category) { %>
                         <option value="<%= category.id %>"><%= category.name %></option>
                         <% }); %>
                     </select>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="location" placeholder="location">
+                    <input type="text" class="form-control" name="location" placeholder="location" required="true">
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="start_dt" value="2012-05-15 21:05" id="datetimepicker">
-                    <input type="text" class="form-control" name="end_dt" value="2012-05-15 22:05" id="datetimepicker">
+                    <div class='input-group date' id='datetimepicker_start_grp'>
+                        <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="Enter start date and time" required="true">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div class='input-group date' id='datetimepicker_end_grp'>
+                        <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="Enter end date and time" required="true">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                 </div>
+    
                 <div class="form-group">
-                    <input type="text" class="form-control" name="price" placeholder="price">
-                </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" name="price" class="form-control" placeholder="Enter your suggested price" required="true">
+                        </div>
+                    </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-default btn-block">Submit!</button>
                 </div>
             </form>
             <a href="/tasks">Go back</a>
         </div>
+        <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker_start_grp').datetimepicker({
+                    minDate: moment(), 
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#datetimepicker_start').datetimepicker({
+                    minDate: moment(), 
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#datetimepicker_end_grp').datetimepicker({
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#datetimepicker_end').datetimepicker({
+                    useCurrent: false //Important! See issue #1075
+                });
+                $("#datetimepicker_start").on("dp.change", function (e) {
+                    $('#datetimepicker_end').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker_end").on("dp.change", function (e) {
+                    $('#datetimepicker_start').data("DateTimePicker").maxDate(e.date);
+                });
+                $("#datetimepicker_start_grp").on("dp.change", function (e) {
+                    $('#datetimepicker_end_grp').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker_end_grp").on("dp.change", function (e) {
+                    $('#datetimepicker_start_grp').data("DateTimePicker").maxDate(e.date);
+                });
+            });
+        </script>
     </div>
 </div>
 <% include partials/footer %>

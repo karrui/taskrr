@@ -1,10 +1,17 @@
 <% include ./partials/header %> 
 
 <div class="container">
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+        You are currently at:
+        <a class="breadcrumb-item" href="/">Home</a> >
+        <span class="breadcrumb-item active"> Profile</span>
+    </nav>
 
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/profile/tasks" class="btn btn-primary btn-sm">Your tasks</a>
+        <a href="/profile/tasks" class="btn btn-info btn-sm">Your tasks</a>
+        <a href="/profile/offers" class="btn btn-info btn-sm">Your offers</a>
         <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
         <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
