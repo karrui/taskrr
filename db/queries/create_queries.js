@@ -2,8 +2,7 @@
 // imagine all calls to these methods to be create.[REFERENCE],
 // i.e: create.EXAMPLE_TABLE
 
-/*
-    List of contents:
+/* TABLE OF CONTENTS
     1. Table
     2. View
     3. Functions
