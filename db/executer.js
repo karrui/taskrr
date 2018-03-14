@@ -37,6 +37,24 @@ async function execute(query, args) {
     return promise;
 }
 
+/* TABLE OF CONTENTS
+
+    1. Create
+    2. Prepare sample data
+    3. Insert
+    4. Update
+    5. Delete
+    6. Select
+    ├── 6.1. User
+    ├── 6.2. Category
+    ├── 6.3. Task
+    ├── 6.4. Offer
+
+*/
+
+//==================================================================================================================================================
+// 1. Create
+
 exports.createAllTables = async function createAllTables() {
     console.log("Creating tables.");
     execute(queries.create.TABLE_PERSON);
@@ -75,6 +93,9 @@ exports.createAllIndexes = async function createAllIndexes() {
     execute(queries.create.INDEX_TABLE_TASK);
     execute(queries.create.INDEX_TABLE_OFFER);
 }
+
+//==================================================================================================================================================
+// 2. Prepare sample data
 
 exports.populateTasks = async function populateTasks() {
     let csvStream = csv.fromPath('./db/csv/tasks.csv', {headers: true})
@@ -135,36 +156,77 @@ exports.dropTables = async function dropTables() {
     execute(queries.drop.VIEW_ALL_OFFER);
 }
 
+//==================================================================================================================================================
+// 3. Insert
 
 exports.addTask = async function addTask(title, description, category_id, location, requester, start_dt, end_dt, price) {
     console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
     return execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
 }
 
+exports.addUser = async function addUser(username, password, email, created_dt) {
+    console.log('Attempting to add user: %s', username);
+    return execute(queries.insert.ONE_PERSON, [username, password, email, created_dt]);
+}
+
+exports.addOffer = async function addOffer(task_id, price, assignee, offered_dt) {
+    console.log('Attempting to add offer of task id: %s', task_id);
+    return execute(queries.insert.ONE_OFFER, [task_id, price, assignee, offered_dt]);
+}
+
+//==================================================================================================================================================
+// 4. Update
+
+exports.updateOfferByAssigneeAndTaskId = async function updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt) {
+    console.log('Attempting to update offer by assignee: %s and task_id: %s', assignee, task_id);
+    return execute(queries.update.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id, newPrice, newOffered_dt]);
+}
+
+exports.updateTaskById = async function updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price) {
+    console.log('Attempting to update task with task_id: %s', task_id);
+    return execute(queries.update.TASK_BY_ID, [task_id, title, description, category_id, location, start_dt, end_dt, price]);
+}
+
+//==================================================================================================================================================
+// 5. Delete
+
+// **TO DO: Need to change the parameters to delete 1 task
 exports.deleteTask = async function deleteTask(title, description) {
     console.log('Attemping to delete task: \"%s\"', title);
     return execute(queries.delete.ONE_TASK, [title, description]);
 }
+
+//==================================================================================================================================================
+// 6. Select
+
+// ======================================================
+// 6.1. User
+
+exports.getUserById = async function getUserById(id) {
+    console.log('Attempting to find user by id: ' + id);
+    return execute(queries.get.USER_BY_ID, [id]);
+}
+
+exports.getUserByName = async function getUserByName(username) {
+    console.log('Attempting to find user by name: ' + username);
+    return execute(queries.get.USER_BY_NAME, [username]);
+}
+// ======================================================
+// 6.2. Category
 
 exports.getCategories = async function getCategories() {
     console.log('Attempting to get all categories');
     return execute(queries.get.ALL_CATEGORIES);
 }
 
+// ======================================================
+// 6.3. Task
+
 exports.getAllTasks = async function getAllTasks() {
     console.log('Attempting to get all tasks');
     return execute(queries.get.ALL_TASKS);
 }
 
-exports.getOffersByTaskId = async function getOffersByTaskId(task_id) {
-    console.log('Attempting to get offers by its task_id: %s', task_id);
-    return execute(queries.get.OFFERS_BY_TASKID, [task_id]);
-}
-
-exports.getOffersByAssigneeAndTaskId = async function getOffersByAssigneeAndTaskId(assignee, task_id) {
-    console.log('Attempting to get offer by assignee: %s and task_id: %s', assignee, task_id);
-    return execute(queries.get.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
-}
 
 exports.getTasksWithOffersByOfferAssignee = async function getTasksWithOffersByOfferAssignee(offer_assignee) {
     console.log('Attempting to get tasks and offers by assignee: %s', offer_assignee);
@@ -186,32 +248,30 @@ exports.getTasksByRequester = async function getTasksByRequester(requester) {
     return execute(queries.get.TASK_BY_REQUESTER, [requester]);
 }
 
-exports.addUser = async function addUser(username, password, email, created_dt) {
-    console.log('Attempting to add user: %s', username);
-    return execute(queries.insert.ONE_PERSON, [username, password, email, created_dt]);
+exports.getTasksWithOfferedStatusByRequester = async function getTasksWithOfferedStatusByRequester(requester) {
+    console.log('Attempting to get offered task by its requester: %s', requester);
+    return execute(queries.get.TASK_WITH_OFFERED_STATUS_BY_REQUESTER, [requester]);
 }
 
-exports.addOffer = async function addOffer(task_id, price, assignee, offered_dt) {
-    console.log('Attempting to add offer of task id: %s', task_id);
-    return execute(queries.insert.ONE_OFFER, [task_id, price, assignee, offered_dt]);
+exports.getTasksWithAcceptedStatusByRequester = async function getTasksWithAcceptedStatusByRequester(requester) {
+    console.log('Attempting to get accepted task by its requester: %s', requester);
+    return execute(queries.get.TASK_WITH_ACCEPTED_STATUS_BY_REQUESTER, [requester]);
 }
 
-exports.findUserById = async function findUserById(id) {
-    console.log('Attempting to find user by id: ' + id);
-    return execute(queries.get.USER_BY_ID, [id]);
+exports.getTasksWithOpenStatusByRequester = async function getTasksWithOpenStatusByRequester(requester) {
+    console.log('Attempting to get open task by its requester: %s', requester);
+    return execute(queries.get.TASK_WITH_OPEN_STATUS_BY_REQUESTER, [requester]);
 }
 
-exports.findUserByName = async function findUserByName(username) {
-    console.log('Attempting to find user by name: ' + username);
-    return execute(queries.get.USER_BY_NAME, [username]);
+// ======================================================
+// 6.4. Offer
+
+exports.getOffersByTaskId = async function getOffersByTaskId(task_id) {
+    console.log('Attempting to get offers by its task_id: %s', task_id);
+    return execute(queries.get.OFFERS_BY_TASKID, [task_id]);
 }
 
-exports.updateOfferByAssigneeAndTaskId = async function updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt) {
-    console.log('Attempting to update offer by assignee: %s and task_id: %s', assignee, task_id);
-    return execute(queries.update.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id, newPrice, newOffered_dt]);
-}
-
-exports.updateTaskById = async function updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price) {
-    console.log('Attempting to update task with task_id: %s', task_id);
-    return execute(queries.update.TASK_BY_ID, [task_id, title, description, category_id, location, start_dt, end_dt, price]);
+exports.getOffersByAssigneeAndTaskId = async function getOffersByAssigneeAndTaskId(assignee, task_id) {
+    console.log('Attempting to get offer by assignee: %s and task_id: %s', assignee, task_id);
+    return execute(queries.get.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
 }
