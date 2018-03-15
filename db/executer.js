@@ -82,6 +82,8 @@ exports.createAllFunctions = async function createAllFunctions() {
     execute(queries.create.FUNCTION_INSERT_ONE_OFFER);
     execute(queries.create.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID);
     execute(queries.create.FUNCTION_UPDATE_TASK_BY_ID);
+    execute(queries.create.FUNCTION_UPDATE_TASK_UPON_ACCEPTING_OFFER_BY_TASK_ID);
+    execute(queries.create.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID);
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
@@ -185,6 +187,16 @@ exports.updateOfferByAssigneeAndTaskId = async function updateOfferByAssigneeAnd
 exports.updateTaskById = async function updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price) {
     console.log('Attempting to update task with task_id: %s', task_id);
     return execute(queries.update.TASK_BY_ID, [task_id, title, description, category_id, location, start_dt, end_dt, price]);
+}
+
+exports.updateTaskUponAcceptingOfferByTaskID = async function updateTaskUponAcceptingOfferByTaskID(task_id, assignee, offer_price) {
+    console.log('Attempting to update task status to accepted with task_id: %s', task_id);
+    return execute(queries.update.TASK_UPON_ACCEPTING_OFFER_BY_TASK_ID, [task_id, assignee, offer_price]);
+}
+
+exports.updateTaskUponRejectingOfferByTaskID = async function updateTaskUponRejectingOfferByTaskID(task_id, offer_id) {
+    console.log('Attempting to update offer status to rejected with task_id: %s', task_id);
+    return execute(queries.update.TASK_UPON_REJECTING_OFFER_BY_TASK_ID, [task_id, offer_id]);
 }
 
 //==================================================================================================================================================
