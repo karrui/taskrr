@@ -56,7 +56,7 @@
                     <p>Start: <%= task.start_dt %></p>
                     <p>End: <%= task.end_dt %></p>
                     <p>Status: <%= task.status_task %></p>
-                    <p>Starting offer: <%= task.price %></p>
+                    <p>Starting offer: $<%= task.price %></p>
                     <% if (loggedIn && currentUser.username == task.requester) { %>
                         <form action="/delete/task/<%=task.id%>" method="POST">
                         <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
