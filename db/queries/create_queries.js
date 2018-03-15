@@ -428,6 +428,13 @@ exports.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID = `
     RETURNS void AS
     $BODY$
         BEGIN
+            UPDATE offer
+            SET
+                status_task = 'rejected'
+            WHERE 1=1
+                AND id = _offer_id
+            ;
+
             UPDATE task
             SET
                 status_task = 'open'
@@ -440,13 +447,6 @@ exports.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID = `
                         AND task_id = _task_id
                         AND status_offer IS DISTINCT FROM 'rejected'
                 )
-            ;
-
-            UPDATE offer
-            SET
-                status_task = 'rejected'
-            WHERE 1=1
-                AND id = _offer_id
             ;
         END;
     $BODY$
