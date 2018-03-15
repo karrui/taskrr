@@ -8,3 +8,7 @@ exports.ONE_POPULATED_TASK = `
 exports.ONE_TASK = `
     DELETE FROM task
     WHERE id = $1`
+
+exports.ONE_POPULATED_PERSON = `
+    DELETE FROM person
+    WHERE username = $1`

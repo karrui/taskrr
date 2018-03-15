@@ -7,8 +7,16 @@ exports.TABLE_OFFER = `
 exports.TABLE_TASK = `
     DROP TABLE IF EXISTS task CASCADE`;
 
+
+exports.TABLE_CATEGORY = `
+    DROP TABLE IF EXISTS category CASCADE`;
+
 exports.TABLE_TASK_STATUS = `
     DROP TABLE IF EXISTS task_status CASCADE`;
+
+exports.TABLE_OFFER_STATUS = `
+    DROP TABLE IF EXISTS offer_status CASCADE`;
+
 
 exports.VIEW_PERSON_ALL_INFO = `
     DROP VIEW IF EXISTS view_person_all_info`;

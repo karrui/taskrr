@@ -52,11 +52,11 @@ exports.TABLE_TASK = `
 	    requester		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    start_dt		 TIMESTAMP		    NOT NULL,
 	    end_dt		     TIMESTAMP		    NOT NULL,
-	    price			 MONEY		       	NOT NULL,
+	    price			 NUMERIC(6, 2)		       	NOT NULL,
 	    status_task	     VARCHAR(8)	       	DEFAULT 'open' NOT NULL		REFERENCES task_status (status) ON UPDATE CASCADE,
 	    assignee		 VARCHAR(25)		DEFAULT NULL 				REFERENCES person (username) ON DELETE SET NULL,
         CHECK (start_dt <= end_dt),
-        CHECK (price >= 0)
+        CHECK (price >= 0 and price < 10000)
     )
     ;
 `
@@ -71,13 +71,13 @@ exports.TABLE_OFFER_STATUS = `
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
 	    id		         SERIAL		      	PRIMARY KEY,
-	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE NO ACTION,
-	    price			 MONEY			    NOT NULL,
+	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
+	    price			 NUMERIC(6, 2)			    NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
 	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE,
         UNIQUE (task_id, assignee),
-        CHECK (price >= 0)
+        CHECK (price >= 0 and price < 10000)
     )
     ;
 `
@@ -221,7 +221,7 @@ exports.FUNCTION_INSERT_ONE_TASK = `
         _requester      VARCHAR(25),
         _start_dt       TIMESTAMP,
         _end_dt         TIMESTAMP,
-        _price          MONEY
+        _price          NUMERIC(6, 2)
     )
     RETURNS void AS
     $BODY$
@@ -290,7 +290,7 @@ exports.FUNCTION_INSERT_ONE_PERSON = `
 exports.FUNCTION_INSERT_ONE_OFFER = `
     CREATE OR REPLACE FUNCTION insert_one_offer (
         _task_id        INTEGER,
-        _price          MONEY,
+        _price          NUMERIC(6, 2),
         _assignee       VARCHAR(25),
         _offered_dt     TIMESTAMP
     )
@@ -331,7 +331,7 @@ exports.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID = `
     CREATE OR REPLACE FUNCTION update_offer_by_assignee_taskid (
         _assignee       VARCHAR(25),
         _task_id        INTEGER,
-        _price          MONEY,
+        _price          NUMERIC(6, 2),
         _offered_dt     TIMESTAMP
     )
     RETURNS void AS
@@ -361,7 +361,7 @@ exports.FUNCTION_UPDATE_TASK_BY_ID = `
         _location       TEXT,
         _start_dt       TIMESTAMP,
         _end_dt         TIMESTAMP,
-        _price          MONEY
+        _price          NUMERIC(6, 2)
     )
     RETURNS void AS
     $BODY$
@@ -389,7 +389,7 @@ exports.FUNCTION_UPDATE_TASK_UPON_ACCEPTING_OFFER_BY_TASK_ID = `
     CREATE OR REPLACE FUNCTION update_task_upon_accepting_offer_by_task_id (
         _task_id             INTEGER,
         _assignee            VARCHAR(25),
-        _offer_price         MONEY
+        _offer_price         NUMERIC(6, 2)
     )
     RETURNS void AS
     $BODY$

@@ -28,7 +28,7 @@ async function execute(query, args) {
             // console.log("DONE: %s \n Returned %d rows.", query.substring(0, 40), result.rowCount);
             return result;
         }).catch(err => {
-            console.log("FAIL: %s \n Reason: %s %s", query.substring(0, 40), err.name, err.message);
+            console.log("FAIL: %s \n %s \n Reason: %s %s", query.substring(0, 40), args, err.name, err.message);
             throw err;
         });
     } finally {
@@ -113,13 +113,121 @@ exports.populateTasks = async function populateTasks() {
         let end_dt = record.end_dt;
         let price = record.price;
 
-        console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
+        // console.log('Attemping to add task: \"%s\" under user \"%s\"', title, requester);
         execute(queries.insert.ONE_TASK, [title, description, category_id, location, requester, start_dt, end_dt, price]);
 
         csvStream.resume();
     })
     .on('end', function() {
         console.log('Populating tasks done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
+exports.populatePersons = async function populatePersons() {
+    let csvStream = csv.fromPath('./db/csv/persons.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let username = record.username;
+        let password = record.password;
+        let email = record.email;
+        let created_dt = record.created_dt;
+
+        // console.log('Attemping to add person: \"%s\"', username);
+        execute(queries.insert.ONE_PERSON, [username, password, email, created_dt])
+
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Populating persons done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
+exports.populateCategories = async function populateCategories() {
+    let csvStream = csv.fromPath('./db/csv/categories.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let id = record.id;
+        let name = record.name;
+
+        // console.log('Attemping to add category: \"%s\"', name);
+        execute(queries.insert.ONE_CATEGORY, [id, name]);
+
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Populating categories done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
+exports.populateOfferStatuses = async function populateOfferStatuses() {
+    let csvStream = csv.fromPath('./db/csv/offer_status.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let status = record.status;
+        
+        // console.log('Attemping to add offer status: \"%s\"', status);
+        execute(queries.insert.ONE_OFFER_STATUS, [status]);
+
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Populating offer_status done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
+exports.populateOffers = async function populateOffers() {
+    let csvStream = csv.fromPath('./db/csv/offers.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let task_id = record.task_id;
+        let price = record.price;
+        let assignee = record.assignee;
+        let offered_dt = record.offered_dt;
+        let status_offer = record.status_offer;
+        
+        // console.log('Attemping to add offer: \"%s\"', id);
+        execute(queries.insert.ONE_POPULATED_OFFER, [task_id, price, assignee, offered_dt, status_offer]);
+
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Populating offers done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
+exports.populateTaskStatuses = async function populateTaskStatuses() {
+    let csvStream = csv.fromPath('./db/csv/task_status.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let status = record.status;
+        
+        // console.log('Attemping to add task status: \"%s\"', status);
+        execute(queries.insert.ONE_TASK_STATUS, [status]);
+
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Populating task_status done!');
     })
     .on('error', function(err) {
         console.log(err);
@@ -134,7 +242,7 @@ exports.deletePopulatedTasks = async function deletePopulatedTasks() {
         let title = record.title;
         let description = record.description;
 
-        console.log('Attemping to delete task: \"%s\"', title);
+        // console.log('Attemping to delete task: \"%s\"', title);
         execute(queries.delete.ONE_POPULATED_TASK, [title, description]);
 
         csvStream.resume();
@@ -147,10 +255,33 @@ exports.deletePopulatedTasks = async function deletePopulatedTasks() {
     })
 }
 
+exports.deletePopulatedTasks = async function deletePopulatedTasks() {
+    let csvStream = csv.fromPath('./db/csv/persons.csv', {headers: true})
+    .on('data', function(record) {
+        csvStream.pause();
+
+        let username = record.username;
+
+        // console.log('Attemping to delete person: \"%s\"', username);
+        execute(queries.delete.ONE_POPULATED_PERSON, [username]);
+
+        csvStream.resume();
+    })
+    .on('end', function() {
+        console.log('Deleting populated persons done!');
+    })
+    .on('error', function(err) {
+        console.log(err);
+    })
+}
+
 exports.dropTables = async function dropTables() {
     execute(queries.drop.TABLE_PERSON);
     execute(queries.drop.TABLE_OFFER);
     execute(queries.drop.TABLE_TASK);
+    execute(queries.drop.TABLE_CATEGORY);
+    execute(queries.drop.TABLE_TASK_STATUS);
+    execute(queries.drop.TABLE_OFFER_STATUS);
     execute(queries.drop.VIEW_ALL_CATEGORY);
     execute(queries.drop.VIEW_ALL_TASK);
     execute(queries.drop.VIEW_PERSON_ALL_INFO);
@@ -205,7 +336,12 @@ exports.updateTaskUponRejectingOfferByTaskID = async function updateTaskUponReje
 // **TO DO: Need to change the parameters to delete 1 task
 exports.deleteTask = async function deleteTask(title, description) {
     console.log('Attemping to delete task: \"%s\"', title);
-    return execute(queries.delete.ONE_TASK, [title, description]);
+    return execute(queries.delete.ONE_POPULATED_TASK, [title, description]);
+}
+
+exports.deleteTaskById = async function deleteTaskById(id) {
+    console.log('Attemping to delete task by id: \"%s\"', id);
+    return execute(queries.delete.ONE_TASK, [id]);
 }
 
 //==================================================================================================================================================
