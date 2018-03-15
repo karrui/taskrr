@@ -58,16 +58,23 @@ app.use(function(req,res,next){
 // =====================================
 const executer = require('./db/executer');
 
-// Creates Tables + Views + Functions when server starts
+// executer.dropTables();
+
+// // Creates Tables + Views + Functions when server starts
 executer.createAllTables();
 executer.createAllViews();
 executer.createAllFunctions();
 executer.createAllIndexes();
 
-// executer.dropTables();
-
 // Toggle methods to populate or delete populated tasks
+// must be in this order
+// executer.populateCategories();
+// executer.populatePersons();
+// executer.populateTaskStatuses();
+// executer.populateOfferStatuses();
 // executer.populateTasks();
+// executer.populateOffers();
+
 // executer.deletePopulatedTasks();
 
 app.get("/", function(req, res) {
@@ -254,7 +261,9 @@ app.get("/tasks/", redirection, function(req, res) {
     var promise = executer.getAllTasks()
     .then(results => {
         var tasks = results.rows;
-        res.render("tasks", { tasks: tasks });
+        res.render("tasks", {   tasks: tasks,
+                                message: req.flash('message'),
+                                success: req.flash('success')});
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -321,7 +330,7 @@ app.post("/tasks", isLoggedIn, function(req, res) {
     });
 });
 
-app.get("/edit/task/:id", isLoggedIn, function(req, res) {
+app.get("/edit/task/:id", isLoggedIn, redirection, function(req, res) {
     var promise = executer.getTaskById(req.params['id'])
     .then(results => {
         var task = results.rows[0];
@@ -356,6 +365,20 @@ app.post("/edit/task/:id", isLoggedIn, function(req, res) {
         var redirectUrl = "/edit/task/" + task_id;
         res.redirect(redirectUrl); // to updated task page
     });
+})
+
+app.post("/delete/task/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.id;
+    var promise = executer.deleteTaskById(task_id)
+    .then(function() {
+        console.log("Task successfully deleted!")
+        req.flash('success', "Task successfully deleted!")
+        res.redirect("/tasks");
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        res.redirect("/tasks"); // to updated task page
+    })
 })
 
 // =====================================
