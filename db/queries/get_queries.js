@@ -98,7 +98,97 @@ exports.TASK_WITH_OFFER_BY_OFFER_ASSIGNEE = `
     WHERE 1=1
         AND view_all_offer.assignee = $1
     ;
+`
 
+exports.TASK_BY_REQUESTER = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.category_name,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price,
+        view_all_task.status_task,
+        view_all_task.assignee
+    FROM view_all_task
+    WHERE 1=1
+        AND view_all_task.requester = $1
+    ORDER BY
+        view_all_task.id DESC
+    ;
+`
+
+exports.TASK_WITH_OFFERED_STATUS_BY_REQUESTER = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.category_name,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price,
+        view_all_task.status_task,
+        view_all_task.assignee
+    FROM view_all_task
+    WHERE 1=1
+        AND view_all_task.requester = $1
+        AND view_all_task.status_task = 'offered'
+    ORDER BY
+        view_all_task.id DESC
+    ;
+`
+
+exports.TASK_WITH_ACCEPTED_STATUS_BY_REQUESTER = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.category_name,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price,
+        view_all_task.status_task,
+        view_all_task.assignee
+    FROM view_all_task
+    WHERE 1=1
+        AND view_all_task.requester = $1
+        AND view_all_task.status_task = 'accepted'
+    ORDER BY
+        view_all_task.id DESC
+    ;
+`
+
+exports.TASK_WITH_OPEN_STATUS_BY_REQUESTER = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.category_name,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price,
+        view_all_task.status_task,
+        view_all_task.assignee
+    FROM view_all_task
+    WHERE 1=1
+        AND view_all_task.requester = $1
+        AND view_all_task.status_task = 'open'
+    ORDER BY
+        id DESC
+    ;
 `
 
 exports.OFFERS_BY_TASKID = `
@@ -127,28 +217,6 @@ exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
     where 1=1
         AND view_all_offer.assignee = $1
         AND view_all_offer.task_id = $2
-    ;
-`
-
-exports.TASK_BY_REQUESTER = `
-    SELECT
-        view_all_task.id,
-        view_all_task.title,
-        view_all_task.description,
-        view_all_task.category_id,
-        view_all_task.category_name,
-        view_all_task.location,
-        view_all_task.requester,
-        view_all_task.start_dt,
-        view_all_task.end_dt,
-        view_all_task.price,
-        view_all_task.status_task,
-        view_all_task.assignee
-    FROM view_all_task
-    WHERE 1=1
-        AND view_all_task.requester = $1
-    ORDER BY
-        id DESC
     ;
 `
 

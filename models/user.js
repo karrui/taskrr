@@ -67,7 +67,7 @@ User.findOne = function(username, callback) {
     console.log('Finding username: ' + username);
     
     //check if there is a user available for this username;
-    executer.findUserByName(username)
+    executer.getUserByName(username)
     .then(result => {
         //if no rows were returned from query, then new user
         if (result.rows.length > 0){    // means there is already a user with this username
@@ -99,7 +99,7 @@ User.findOne = function(username, callback) {
 User.findById = function(id, callback){
     console.log("Finding user by id...");
     
-    executer.findUserById(id)
+    executer.getUserById(id)
     .then(result => {
         // check if user exists
         if (result.rows.length > 0){
