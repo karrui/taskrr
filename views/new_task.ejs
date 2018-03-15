@@ -29,18 +29,12 @@
                     <input type="text" class="form-control" name="location" placeholder="location" required="true">
                 </div>
                 <div class="form-group">
-                    <div class='input-group date' id='datetimepicker_start_grp'>
-                        <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="Enter start date and time" required="true">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                    <div class='input-group date' id='datetimepicker_end_grp'>
-                        <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="Enter end date and time" required="true">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="Enter start date and time" required="true">
+                            <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="Enter end date and time" required="true">
+                        </div>
+                    </div>                    
                 </div>
     
                 <div class="form-group">
@@ -58,31 +52,29 @@
         <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
         <script type="text/javascript">
             $(function () {
-                $('#datetimepicker_start_grp').datetimepicker({
-                    minDate: moment(), 
-                    useCurrent: false //Important! See issue #1075
-                });
                 $('#datetimepicker_start').datetimepicker({
                     minDate: moment(), 
-                    useCurrent: false //Important! See issue #1075
-                });
-                $('#datetimepicker_end_grp').datetimepicker({
-                    useCurrent: false //Important! See issue #1075
+                    useCurrent: false, //Important! See issue #1075
+                    sideBySide: true,
+                    format: "DD/MM/YYYY, h:mm a",
+                    showTodayButton: true,
+                    showClose: true,
+                    toolbarPlacement: "bottom"
                 });
                 $('#datetimepicker_end').datetimepicker({
-                    useCurrent: false //Important! See issue #1075
+                    minDate: moment(), 
+                    useCurrent: false, //Important! See issue #1075
+                    sideBySide: true,
+                    format: "DD/MM/YYYY, h:mm a",
+                    showTodayButton: true,
+                    showClose: true,
+                    toolbarPlacement: "bottom"
                 });
                 $("#datetimepicker_start").on("dp.change", function (e) {
                     $('#datetimepicker_end').data("DateTimePicker").minDate(e.date);
                 });
                 $("#datetimepicker_end").on("dp.change", function (e) {
                     $('#datetimepicker_start').data("DateTimePicker").maxDate(e.date);
-                });
-                $("#datetimepicker_start_grp").on("dp.change", function (e) {
-                    $('#datetimepicker_end_grp').data("DateTimePicker").minDate(e.date);
-                });
-                $("#datetimepicker_end_grp").on("dp.change", function (e) {
-                    $('#datetimepicker_start_grp').data("DateTimePicker").maxDate(e.date);
                 });
             });
         </script>

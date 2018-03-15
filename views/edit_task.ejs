@@ -49,18 +49,12 @@
                     <input type="text" class="form-control" name="location" value="<%=task.location%>" required="true">
                 </div>
                 <div class="form-group">
-                    <div class='input-group date' id='datetimepicker_start_grp'>
-                        <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="<%=task.start_dt.toLocaleString()%>" value="<%=task.start_dt.toLocaleString()%>" required="true">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                    <div class='input-group date' id='datetimepicker_end_grp'>
-                        <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="<%=task.end_dt.toLocaleString()%>" value="<%=task.end_dt.toLocaleString()%>" required="true">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="<%=task.start_dt.toLocaleString('en-GB', { hour12: true })%>" required="true">
+                            <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="<%=task.end_dt.toLocaleString('en-GB', { hour12: true })%>" required="true">
+                        </div>
+                    </div>                    
                 </div>
                 <div class="form-group">
                     <div class="input-group">
@@ -81,7 +75,7 @@
             <form action="/delete/task/<%=task.id%>" method="POST">
                 <input class="form-control" type="hidden" name="id" value="<%=task.id%>" readonly>
                 <button class="btn btn-sm btn-danger pull-right" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete task" data-message="Are you sure you want to delete this task?">
-                    <i class="glyphicon glyphicon-trash"></i> Or delete task
+                    <i class="glyphicon glyphicon-trash"></i>
                 </button>
             </form>
 
@@ -126,33 +120,29 @@
         <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
         <script type="text/javascript">
             $(function () {
-                $('#datetimepicker_start_grp').datetimepicker({
-                    minDate: moment(), 
-                    useCurrent: false //Important! See issue #1075
-                });
                 $('#datetimepicker_start').datetimepicker({
                     minDate: moment(), 
-                    useCurrent: false //Important! See issue #1075
-                });
-                $('#datetimepicker_end_grp').datetimepicker({
-                    minDate: moment(),
-                    useCurrent: false //Important! See issue #1075
+                    useCurrent: false, //Important! See issue #1075
+                    sideBySide: true,
+                    format: "DD/MM/YYYY, h:mm a",
+                    showTodayButton: true,
+                    showClose: true,
+                    toolbarPlacement: "bottom"
                 });
                 $('#datetimepicker_end').datetimepicker({
-                    minDate: moment(),
-                    useCurrent: false //Important! See issue #1075
+                    minDate: moment(), 
+                    useCurrent: false, //Important! See issue #1075
+                    sideBySide: true,
+                    format: "DD/MM/YYYY, h:mm a",
+                    showTodayButton: true,
+                    showClose: true,
+                    toolbarPlacement: "bottom"
                 });
                 $("#datetimepicker_start").on("dp.change", function (e) {
                     $('#datetimepicker_end').data("DateTimePicker").minDate(e.date);
                 });
                 $("#datetimepicker_end").on("dp.change", function (e) {
                     $('#datetimepicker_start').data("DateTimePicker").maxDate(e.date);
-                });
-                $("#datetimepicker_start_grp").on("dp.change", function (e) {
-                    $('#datetimepicker_end_grp').data("DateTimePicker").minDate(e.date);
-                });
-                $("#datetimepicker_end_grp").on("dp.change", function (e) {
-                    $('#datetimepicker_start_grp').data("DateTimePicker").maxDate(e.date);
                 });
             });
         </script>
