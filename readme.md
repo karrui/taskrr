@@ -1,16 +1,16 @@
 # Taskrr - a Task Sourcing Web Application
 ## Module Project for CS2102, NUS School of Computing
-This is a task matching application (e.g., https://www.taskrabbit.com) to facilitate users to hire temporary help to complete certain tasks. 
-Tasks are general chores as such washing a car at Kent Vales car park on Sunday or delivering a parcel on Tuesday between 17:00 and 19:00. 
-Users of this application are either looking for help to complete some task or bidding to complete some freelance task. 
-The application provides templates for generic common tasks to facilitate task requesters to create new tasks. 
-The successful bidder for a task is chosen by the task requester. 
+This is a task matching application (e.g., https://www.taskrabbit.com) to facilitate users to hire temporary help to complete certain tasks.
+Tasks are general chores as such washing a car at Kent Vales car park on Sunday or delivering a parcel on Tuesday between 17:00 and 19:00.
+Users of this application are either looking for help to complete some task or bidding to complete some freelance task.
+The application provides templates for generic common tasks to facilitate task requesters to create new tasks.
+The successful bidder for a task is chosen by the task requester.
 Each user has an account, and administrators can create/modify/delete entries.
 
 ## Getting started
 
 
-## Implemented: 
+## Implemented:
 * User authentication
 * Tasks/Offers by user
 * Error catching and handling
@@ -18,7 +18,8 @@ Each user has an account, and administrators can create/modify/delete entries.
 * Categories page that lists all categories
 * Tasks page that lists all tasks
 
-## Database schema:
+### Database schema:
+![](./docs/images/DatabaseSchema.png)
 ### ER Diagram:
 ![](./docs/images/ERDiagram.png)
 
@@ -31,7 +32,7 @@ Refer to [our api documentation for more info](./docs/api.md)
 
 # Getting started
 ## Prerequisites
-This app uses NodeJS. Install NodeJS via your terminal with 
+This app uses NodeJS. Install NodeJS via your terminal with
 
 ```
 sudo apt-get install nodejs
