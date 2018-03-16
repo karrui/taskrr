@@ -428,3 +428,8 @@ exports.getOffersByAssigneeAndTaskId = async function getOffersByAssigneeAndTask
     console.log('Attempting to get offer by assignee: %s and task_id: %s', assignee, task_id);
     return execute(queries.get.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
 }
+
+exports.getOffersByAssignee = async function getOffersByAssignee(assignee) {
+    console.log('Attempting to get offer by assignee: %s', assignee);
+    return execute(queries.get.OFFER_BY_ASSIGNEE, [assignee]);
+}
