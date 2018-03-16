@@ -64,6 +64,7 @@ const executer = require('./db/executer');
 // // Creates Tables + Views + Functions when server starts
 executer.createAllTables();
 executer.createAllViews();
+executer.dropAllFunctions();
 executer.createAllFunctions();
 executer.createAllIndexes();
 
@@ -98,7 +99,7 @@ function isLoggedIn(req, res, next) {
 
 // save previous returnTo so user can seamlessly join back
 function redirection(req, res, next) {
-    req.session.returnTo = req.originalUrl; 
+    req.session.returnTo = req.originalUrl;
     return next();
 }
 
@@ -180,7 +181,7 @@ app.get('/profile/tasks', isLoggedIn, function(req, res) {
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks", {
-            loggedIn: loggedIn, 
+            loggedIn: loggedIn,
             tasks: tasks
         });
     })
@@ -293,8 +294,8 @@ app.get("/tasks/:id", redirection, function(req, res) {
                 promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
                 .then(results => {
                     var offerByUser = results.rows[0];
-                    res.render("task_page", {   task: task, 
-                                                offers: offers, 
+                    res.render("task_page", {   task: task,
+                                                offers: offers,
                                                 offerByUser: offerByUser,
                                                 message: req.flash('message')});
                 })
@@ -306,7 +307,7 @@ app.get("/tasks/:id", redirection, function(req, res) {
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     })
-    
+
 })
 
 app.post("/tasks", isLoggedIn, function(req, res) {
@@ -390,7 +391,7 @@ app.post("/new/offer/:id", isLoggedIn, function(req, res) {
     var price = req.body.price;
     var assignee = res.locals.currentUser.username;
     var offered_dt = new Date().toISOString();
-    
+
     var promise = executer.addOffer(task_id, price, assignee, offered_dt)
     .then(function() {
         var redirectUrl = "/tasks/" + task_id;
@@ -408,7 +409,7 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
     var assignee = res.locals.currentUser.username;
     var newPrice = req.body.price;
     var newOffered_dt = new Date().toISOString();
-    
+
     var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
     .then(function() {
         var redirectUrl = "/tasks/" + task_id;

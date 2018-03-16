@@ -52,7 +52,7 @@ exports.TABLE_TASK = `
 	    requester		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    start_dt		 TIMESTAMP		    NOT NULL,
 	    end_dt		     TIMESTAMP		    NOT NULL,
-	    price			 NUMERIC(6, 2)		       	NOT NULL,
+	    price			 NUMERIC(6, 2)		NOT NULL,
 	    status_task	     VARCHAR(8)	       	DEFAULT 'open' NOT NULL		REFERENCES task_status (status) ON UPDATE CASCADE,
 	    assignee		 VARCHAR(25)		DEFAULT NULL 				REFERENCES person (username) ON DELETE SET NULL,
         CHECK (start_dt <= end_dt),
@@ -71,8 +71,8 @@ exports.TABLE_OFFER_STATUS = `
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
 	    id		         SERIAL		      	PRIMARY KEY,
-	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
-	    price			 NUMERIC(6, 2)			    NOT NULL,
+	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE SET NULL,
+	    price			 NUMERIC(6, 2)		NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
 	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE,

@@ -220,6 +220,20 @@ exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
     ;
 `
 
+exports.OFFER_BY_ASSIGNEE = `
+    SELECT
+        view_all_offer.id,
+        view_all_offer.task_id,
+        view_all_offer.price,
+        view_all_offer.assignee,
+        view_all_offer.offered_dt,
+        view_all_offer.status_offer
+    FROM view_all_offer
+    where 1=1
+        AND view_all_offer.assignee = $1
+    ;
+`
+
 exports.USER_BY_ID = `
     SELECT
         view_person_login.id,
