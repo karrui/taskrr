@@ -71,7 +71,7 @@ exports.TABLE_OFFER_STATUS = `
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
 	    id		         SERIAL		      	PRIMARY KEY,
-	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE ,
+	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
 	    price			 NUMERIC(6, 2)		NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
