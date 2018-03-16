@@ -194,7 +194,7 @@ app.get('/profile/tasks/open', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithOpenStatusByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_offers", {
+        res.render("user_tasks_open", {
             tasks: tasks
         });
     })
@@ -207,7 +207,7 @@ app.get('/profile/tasks/offered', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithOfferedStatusByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_offers", {
+        res.render("user_tasks_offered", {
             tasks: tasks
         });
     })
@@ -220,7 +220,7 @@ app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithAcceptedStatusByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_offers", {
+        res.render("user_tasks_accepted", {
             tasks: tasks
         });
     })
@@ -395,6 +395,7 @@ app.post("/new/offer/:id", isLoggedIn, function(req, res) {
 
     var promise = executer.addOffer(task_id, price, assignee, offered_dt)
     .then(function() {
+        req.flash('offer_success', "Offer successfully added!");
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to task page
     })
