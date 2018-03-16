@@ -32,3 +32,7 @@ exports.VIEW_ALL_CATEGORY = `
 
 exports.VIEW_ALL_OFFER = `
     DROP VIEW IF EXISTS view_all_offer`;
+
+exports.FUNCTIONS_ALL = `
+    SELECT information_schema.f_delfunc('public')
+`

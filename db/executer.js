@@ -176,7 +176,7 @@ exports.populateOfferStatuses = async function populateOfferStatuses() {
         csvStream.pause();
 
         let status = record.status;
-        
+
         // console.log('Attemping to add offer status: \"%s\"', status);
         execute(queries.insert.ONE_OFFER_STATUS, [status]);
 
@@ -200,7 +200,7 @@ exports.populateOffers = async function populateOffers() {
         let assignee = record.assignee;
         let offered_dt = record.offered_dt;
         let status_offer = record.status_offer;
-        
+
         // console.log('Attemping to add offer: \"%s\"', id);
         execute(queries.insert.ONE_POPULATED_OFFER, [task_id, price, assignee, offered_dt, status_offer]);
 
@@ -220,7 +220,7 @@ exports.populateTaskStatuses = async function populateTaskStatuses() {
         csvStream.pause();
 
         let status = record.status;
-        
+
         // console.log('Attemping to add task status: \"%s\"', status);
         execute(queries.insert.ONE_TASK_STATUS, [status]);
 
@@ -287,6 +287,11 @@ exports.dropTables = async function dropTables() {
     execute(queries.drop.VIEW_PERSON_ALL_INFO);
     execute(queries.drop.VIEW_PERSON_LOGIN);
     execute(queries.drop.VIEW_ALL_OFFER);
+}
+
+exports.dropAllFunctions = async function dropAllFunctions() {
+    console.log('Removing all functions.');
+    execute(queries.drop.FUNCTIONS_ALL);
 }
 
 //==================================================================================================================================================
