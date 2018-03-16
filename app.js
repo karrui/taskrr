@@ -306,7 +306,7 @@ app.get("/tasks/:id", redirection, function(req, res) {
         })
     })
     .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        res.render("deleted_task_page", { title: "Sorry, task not found"});
     })
 
 })
