@@ -6,6 +6,9 @@
     1. Table
     2. View
     3. Functions
+    ├── 3.1. Create
+    ├── 3.2. Insert
+    ├── 3.3. Update
     4. Function calls for Create
 */
 
@@ -68,7 +71,7 @@ exports.TABLE_OFFER_STATUS = `
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
 	    id		         SERIAL		      	PRIMARY KEY,
-	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
+	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE NO ACTION,
 	    price			 MONEY			    NOT NULL,
 	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
 	    offered_dt	     TIMESTAMP		    NOT NULL,
@@ -157,6 +160,57 @@ exports.VIEW_ALL_OFFER = `
 
 //======================================================================================================================
 // 3. Functions
+
+// ======================================================
+// 3.1. Create
+
+exports.FUNCTION_CREATE_INDEX_PERSON = `
+    CREATE OR REPLACE FUNCTION create_index_table_person ()
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            CREATE INDEX IF NOT EXISTS idx_person_role          ON person (role             DESC);
+            CREATE INDEX IF NOT EXISTS idx_person_created_dt    ON person (created_dt       DESC);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_CREATE_INDEX_TASK = `
+    CREATE OR REPLACE FUNCTION create_index_table_task ()
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            CREATE INDEX IF NOT EXISTS idx_task_category_id     ON task (category_id);
+            CREATE INDEX IF NOT EXISTS idx_task_requester       ON task (requester          DESC);
+            CREATE INDEX IF NOT EXISTS idx_task_status_task     ON task (status_task        DESC);
+            CREATE INDEX IF NOT EXISTS idx_task_assignee        ON task (assignee           NULLS LAST);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_CREATE_INDEX_OFFER = `
+    CREATE OR REPLACE FUNCTION create_index_table_offer ()
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            CREATE INDEX IF NOT EXISTS idx_offer_task_id        ON offer (task_id);
+            CREATE INDEX IF NOT EXISTS idx_offer_assignee       ON offer (assignee);
+            CREATE INDEX IF NOT EXISTS idx_offer_status_offer   ON offer (status_offer);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+// ======================================================
+// 3.2. Insert
 
 exports.FUNCTION_INSERT_ONE_TASK = `
     CREATE OR REPLACE FUNCTION insert_one_task (
@@ -270,6 +324,9 @@ exports.FUNCTION_INSERT_ONE_OFFER = `
     ;
 `
 
+// ======================================================
+// 3.3. Update
+
 exports.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID = `
     CREATE OR REPLACE FUNCTION update_offer_by_assignee_taskid (
         _assignee       VARCHAR(25),
@@ -328,13 +385,34 @@ exports.FUNCTION_UPDATE_TASK_BY_ID = `
     ;
 `
 
-exports.FUNCTION_CREATE_INDEX_PERSON = `
-    CREATE OR REPLACE FUNCTION create_index_table_person ()
+exports.FUNCTION_UPDATE_TASK_UPON_ACCEPTING_OFFER_BY_TASK_ID = `
+    CREATE OR REPLACE FUNCTION update_task_upon_accepting_offer_by_task_id (
+        _task_id             INTEGER,
+        _assignee            VARCHAR(25),
+        _offer_price         MONEY
+    )
     RETURNS void AS
     $BODY$
         BEGIN
-            CREATE INDEX IF NOT EXISTS idx_person_role          ON person (role             DESC);
-            CREATE INDEX IF NOT EXISTS idx_person_created_dt    ON person (created_dt       DESC);
+            UPDATE task
+            SET
+                price = _offer_price,
+                status_task = 'accepted',
+                assignee = _assignee
+            WHERE 1=1
+                AND id = _task_id
+            ;
+
+            UPDATE offer
+            SET
+                status_task =
+                    CASE
+                        WHEN assignee IS NOT DISTINCT FROM _assignee THEN 'accepted'
+                        ELSE 'rejected'
+                    END
+            WHERE 1=1
+                AND task_id = _task_id
+            ;
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE
@@ -342,30 +420,34 @@ exports.FUNCTION_CREATE_INDEX_PERSON = `
     ;
 `
 
-exports.FUNCTION_CREATE_INDEX_TASK = `
-    CREATE OR REPLACE FUNCTION create_index_table_task ()
+exports.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID = `
+    CREATE OR REPLACE FUNCTION update_task_upon_rejecting_offer_by_task_id (
+        _task_id             INTEGER,
+        _offer_id            INTEGER
+    )
     RETURNS void AS
     $BODY$
         BEGIN
-            CREATE INDEX IF NOT EXISTS idx_task_category_id     ON task (category_id);
-            CREATE INDEX IF NOT EXISTS idx_task_requester       ON task (requester          DESC);
-            CREATE INDEX IF NOT EXISTS idx_task_status_task     ON task (status_task        DESC);
-            CREATE INDEX IF NOT EXISTS idx_task_assignee        ON task (assignee           NULLS LAST);
-        END;
-    $BODY$
-    LANGUAGE 'plpgsql' VOLATILE
-    COST 100
-    ;
-`
+            UPDATE offer
+            SET
+                status_task = 'rejected'
+            WHERE 1=1
+                AND id = _offer_id
+            ;
 
-exports.FUNCTION_CREATE_INDEX_OFFER = `
-    CREATE OR REPLACE FUNCTION create_index_table_offer ()
-    RETURNS void AS
-    $BODY$
-        BEGIN
-            CREATE INDEX IF NOT EXISTS idx_offer_task_id        ON offer (task_id);
-            CREATE INDEX IF NOT EXISTS idx_offer_assignee       ON offer (assignee);
-            CREATE INDEX IF NOT EXISTS idx_offer_status_offer   ON offer (status_offer);
+            UPDATE task
+            SET
+                status_task = 'open'
+            WHERE 1=1
+                AND id = _task_id
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM offer
+                    WHERE 1=1
+                        AND task_id = _task_id
+                        AND status_offer IS DISTINCT FROM 'rejected'
+                )
+            ;
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE
