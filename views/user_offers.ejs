@@ -35,7 +35,7 @@
                     <p>Start: <%= task.start_dt %></p>
                     <p>End: <%= task.end_dt %></p>
                     <p>Status: <%= task.status_task %></p>
-                    <p>You offered: <%= task.offer_price %></p>
+                    <p>You offered: $<%= task.offer_price %></p>
                     <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                     <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
                 </div>

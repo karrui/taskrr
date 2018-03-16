@@ -349,6 +349,11 @@ exports.deleteTaskById = async function deleteTaskById(id) {
     return execute(queries.delete.ONE_TASK, [id]);
 }
 
+exports.deleteOfferByAssigneeAndTaskId = async function deleteOfferByAssigneeAndTaskId(assignee, task_id) {
+    console.log('Attempting to delete offer with assignee: \"%s\" and task_id: \"%s\"', assignee, task_id);
+    return execute(queries.delete.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
+}
+
 //==================================================================================================================================================
 // 6. Select
 

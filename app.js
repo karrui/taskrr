@@ -297,7 +297,8 @@ app.get("/tasks/:id", redirection, function(req, res) {
                     res.render("task_page", {   task: task,
                                                 offers: offers,
                                                 offerByUser: offerByUser,
-                                                message: req.flash('message')});
+                                                message: req.flash('message'),
+                                                offer_success: req.flash('offer_success')});
                 })
             } else {
                 res.render("task_page", { task: task, offers: offers});
@@ -412,6 +413,7 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
 
     var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
     .then(function() {
+        req.flash('offer_success', "Offer successfully updated!");
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to task page
     })
@@ -420,6 +422,23 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to page to display errors
     });
+});
+
+app.post("/delete/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.task_id;
+    var assignee = res.locals.currentUser.username;
+
+    var promise = executer.deleteOfferByAssigneeAndTaskId(assignee, task_id)
+    .then(function() {
+        req.flash('offer_success', "Offer successfully deleted!");
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    })
 });
 
 // =====================================
