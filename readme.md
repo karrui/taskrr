@@ -23,9 +23,6 @@ Each user has an account, and administrators can create/modify/delete entries.
 
 And more...
 
-## Getting started
-
-
 ## Implemented: 
 * User authentication
 * Tasks/Offers by user
