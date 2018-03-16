@@ -7,6 +7,7 @@ var bodyParser       = require('body-parser');
 var session          = require('express-session');
 var flash            = require('connect-flash');
 var expressValidator = require('express-validator');
+var moment           = require('moment');
 
 // =====================================
 // APP SETUP ===========================
@@ -315,8 +316,8 @@ app.post("/tasks", isLoggedIn, function(req, res) {
     var category_id = req.body.category_id;
     var location = req.body.location;
     var requester = req.user.username;
-    var start_dt = req.body.start_dt;
-    var end_dt = req.body.end_dt;
+    var start_dt = moment(req.body.start_dt, 'DD/MM/YYYY, h:mm A').format();
+    var end_dt = moment(req.body.end_dt, 'DD/MM/YYYY, h:mm A').format();
     var price = req.body.price;
 
     var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price)
@@ -351,8 +352,8 @@ app.post("/edit/task/:id", isLoggedIn, function(req, res) {
     var description = req.body.description;
     var category_id = req.body.category_id;
     var location = req.body.location;
-    var start_dt = req.body.start_dt;
-    var end_dt = req.body.end_dt;
+    var start_dt = moment(req.body.start_dt, 'DD/MM/YYYY, h:mm A').format();
+    var end_dt = moment(req.body.end_dt, 'DD/MM/YYYY, h:mm A').format();
     var price = req.body.price;
 
     var promise = executer.updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price)
