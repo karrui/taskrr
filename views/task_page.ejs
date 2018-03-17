@@ -171,17 +171,37 @@
                             <% if (offers.length == 0) { %>
                                 <p>None :(</p>
                             <% } else { %> 
-                                <% offers.forEach(function(offer) { %>
-                                    <p> 
+                                <% offers.forEach(function(offer) { %> 
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
                                         <% if (loggedIn && currentUser.username == offer.assignee) { %>
                                             You offered $<%= offer.price %> at <%= new Date(offer.offered_dt + 'Z') %>
                                         <% } else { %>
                                             <%= offer.assignee %> offered $<%= offer.price %> at <%= new Date(offer.offered_dt + 'Z') %>
                                         <% } %>
-                                        </p>
+                                    </div>
+                                        <% if (loggedIn && currentUser.username == task.requester) { %>
+                                            <div class="panel-footer">
+                                            <!-- Accept offer button -->
+                                            <form class="form-inline" style="display: inline-block;" action="/accept/offer/<%=task.id%>" method="POST">
+                                                <input type="hidden" name="task_id" value="<%=task.id%>" readonly>
+                                                <input type="hidden" name="requester" value="<%=task.requester%>" readonly>
+                                                <input type="hidden" name="assignee" value="<%=offer.assignee%>" readonly>
+                                                <input type="hidden" name="offer_price" value="<%=offer.price%>" readonly>
+                                                <input type="submit" class="btn btn-info btn-xs" value="Accept offer">
+                                            </form>
+                                             <!-- Reject offer button -->
+                                             <form class="form-inline" style="display: inline-block;" action="/reject/offer/<%=task.id%>" method="POST">
+                                                <input type="hidden" name="task_id" value="<%=task.id%>" readonly>
+                                                <input type="hidden" name="requester" value="<%=task.requester%>" readonly>
+                                                <input type="hidden" name="offer_id" value="<%=offer.id%>" readonly>
+                                                <input type="submit" class="btn btn-danger btn-xs" value="Reject offer">
+                                            </form>
+                                            </div>
+                                        <% } %>
+                                        </div>
                                 <% }); %>
                             <% } %>
-                            </p>
                         </div>
                     </div>
             </div>

@@ -442,6 +442,51 @@ app.post("/delete/offer/:id", isLoggedIn, function(req, res) {
     })
 });
 
+app.post("/accept/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.task_id;
+    var requester = req.body.requester;
+    var assignee = req.body.assignee;
+    var offer_price = req.body.offer_price;
+    if (!(requester == res.locals.currentUser.username)) {
+        var redirectUrl = "/tasks/" + task_id;
+        req.flash('message', "You are not the user who requested for this task!")
+        res.redirect(403, redirectUrl);
+    }
+    var promise = executer.updateTaskUponAcceptingOfferByTaskID(task_id, assignee, offer_price) 
+    .then(function() {
+        req.flash('offer_success', "Offer accepted!");
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    })
+});
+
+app.post("/reject/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.task_id;
+    var requester = req.body.requester;
+    var offer_id = req.body.offer_id;
+    if (!(requester == res.locals.currentUser.username)) {
+        var redirectUrl = "/tasks/" + task_id;
+        req.flash('message', "You are not the user who requested for this task!")
+        res.redirect(403, redirectUrl);
+    }
+    var promise = executer.updateTaskUponRejectingOfferByTaskID(task_id, offer_id) 
+    .then(function() {
+        req.flash('offer_success', "Offer rejected!");
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    })
+});
+
 // =====================================
 // CATEGORIES APIs =====================
 // =====================================
