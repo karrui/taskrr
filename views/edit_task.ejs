@@ -23,7 +23,7 @@
         <h1 style="text-align: center;">Edit task</h1>
         <div style="width:40%; margin: 0 auto">
              <!-- show any errors from invalid query -->
-             <% if (typeof message != 'undefined' && message.length > 0) { %>
+             <% if (message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
             <% } %>
                 <form action="/edit/task/<%=task.id%>" method="POST">
@@ -66,7 +66,7 @@
                     <button class="btn btn-primary btn-warning btn-block">Edit!</button>
                 </div>
             </form>
-            <% if (typeof prevUrl != 'undefined') { %>
+            <% if (prevUrl.length > 0) { %>
                 <a href="<%=prevUrl%>">Go back</a>
             <% } else { %>
                 <a href="javascript:history.back()">Go back</a> 

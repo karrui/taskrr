@@ -6,7 +6,7 @@
         <h1 style="text-align: center;">Create a new task</h1>
         <div style="width:40%; margin: 0 auto">
             <!-- show any errors from invalid query -->
-            <% if (typeof message != 'undefined' && message.length > 0) { %>
+            <% if (message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
             <% } %>
                 <form action="/tasks" method="POST">
