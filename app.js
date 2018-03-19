@@ -513,6 +513,20 @@ app.get("/categories/:id", redirection, function(req, res) {
 });
 
 // =====================================
+// SEARCH APIs =========================
+// =====================================
+app.post("/search/task/", function(req, res) {
+    var promise = executer.getTasksBySearchMatchNameOrDescription(req.body.matching_string)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("tasks", { tasks: tasks });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+})
+
+// =====================================
 // MISC APIs ===========================
 // =====================================
 //404
