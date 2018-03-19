@@ -88,14 +88,14 @@
                 </div>
 
                  <!-- show any error messages -->
-                <% if (message.length > 0) { %>
+                <% if (typeof message != 'undefined' && message.length > 0) { %>
                     <div class="alert alert-danger alert-dismissible"><%= message %></div>
                 <% } %>
 
                 <% if (loggedIn) { %>
                     <% if (currentUser.username == task.requester) { %>
                         <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
-                    <% } else if (offerByUser) { %>
+                    <% } else if (typeof offerByUser != 'undefined') { %>
                         You have already offered!
                         <div>
                             <div id="offer_info" style="display:none">
@@ -159,7 +159,7 @@
                         <div class="col-md-12">
                             <h3>Current offers:</h3>
                             <!-- Display success message -->
-                            <% if (offer_success.length > 0) { %>
+                            <% if (typeof offer_success != 'undefined' && offer_success.length > 0) { %>
                                 <div class="alert alert-success alert-dismissible"><%= offer_success %></div>
                             <% } %>
                             <p class="offers">
