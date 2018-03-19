@@ -243,3 +243,25 @@ exports.USER_BY_NAME = `
         AND view_person_login.username = $1
     ;
 `
+
+// Note that ILIKE is pretty inefficient
+exports.TASK_BY_SEARCH_MATCH_NAME_OR_DESCRIPTION = `
+    SELECT
+        view_all_task.id,
+        view_all_task.title,
+        view_all_task.description,
+        view_all_task.category_id,
+        view_all_task.category_name,
+        view_all_task.location,
+        view_all_task.requester,
+        view_all_task.start_dt,
+        view_all_task.end_dt,
+        view_all_task.price,
+        view_all_task.status_task,
+        view_all_task.assignee
+    FROM view_all_task
+    WHERE 1=1
+        AND (view_all_task.title ILIKE '%' || $1 || '%'
+        OR view_all_task.description ILIKE '%' || $1 || '%')
+    ;
+`

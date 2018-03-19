@@ -263,6 +263,11 @@ exports.getTasksWithOpenStatusByRequester = async function getTasksWithOpenStatu
     return execute(queries.get.TASK_WITH_OPEN_STATUS_BY_REQUESTER, [requester]);
 }
 
+exports.getTasksBySearchMatchNameOrDescription = async function getTasksBySearchMatchNameOrDescription(search_string) {
+    console.log('Attempting to get tasks by search string: \"%s\"', search_string);
+    return execute(queries.get.TASK_BY_SEARCH_MATCH_NAME_OR_DESCRIPTION, [search_string]);
+}
+
 // ======================================================
 // 6.4. Offer
 
