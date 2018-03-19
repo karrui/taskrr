@@ -30,3 +30,7 @@ body {
 .breadcrumb {
     background: transparent;
 }
+
+.lb-md {
+    font-size: 12px;
+  }

@@ -24,12 +24,22 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="label label-primary">#
-                            <%= task.id %>
+                        <span class="label label-primary">
+                            #<%= task.id %>
                         </span>
-                        <span class="label label-info">
-                            <%= task.status_task %>
-                        </span>
+                        <% if (task.status_task === 'accepted') { %>
+                            <span class="label label-success">
+                                <%= task.status_task %>
+                            </span>
+                        <% } else if (task.status_task === 'offered') { %>
+                            <span class="label label-info">
+                                <%= task.status_task %>
+                            </span>
+                        <% } else { %>
+                            <span class="label label-warning">
+                                <%= task.status_task %>
+                            </span>
+                        <% } %>
                     </div>
                 </div>
 

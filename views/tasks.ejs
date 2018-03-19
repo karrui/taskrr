@@ -55,7 +55,21 @@
                     <p>Description: <%= task.description %></p>
                     <p>Start: <%= task.start_dt %></p>
                     <p>End: <%= task.end_dt %></p>
-                    <p>Status: <%= task.status_task %></p>
+                    <p>Status: 
+                        <% if (task.status_task === 'accepted') { %>
+                            <span class="label label-success lb-md">
+                                <%= task.status_task %>
+                            </span>
+                        <% } else if (task.status_task === 'offered') { %>
+                            <span class="label label-info lb-md">
+                                <%= task.status_task %>
+                            </span>
+                        <% } else { %>
+                            <span class="label label-warning lb-md">
+                                <%= task.status_task %>
+                            </span>
+                        <% } %>
+                    </p>
                     <p>Starting offer: $<%= task.price %></p>
                     <% if (loggedIn && currentUser.username == task.requester) { %>
                         <form action="/delete/task/<%=task.id%>" method="POST">
