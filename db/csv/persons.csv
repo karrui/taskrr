@@ -1,0 +1,7 @@
+username,password,email,created_dt
+admin,$2a$10$xzkXIYKKV.yMRILu3qPtJejGb.kSfdOcDyYRDu1AGtQb5QcFzFDgG,admin-has-no@email.com,2018-03-04 07:19:21.203
+karrui,$2a$10$m2IyA1EbLsR9Q1.FAZSnpeGKocERcaIH6IMPGXDe05pWrdvA0TEIq,karrui@karrui.com,2018-03-04 07:19:38.432
+test,$2a$10$FxQV3PGgJ8lZIYyrTqEJl.kSgYGyVeypzAaRLejXb5wKHndMxAHZO,test@email.com,2018-03-04 07:19:52.371
+son,$2a$10$ByL1t0SupxCb38iqkCNgN.27RKzHx7CdD3jkwuwmM7s23rybWit0a,son@123.com,2018-03-04 15:06:26.507
+karrui2,$2a$10$nej7jzMY.yZzjbi3Vpr5vOiTqomFFjfwSRYCvzdbF1LiW5VwoAqoe,ka@ka.com,2018-03-06 12:29:10.188
+son_test,$2a$10$NtpQgGfwSG463a0enDDNJOkQg1sFV.haup36zErTGLZFnWJeYAxi.,son_test@123.com,2018-03-06 16:10:29.091

@@ -7,6 +7,7 @@ var bodyParser       = require('body-parser');
 var session          = require('express-session');
 var flash            = require('connect-flash');
 var expressValidator = require('express-validator');
+var moment           = require('moment');
 
 // =====================================
 // APP SETUP ===========================
@@ -58,16 +59,24 @@ app.use(function(req,res,next){
 // =====================================
 const executer = require('./db/executer');
 
-// Creates Tables + Views + Functions when server starts
+// executer.dropTables();
+
+// // Creates Tables + Views + Functions when server starts
 executer.createAllTables();
 executer.createAllViews();
+executer.dropAllFunctions();
 executer.createAllFunctions();
 executer.createAllIndexes();
 
-// executer.dropTables();
-
 // Toggle methods to populate or delete populated tasks
+// must be in this order
+// executer.populateCategories();
+// executer.populatePersons();
+// executer.populateTaskStatuses();
+// executer.populateOfferStatuses();
 // executer.populateTasks();
+// executer.populateOffers();
+
 // executer.deletePopulatedTasks();
 
 app.get("/", function(req, res) {
@@ -90,7 +99,7 @@ function isLoggedIn(req, res, next) {
 
 // save previous returnTo so user can seamlessly join back
 function redirection(req, res, next) {
-    req.session.returnTo = req.originalUrl; 
+    req.session.returnTo = req.originalUrl;
     return next();
 }
 
@@ -134,7 +143,7 @@ app.get("/signup", function(req, res) {
 
 // process the signup form
 app.post('/signup', signup_validation, passport.authenticate('local-signup', {
-    successReturnToOrRedirect : '/profile', // redirect to the secure profile section
+    successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/signup', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
 }));
@@ -172,7 +181,7 @@ app.get('/profile/tasks', isLoggedIn, function(req, res) {
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks", {
-            loggedIn: loggedIn, 
+            loggedIn: loggedIn,
             tasks: tasks
         });
     })
@@ -185,7 +194,7 @@ app.get('/profile/tasks/open', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithOpenStatusByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_offers", {
+        res.render("user_tasks_open", {
             tasks: tasks
         });
     })
@@ -198,7 +207,7 @@ app.get('/profile/tasks/offered', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithOfferedStatusByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_offers", {
+        res.render("user_tasks_offered", {
             tasks: tasks
         });
     })
@@ -211,7 +220,7 @@ app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithAcceptedStatusByRequester(req.user.username)
     .then(results => {
         var tasks = results.rows;
-        res.render("user_offers", {
+        res.render("user_tasks_accepted", {
             tasks: tasks
         });
     })
@@ -254,7 +263,9 @@ app.get("/tasks/", redirection, function(req, res) {
     var promise = executer.getAllTasks()
     .then(results => {
         var tasks = results.rows;
-        res.render("tasks", { tasks: tasks });
+        res.render("tasks", {   tasks: tasks,
+                                message: req.flash('message'),
+                                success: req.flash('success')});
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -283,10 +294,11 @@ app.get("/tasks/:id", redirection, function(req, res) {
                 promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
                 .then(results => {
                     var offerByUser = results.rows[0];
-                    res.render("task_page", {   task: task, 
-                                                offers: offers, 
+                    res.render("task_page", {   task: task,
+                                                offers: offers,
                                                 offerByUser: offerByUser,
-                                                message: req.flash('message')});
+                                                message: req.flash('message'),
+                                                offer_success: req.flash('offer_success')});
                 })
             } else {
                 res.render("task_page", { task: task, offers: offers});
@@ -294,9 +306,9 @@ app.get("/tasks/:id", redirection, function(req, res) {
         })
     })
     .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        res.render("deleted_task_page", { title: "Sorry, task not found"});
     })
-    
+
 })
 
 app.post("/tasks", isLoggedIn, function(req, res) {
@@ -306,8 +318,8 @@ app.post("/tasks", isLoggedIn, function(req, res) {
     var category_id = req.body.category_id;
     var location = req.body.location;
     var requester = req.user.username;
-    var start_dt = req.body.start_dt;
-    var end_dt = req.body.end_dt;
+    var start_dt = moment(req.body.start_dt, 'DD/MM/YYYY, h:mm A').format();
+    var end_dt = moment(req.body.end_dt, 'DD/MM/YYYY, h:mm A').format();
     var price = req.body.price;
 
     var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price)
@@ -321,7 +333,7 @@ app.post("/tasks", isLoggedIn, function(req, res) {
     });
 });
 
-app.get("/edit/task/:id", isLoggedIn, function(req, res) {
+app.get("/edit/task/:id", isLoggedIn, redirection, function(req, res) {
     var promise = executer.getTaskById(req.params['id'])
     .then(results => {
         var task = results.rows[0];
@@ -342,8 +354,8 @@ app.post("/edit/task/:id", isLoggedIn, function(req, res) {
     var description = req.body.description;
     var category_id = req.body.category_id;
     var location = req.body.location;
-    var start_dt = req.body.start_dt;
-    var end_dt = req.body.end_dt;
+    var start_dt = moment(req.body.start_dt, 'DD/MM/YYYY, h:mm A').format();
+    var end_dt = moment(req.body.end_dt, 'DD/MM/YYYY, h:mm A').format();
     var price = req.body.price;
 
     var promise = executer.updateTaskById(task_id, title, description, category_id, location, start_dt, end_dt, price)
@@ -358,6 +370,20 @@ app.post("/edit/task/:id", isLoggedIn, function(req, res) {
     });
 })
 
+app.post("/delete/task/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.id;
+    var promise = executer.deleteTaskById(task_id)
+    .then(function() {
+        console.log("Task successfully deleted!")
+        req.flash('success', "Task successfully deleted!")
+        res.redirect("/tasks");
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        res.redirect("/tasks"); // to updated task page
+    })
+})
+
 // =====================================
 // OFFER APIs ==========================
 // =====================================
@@ -366,9 +392,10 @@ app.post("/new/offer/:id", isLoggedIn, function(req, res) {
     var price = req.body.price;
     var assignee = res.locals.currentUser.username;
     var offered_dt = new Date().toISOString();
-    
+
     var promise = executer.addOffer(task_id, price, assignee, offered_dt)
     .then(function() {
+        req.flash('offer_success', "Offer successfully added!");
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to task page
     })
@@ -384,9 +411,10 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
     var assignee = res.locals.currentUser.username;
     var newPrice = req.body.price;
     var newOffered_dt = new Date().toISOString();
-    
+
     var promise = executer.updateOfferByAssigneeAndTaskId(assignee, task_id, newPrice, newOffered_dt)
     .then(function() {
+        req.flash('offer_success', "Offer successfully updated!");
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to task page
     })
@@ -395,6 +423,68 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
         var redirectUrl = "/tasks/" + task_id;
         res.redirect(redirectUrl); // back to page to display errors
     });
+});
+
+app.post("/delete/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.task_id;
+    var assignee = res.locals.currentUser.username;
+
+    var promise = executer.deleteOfferByAssigneeAndTaskId(assignee, task_id)
+    .then(function() {
+        req.flash('offer_success', "Offer successfully deleted!");
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    })
+});
+
+app.post("/accept/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.task_id;
+    var requester = req.body.requester;
+    var assignee = req.body.assignee;
+    var offer_price = req.body.offer_price;
+    if (!(requester == res.locals.currentUser.username)) {
+        var redirectUrl = "/tasks/" + task_id;
+        req.flash('message', "You are not the user who requested for this task!")
+        res.redirect(403, redirectUrl);
+    }
+    var promise = executer.updateTaskUponAcceptingOfferByTaskID(task_id, assignee, offer_price) 
+    .then(function() {
+        req.flash('offer_success', "Offer accepted!");
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    })
+});
+
+app.post("/reject/offer/:id", isLoggedIn, function(req, res) {
+    var task_id = req.body.task_id;
+    var requester = req.body.requester;
+    var offer_id = req.body.offer_id;
+    if (!(requester == res.locals.currentUser.username)) {
+        var redirectUrl = "/tasks/" + task_id;
+        req.flash('message', "You are not the user who requested for this task!")
+        res.redirect(403, redirectUrl);
+    }
+    var promise = executer.updateTaskUponRejectingOfferByTaskID(task_id, offer_id) 
+    .then(function() {
+        req.flash('offer_success', "Offer rejected!");
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    })
 });
 
 // =====================================
@@ -421,6 +511,20 @@ app.get("/categories/:id", redirection, function(req, res) {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
+
+// =====================================
+// SEARCH APIs =========================
+// =====================================
+app.post("/search/task/", function(req, res) {
+    var promise = executer.getTasksBySearchMatchNameOrDescription(req.body.matching_string)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("tasks", { tasks: tasks });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+})
 
 // =====================================
 // MISC APIs ===========================

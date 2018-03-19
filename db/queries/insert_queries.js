@@ -12,7 +12,7 @@ _location TEXT,
 _requester VARCHAR(25),
 _start_dt TIMESTAMP,
 _end_dt TIMESTAMP,
-_price MONEY
+_price NUMERIC(6, 2)
 */
 exports.ONE_TASK = `
     SELECT
@@ -34,12 +34,38 @@ exports.ONE_PERSON = `
 
 /* Input:
 _task_id INTEGER,
-_price MONEY,
+_price NUMERIC(6, 2),
 _assignee VARCHAR(25),
 _offered_dt TIMESTAMP
 */
 exports.ONE_OFFER = `
     SELECT
         insert_one_offer($1, $2, $3, $4)
+    ;
+`
+
+/* Input:
+_id SERIAL,
+_name TEXT
+*/
+exports.ONE_CATEGORY = `
+    INSERT INTO category
+    VALUES ($1, $2)
+    ;
+`
+
+exports.ONE_POPULATED_OFFER = `
+    INSERT INTO offer (task_id, price, assignee, offered_dt, status_offer)
+    VALUES ($1, $2, $3, $4, $5)
+    ;
+`
+exports.ONE_OFFER_STATUS = `
+    INSERT INTO offer_status
+    VALUES ($1)
+    ;
+`
+exports.ONE_TASK_STATUS = `
+    INSERT INTO task_status
+    VALUES ($1)
     ;
 `
