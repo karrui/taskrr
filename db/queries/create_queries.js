@@ -405,7 +405,7 @@ exports.FUNCTION_UPDATE_TASK_UPON_ACCEPTING_OFFER_BY_TASK_ID = `
 
             UPDATE offer
             SET
-                status_task =
+                status_offer =
                     CASE
                         WHEN assignee IS NOT DISTINCT FROM _assignee THEN 'accepted'
                         ELSE 'rejected'
@@ -430,7 +430,7 @@ exports.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID = `
         BEGIN
             UPDATE offer
             SET
-                status_task = 'rejected'
+                status_offer = 'rejected'
             WHERE 1=1
                 AND id = _offer_id
             ;

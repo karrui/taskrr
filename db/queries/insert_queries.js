@@ -14,15 +14,9 @@ _start_dt TIMESTAMP,
 _end_dt TIMESTAMP,
 _price NUMERIC(6, 2)
 */
-// TODO: Functions not working yet, made an insert
-// exports.ONE_TASK = `
-//     SELECT
-//         insert_one_task($1, $2, $3, $4, $5, $6, $7, $8)
-//     ;
-// `
 exports.ONE_TASK = `
-    INSERT INTO task (title, description, category_id, location, requester, start_dt, end_dt, price)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    SELECT
+        insert_one_task($1, $2, $3, $4, $5, $6, $7, $8)
     ;
 `
 
