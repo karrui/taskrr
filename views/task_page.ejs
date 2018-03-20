@@ -112,10 +112,14 @@
           </div>
         <% } %>
 
-        <% if (loggedIn) { %>
-          <% if (currentUser.username == task.requester) { %>
+        <% if (loggedIn && currentUser.username == task.requester) { %>
+          <% if (task.status_task != 'accepted') { %>
             <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
+          <% } else { %>
+            You have accepted this task! Contact <%=task.assignee%> to finalize details.
         <% } } %>
+
+        <% if (task.status_task != 'accepted') { %>
         <div class="row">
           <div class="col-md-12">
             <h3>Current offers:</h3>
@@ -198,19 +202,21 @@
             <p>None :(</p>
           <% } else { %>
             <% offers.forEach(function(offer) { %>
-            <div class="panel panel-default">
-              <div class="panel-body">
-                <% if (loggedIn && currentUser.username == offer.assignee) { %>
+              <div class="panel panel-default">
+              <% if (loggedIn && currentUser.username == offer.assignee && offer.status_offer != 'rejected') { %>
+                <div class="panel-body alert-success">
                   You offered $
                   <%= offer.price %> at
                   <%= new Date(offer.offered_dt + 'Z') %>
-                <% } else { %>
-                  <%= offer.assignee %> offered $
-                  <%= offer.price %> at
-                  <%= new Date(offer.offered_dt + 'Z') %>
+                </div>
+                <% } else if (loggedIn && offer.status_offer != 'rejected') { %>
+                  <div class="panel-body">
+                    <%= offer.assignee %> offered $
+                    <%= offer.price %> at
+                    <%= new Date(offer.offered_dt + 'Z') %>
+                  </div>
                 <% } %>
-              </div>
-              <% if (loggedIn && currentUser.username == task.requester) { %>
+              <% if (loggedIn && currentUser.username == task.requester && offer.status_offer != 'rejected') { %>
                 <div class="panel-footer">
                   <!-- Accept offer button -->
                   <form class="form-inline" style="display: inline-block;" action="/accept/offer/<%=task.id%>" method="POST">
@@ -232,6 +238,54 @@
             </div>
             <% }); %>
           <% } %>
+          </div>
+        </div>
+        <% } %>
+
+        <!-- Accepted Offer section -->
+        <% if (typeof acceptedOffer != 'undefined') { %>
+          <div class="row">
+            <div class="col-md-12">
+              <h3>Accepted offer:</h3>
+              <div class="panel panel-default">
+                <div class="panel-body alert-success">
+                  <%=task.requester%> accepted offer of $
+                  <%= acceptedOffer.price %> by 
+                  <%= acceptedOffer.assignee %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+
+
+        <!-- Rejected Offer section -->
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Rejected offers:</h3>
+            <% if (offers.length == 0) { %>
+              <p>None :)</p>
+            <% } else { %>
+              <% offers.forEach(function(offer) { %>
+                <% if (loggedIn && currentUser.username == offer.assignee && offer.status_offer == 'rejected') { %>
+                  <div class="panel panel-default">
+                  <div class="panel-body alert-warning">
+                    Your offer of $
+                    <%= offer.price %> at
+                    <%= new Date(offer.offered_dt + 'Z') %> was rejected.
+                  </div>
+                  </div>
+                <% } else if (offer.status_offer == 'rejected') { %>
+                  <div class="panel panel-default">
+                  <div class="panel-body">
+                    <%= offer.assignee %>'s offer of $
+                    <%= offer.price %> at
+                    <%= new Date(offer.offered_dt + 'Z') %> was rejected.
+                  </div>
+                  </div>
+                <% } %>
+              <% }) %>
+            <% } %>     
           </div>
         </div>
       </div>

@@ -438,3 +438,8 @@ exports.getOffersByAssignee = async function getOffersByAssignee(assignee) {
     console.log('Attempting to get offer by assignee: %s', assignee);
     return execute(queries.get.OFFER_BY_ASSIGNEE, [assignee]);
 }
+
+exports.getAcceptedOfferByTaskId = async function getAcceptedOfferByTaskId(task_id) {
+    console.log('Attempting to get accepted offer by task_id: %s', task_id);
+    return execute(queries.get.ACCEPTED_OFFER_BY_TASKID, [task_id]);
+}

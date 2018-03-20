@@ -290,19 +290,24 @@ app.get("/tasks/:id", redirection, function(req, res) {
         promise = executer.getOffersByTaskId(task.id)
         .then(results => {
             var offers = results.rows;
-            if (loggedIn) {
-                promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
-                .then(results => {
-                    var offerByUser = results.rows[0];
-                    res.render("task_page", {   task: task,
-                                                offers: offers,
-                                                offerByUser: offerByUser,
-                                                message: req.flash('message'),
-                                                offer_success: req.flash('offer_success')});
-                })
-            } else {
-                res.render("task_page", { task: task, offers: offers});
-            }
+            promise = executer.getAcceptedOfferByTaskId(task.id)
+            .then(results => {
+                var acceptedOffer = results.rows[0];
+                if (loggedIn) {
+                    promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
+                    .then(results => {
+                        var offerByUser = results.rows[0];
+                        res.render("task_page", {   task: task,
+                            offers: offers,
+                            offerByUser: offerByUser,
+                            acceptedOffer: acceptedOffer,
+                            message: req.flash('message'),
+                            offer_success: req.flash('offer_success')});
+                    })
+                } else {
+                    res.render("task_page", { task: task, offers: offers, acceptedOffer: acceptedOffer});
+                }
+            })
         })
     })
     .catch(err => {

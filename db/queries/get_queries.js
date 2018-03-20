@@ -257,3 +257,18 @@ exports.USER_BY_NAME = `
         AND view_person_login.username = $1
     ;
 `
+
+exports.ACCEPTED_OFFER_BY_TASKID = `
+    SELECT
+        view_all_offer.id,
+        view_all_offer.task_id,
+        view_all_offer.price,
+        view_all_offer.assignee,
+        view_all_offer.offered_dt,
+        view_all_offer.status_offer
+    FROM view_all_offer
+    where 1=1
+        AND view_all_offer.task_id = $1
+        AND view_all_offer.status_offer = 'accepted'
+    ;
+    `
