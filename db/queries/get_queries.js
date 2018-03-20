@@ -28,7 +28,7 @@ exports.ALL_TASKS = `
         view_all_task.assignee
     FROM view_all_task
     ORDER BY
-        view_all_task.start_dt
+        view_all_task.id DESC
     ;
 `
 
@@ -50,7 +50,7 @@ exports.TASK_BY_CATEGORY_ID = `
     WHERE 1=1
         AND view_all_task.category_id = $1
     ORDER BY
-        view_all_task.start_dt
+        view_all_task.id DESC
     ;
 `
 exports.TASK_BY_ID = `
@@ -187,7 +187,7 @@ exports.TASK_WITH_OPEN_STATUS_BY_REQUESTER = `
         AND view_all_task.requester = $1
         AND view_all_task.status_task = 'open'
     ORDER BY
-        id DESC
+        view_all_task.id DESC
     ;
 `
 
@@ -202,6 +202,8 @@ exports.OFFERS_BY_TASKID = `
     FROM view_all_offer
     WHERE 1=1
         AND view_all_offer.task_id = $1
+    ORDER BY
+        view_all_offer.offered_dt DESC
     ;
 `
 
@@ -217,6 +219,8 @@ exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
     where 1=1
         AND view_all_offer.assignee = $1
         AND view_all_offer.task_id = $2
+    ORDER BY
+        view_all_offer.offered_dt DESC
     ;
 `
 
@@ -229,8 +233,27 @@ exports.OFFER_BY_ASSIGNEE = `
         view_all_offer.offered_dt,
         view_all_offer.status_offer
     FROM view_all_offer
-    where 1=1
+    WHERE 1=1
         AND view_all_offer.assignee = $1
+    ORDER BY
+        view_all_offer.offered_dt DESC
+    ;
+`
+
+exports.ACCEPTED_OFFER_BY_TASKID = `
+    SELECT
+        view_all_offer.id,
+        view_all_offer.task_id,
+        view_all_offer.price,
+        view_all_offer.assignee,
+        view_all_offer.offered_dt,
+        view_all_offer.status_offer
+    FROM view_all_offer
+    where 1=1
+        AND view_all_offer.task_id = $1
+        AND view_all_offer.status_offer = 'accepted'
+    ORDER BY
+        view_all_offer.offered_dt DESC
     ;
 `
 
@@ -257,18 +280,3 @@ exports.USER_BY_NAME = `
         AND view_person_login.username = $1
     ;
 `
-
-exports.ACCEPTED_OFFER_BY_TASKID = `
-    SELECT
-        view_all_offer.id,
-        view_all_offer.task_id,
-        view_all_offer.price,
-        view_all_offer.assignee,
-        view_all_offer.offered_dt,
-        view_all_offer.status_offer
-    FROM view_all_offer
-    where 1=1
-        AND view_all_offer.task_id = $1
-        AND view_all_offer.status_offer = 'accepted'
-    ;
-    `

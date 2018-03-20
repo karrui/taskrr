@@ -9,6 +9,7 @@
     ├── 3.1. Create
     ├── 3.2. Insert
     ├── 3.3. Update
+    ├── 3.4. Delete
     4. Function calls for Create
 */
 
@@ -327,6 +328,7 @@ exports.FUNCTION_INSERT_ONE_OFFER = `
 // ======================================================
 // 3.3. Update
 
+// Change status_task to 'offered' only status_task is currently 'open'
 exports.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID = `
     CREATE OR REPLACE FUNCTION update_offer_by_assignee_taskid (
         _assignee       VARCHAR(25),
@@ -340,10 +342,18 @@ exports.FUNCTION_UPDATE_OFFER_BY_ASSIGNEE_AND_TASKID = `
             UPDATE offer
             SET
                 price = _price,
-                offered_dt = _offered_dt
+                offered_dt = _offered_dt,
+                status_offer = 'pending'
             WHERE 1=1
                 AND assignee = _assignee
                 AND task_id = _task_id
+            ;
+            UPDATE task
+            SET
+                status_task = 'offered'
+            WHERE 1=1
+                AND id = _task_id
+                AND status_task IS NOT DISTINCT FROM 'open'
             ;
         END;
     $BODY$
@@ -435,6 +445,60 @@ exports.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID = `
                 AND id = _offer_id
             ;
 
+            UPDATE task
+            SET
+                status_task = 'open'
+            WHERE 1=1
+                AND id = _task_id
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM offer
+                    WHERE 1=1
+                        AND task_id = _task_id
+                        AND status_offer IS DISTINCT FROM 'rejected'
+                )
+            ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+// ======================================================
+// 3.4. Delete
+
+exports.FUNCTION_DELETE_ONE_TASK_BY_TASK_ID = `
+    CREATE OR REPLACE FUNCTION delete_one_task_by_task_id (
+        _task_id        INTEGER
+    )
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            DELETE FROM task
+            WHERE id = _task_id
+            ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+// Upon removing an offer, if there are no offers left then change status_task to 'open'
+exports.FUNCTION_DELETE_OFFER_BY_ASSIGNEE_AND_TASK_ID = `
+    CREATE OR REPLACE FUNCTION delete_offer_by_assignee_and_task_id (
+        _assignee       VARCHAR(25),
+        _task_id        INTEGER
+    )
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            DELETE FROM offer
+            WHERE 1=1
+                AND assignee = _assignee
+                AND task_id = _task_id
+            ;
             UPDATE task
             SET
                 status_task = 'open'
