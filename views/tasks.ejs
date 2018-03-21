@@ -9,6 +9,15 @@
         <span class="breadcrumb-item active"> Tasks</span>
     </nav>
     
+     <!-- show any error messages -->
+     <% if (typeof message != 'undefined' && message.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible"><%= message %></div>
+    <% } %>
+    <!-- show any success messages -->
+    <% if (typeof success != 'undefined' && success.length > 0) { %>
+        <div class="alert alert-success alert-dismissible"><%= success %></div>
+    <% } %>
+    
     <header class="jumbotron">
         <div class="container">
             <h1>Tasks</h1>
@@ -16,66 +25,124 @@
             <p>
                 <% if (loggedIn) { %>
                     <a class="btn btn-primary btn-lg" href="/tasks/new">Add new tasks</a>
-                    <% } else { %>
-                        <a class="btn btn-primary btn-lg" href="/login">Login to add new tasks!</a>
-                        <a href="/signup">Or sign up now!</a>
+                <% } else { %>
+                    <a class="btn btn-primary btn-lg" href="/login">Login to add new tasks!</a>
+                    <a href="/signup">Or sign up now!</a>
+                <% } %>
+            </p>
+        </div>
+    </header>
+
+    <div class="row">
+        <form action="/search/task/" method="POST">
+            <div class="input-group col-md-6 col-sm-offset-3">
+                <input type="text" class="form-control" name="matching_string" placeholder="Search for tasks...">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Go!</button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="#">Advanced Search...</a></li>
+                        </ul>
+                </div><!-- /btn-group -->
+            </div><!-- /input-group -->
+        </form>
+    </div>
+    <br>
+
+    <!--Each Task has:-->
+    <!-- * id-->
+    <!-- * DISPLAYED - title-->
+    <!-- * DISPLAYED - description-->
+    <!-- * category_id-->
+    <!-- * location-->
+    <!-- * DISPLAYED - requester-->
+    <!-- * start_dt-->
+    <!-- * end_dt-->
+    <!-- * DISPLAYED - price-->
+    <!-- * status_task-->
+    <!-- * assignee-->
+    
+    <div class="row">
+        <% tasks.forEach(function(task) { %>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><%= task.title %></h3>
+                </div>
+                <div class="panel-body">
+                    <p>Description: <%= task.description %></p>
+                    <p>Start: <%= task.start_dt %></p>
+                    <p>End: <%= task.end_dt %></p>
+                    <p>Status: 
+                        <% if (task.status_task === 'accepted') { %>
+                            <span class="label label-success lb-md">
+                                <%= task.status_task %>
+                            </span>
+                        <% } else if (task.status_task === 'offered') { %>
+                            <span class="label label-info lb-md">
+                                <%= task.status_task %>
+                            </span>
+                        <% } else { %>
+                            <span class="label label-warning lb-md">
+                                <%= task.status_task %>
+                            </span>
                         <% } %>
                     </p>
-                </div>
-            </header>
-
-
-            <div class="row">
-                <form action="/search/task/" method="POST">
-                    <div class="input-group col-md-6 col-sm-offset-3">
-                        <input type="text" class="form-control" name="matching_string" placeholder="Search for tasks...">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit">Go!</button>
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                  <li><a href="#">Advanced Search...</a></li>
-                                </ul>
-                        </div><!-- /btn-group -->
-                    </div><!-- /input-group -->
-                </form>
-            </div>
-            <br>
-            <!--Each Task has:-->
-            <!-- * id-->
-            <!-- * DISPLAYED - title-->
-            <!-- * DISPLAYED - description-->
-            <!-- * category_id-->
-            <!-- * location-->
-            <!-- * DISPLAYED - requester-->
-            <!-- * start_dt-->
-            <!-- * end_dt-->
-            <!-- * DISPLAYED - price-->
-            <!-- * status_task-->
-            <!-- * assignee-->
+                    <p>Starting offer: $<%= task.price %></p>
+                    <% if (loggedIn && currentUser.username == task.requester) { %>
+                        <form action="/delete/task/<%=task.id%>" method="POST">
+                        <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
+                        <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
+                        
+                            <input type="hidden" name="id" value="<%=task.id%>" readonly>
+                            <button class="btn btn-danger pull-right" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete task" data-message="Are you sure you want to delete this task?">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        </form>
             
-            <div class="row">
-            <% tasks.forEach(function(task) { %>
-                    <div class="panel panel-default">
-                            <div class="panel-heading">
-                                    <h3 class="panel-title"><%= task.title %></h3>
+                        <!-- Modal Dialog -->
+                        <div class="modal fade" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Delete Permanently</h4>
                                 </div>
-                        <div class="panel-body">
-                            <p>Description: <%= task.description %></p>
-                            <p>Start: <%= task.start_dt %></p>
-                            <p>End: <%= task.end_dt %></p>
-                            <p>Status: <%= task.status_task %></p>
-                            <p>Starting offer: <%= task.price %></p>
-                            <% if (loggedIn && currentUser.username == task.requester) { %>
-                                <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
-                                <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
-                            <% } else { %>
-                                <a class="btn btn-info" href="/tasks/<%=task.id%>">Help with this task!</a>
-                            <% } %>
+                                <div class="modal-body">
+                                <p>Are you sure about this?</p>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
+                                </div>
+                            </div>
+                            </div>
                         </div>
-                        <div class="panel-footer">Requested by: <%= task.requester %></div>
-                    </div>
-                    <% }); %>
+                    <% } else { %>
+                        <a class="btn btn-info" href="/tasks/<%=task.id%>">Help with this task!</a>
+                    <% } %>
                 </div>
-                
-                
-                <% include partials/footer %>
+                <div class="panel-footer">Requested by: <%= task.requester %></div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Dialog show event handler -->
+    <script type="text/javascript">
+        $('#confirmDelete').on('show.bs.modal', function (e) {
+            $message = $(e.relatedTarget).attr('data-message');
+            $(this).find('.modal-body p').text($message);
+            $title = $(e.relatedTarget).attr('data-title');
+            $(this).find('.modal-title').text($title);
+        
+            // Pass form reference to modal for submission on yes/ok
+            var form = $(e.relatedTarget).closest('form');
+            $(this).find('.modal-footer #confirm').data('form', form);
+        });
+        
+        // <!-- Form confirm (yes/ok) handler, submits form -->
+        $('#confirmDelete').find('.modal-footer #confirm').on('click', function(){
+            $(this).data('form').submit();
+        });
+    </script>
+
+<% include partials/footer %>
