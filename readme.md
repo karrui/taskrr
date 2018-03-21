@@ -7,8 +7,21 @@ The application provides templates for generic common tasks to facilitate task r
 The successful bidder for a task is chosen by the task requester. 
 Each user has an account, and administrators can create/modify/delete entries.
 
-## Getting started
+## Features
+### Working authentication
+![](./docs/images/profile_tasks.gif)
 
+### View tasks
+![](./docs/images/tasks_demo.gif)
+
+### Edit tasks
+![](./docs/images/edit_tasks.gif)
+
+### Add offers
+![](./docs/images/edit_offers.gif)
+
+
+And more...
 
 ## Implemented: 
 * User authentication
@@ -18,7 +31,8 @@ Each user has an account, and administrators can create/modify/delete entries.
 * Categories page that lists all categories
 * Tasks page that lists all tasks
 
-## Database schema:
+### Database schema:
+![](./docs/images/DatabaseSchema.png)
 ### ER Diagram:
 ![](./docs/images/ERDiagram.png)
 
