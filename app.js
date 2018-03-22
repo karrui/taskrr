@@ -1,4 +1,22 @@
 require('dotenv').config()
+
+var config = {
+    host: process.env.REMOTE_HOST,
+    username: process.env.DB_USER,
+    dstHost: process.env.REMOTE_HOST,
+    dstPort: process.env.REMOTE_DEST_PORT,
+    localPort: process.env.DB_PORT,
+    password: process.env.DB_PASS,
+    keepAlive: true,
+};
+
+var tunnel = require('tunnel-ssh');
+    tunnel(config, function (error, server) {
+        if (error) {
+            console.log(error);
+        }
+});
+
 var express          = require('express');
 var app              = express();
 var passport         = require('passport');
@@ -540,8 +558,6 @@ app.use(function(req, res, next){
     res.status(404).render('404', { title: "Sorry, page not found" });
 });
 
-// BEFORE YOU START THIS SERVER RUN IN NEW TERMINAL TAB TO ESTABLISH LINK
-// ssh -L 63333:localhost:5432 webapp@128.199.75.94
 app.listen(5000, 'localhost', function() {
     console.log("Taskrr server has started!");
 });
