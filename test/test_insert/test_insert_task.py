@@ -25,16 +25,7 @@ def insert_new_requester(cursor, person_task_dummy):
 
 def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     # Add the requester
-    query = r"""
-        SELECT
-            insert_one_person('{}', '{}', '{}', '{}')
-        ;
-    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
-
-    try:
-        sql(cursor, query)
-    except Exception as e:
-        raise e
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
