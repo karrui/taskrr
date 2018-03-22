@@ -29,12 +29,16 @@ def test_insert_person_full_with_correct_role(cursor, person_bob):
     query = r"""
     SELECT 1
     FROM person
-    WHERE 1=1
-        AND person.username = '{}'
-        AND person.password = '{}'
-        AND person.email = '{}'
-        AND person.created_dt = '{}'
-        AND person.role = 'member'
+    WHERE EXISTS (
+        SELECT id
+        FROM person
+        WHERE 1=1
+            AND person.username = '{}'
+            AND person.password = '{}'
+            AND person.email = '{}'
+            AND person.created_dt = '{}'
+            AND person.role = 'member'
+    )
     ;""".format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
 
     data = sql_select(cursor, query)
@@ -56,7 +60,7 @@ def test_insert_person_without_username(cursor, person_bob):
         ;
     """.format(person_bob.password, person_bob.email, person_bob.created_dt)
 
-    # Catch IntegrityError when trying to execute the Insert query
+    # Raise IntegrityError as `username` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
@@ -76,7 +80,7 @@ def test_insert_person_without_password(cursor, person_bob):
         ;
     """.format(person_bob.username, person_bob.email, person_bob.created_dt)
 
-    # Catch IntegrityError when trying to execute the Insert query
+    # Raise IntegrityError as `password` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
@@ -96,7 +100,7 @@ def test_insert_person_without_email(cursor, person_bob):
         ;
     """.format(person_bob.username, person_bob.password, person_bob.created_dt)
 
-    # Catch IntegrityError when trying to execute the Insert query
+    # Raise IntegrityError as `email` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
@@ -116,7 +120,7 @@ def test_insert_person_without_created_dt(cursor, person_bob):
         ;
     """.format(person_bob.username, person_bob.password, person_bob.email)
 
-    # Catch IntegrityError when trying to execute the Insert query
+    # Raise IntegrityError as `created_dt` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
@@ -140,7 +144,7 @@ def test_insert_person_with_duplicate_username(cursor, person_bob):
         ;
     """.format(person_bob.username, person_bob.password, 'notbob@doesntexist.com', person_bob.created_dt)
 
-    # Catch IntegrityError when trying to execute the Insert query
+    # Raise IntegrityError as `username` must be UNIQUE
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
@@ -164,6 +168,6 @@ def test_insert_person_with_duplicate_email(cursor, person_bob):
         ;
     """.format('Not_bob_testing_real',person_bob.password, person_bob.email, person_bob.created_dt)
 
-    # Catch IntegrityError when trying to execute the Insert query
+    # Raise IntegrityError as `email` must be UNIQUE
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
