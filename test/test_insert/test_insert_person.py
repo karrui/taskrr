@@ -14,7 +14,7 @@ def person_bob(Person):
     bob_info = ['Bob_testing_is_not_real', '123123123', 'bob@doesntexist.com', '2018-03-19 17:43:54.798']
     return Person(*bob_info)
 
-def test_add_person_full_with_correct_role(cursor, person_bob):
+def test_insert_person_full_with_correct_role(cursor, person_bob):
     query = r"""
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
@@ -40,57 +40,87 @@ def test_add_person_full_with_correct_role(cursor, person_bob):
     data = sql_select(cursor, query)
     assert (1,) in data
 
-def test_add_person_with_only_username(cursor, person_bob):
+def test_insert_person_without_username(cursor, person_bob):
     query = r"""
         INSERT INTO person
             (
-                username
+                password,
+                email,
+                created_dt
             )
         VALUES(
-            '{}'
-        )
-        ;
-    """.format(person_bob.username)
-
-    # Catch IntegrityError when trying to execute the Insert query
-    with pytest.raises(IntegrityError) as e_info:
-        sql(cursor, query)
-
-def test_add_person_with_only_email(cursor, person_bob):
-    query = r"""
-        INSERT INTO person
-            (
-                email
-            )
-        VALUES(
-            '{}'
-        )
-        ;
-    """.format(person_bob.email)
-
-    # Catch IntegrityError when trying to execute the Insert query
-    with pytest.raises(IntegrityError) as e_info:
-        sql(cursor, query)
-
-def test_add_person_with_only_username_password(cursor, person_bob):
-    query = r"""
-        INSERT INTO person
-            (
-                username,
-                password
-            )
-        VALUES(
+            '{}',
             '{}',
             '{}'
         )
         ;
-    """.format(person_bob.username, person_bob.password)
+    """.format(person_bob.password, person_bob.email, person_bob.created_dt)
 
     # Catch IntegrityError when trying to execute the Insert query
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_add_person_with_duplicate_username(cursor, person_bob):
+def test_insert_person_without_password(cursor, person_bob):
+    query = r"""
+        INSERT INTO person
+            (
+                username,
+                email,
+                created_dt
+            )
+        VALUES(
+            '{}',
+            '{}',
+            '{}'
+        )
+        ;
+    """.format(person_bob.username, person_bob.email, person_bob.created_dt)
+
+    # Catch IntegrityError when trying to execute the Insert query
+    with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_person_without_email(cursor, person_bob):
+    query = r"""
+        INSERT INTO person
+            (
+                username,
+                password,
+                created_dt
+            )
+        VALUES(
+            '{}',
+            '{}',
+            '{}'
+        )
+        ;
+    """.format(person_bob.username, person_bob.password, person_bob.created_dt)
+
+    # Catch IntegrityError when trying to execute the Insert query
+    with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_person_without_created_dt(cursor, person_bob):
+    query = r"""
+        INSERT INTO person
+            (
+                username,
+                password,
+                email
+            )
+        VALUES(
+            '{}',
+            '{}',
+            '{}'
+        )
+        ;
+    """.format(person_bob.username, person_bob.password, person_bob.email)
+
+    # Catch IntegrityError when trying to execute the Insert query
+    with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_person_with_duplicate_username(cursor, person_bob):
 
     # Add normal person
     query = r"""
@@ -114,7 +144,7 @@ def test_add_person_with_duplicate_username(cursor, person_bob):
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_add_person_with_duplicate_email(cursor, person_bob):
+def test_insert_person_with_duplicate_email(cursor, person_bob):
 
     # Add normal person
     query = r"""

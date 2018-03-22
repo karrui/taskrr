@@ -13,7 +13,7 @@ def category_meow(Category):
     category_info = [12, 'meow']
     return Category(*category_info)
 
-def test_add_category(cursor, category_meow):
+def test_insert_category(cursor, category_meow):
     query = r"""
         INSERT INTO category (id, name)
         VALUES ({}, '{}')

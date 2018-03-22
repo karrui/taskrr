@@ -21,7 +21,7 @@ def task_dummy(Task, person_task_requester):
                     123.59, 'open']
     return Task(*task_info)
 
-def test_add_task_full(cursor, person_task_requester, task_dummy):
+def test_insert_task_full(cursor, person_task_requester, task_dummy):
     # Add the requester
     query = r"""
         SELECT
@@ -62,6 +62,7 @@ def test_add_task_full(cursor, person_task_requester, task_dummy):
         AND task.end_dt = '{}'
         AND task.price = '{}'
         AND task.status_task = 'open'
+        AND task.assignee IS NULL
     ;
     """.format(task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
                 task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price
