@@ -9,7 +9,6 @@ from psycopg2 import IntegrityError
 def cursor(get_cursor):
     return get_cursor
 
-
 def insert_new_person(cursor, new_person):
     # Add the requester
     query = r"""
@@ -61,13 +60,13 @@ def get_new_task_id(cursor, task_dummy):
     except Exception as e:
         raise e
 
-def test_delete_offer_by_assignee_task_id(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+def test_update_offer_with_open_task(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
     insert_new_person(cursor, person_task_dummy)
     insert_new_person(cursor, person_offer_dummy)
     insert_new_task(cursor, task_dummy)
     task_id = get_new_task_id(cursor, task_dummy)
 
-    # Add an offer to delete later
+    # Add an offer to update later
     query = r"""
         SELECT
             insert_one_offer({}, {}, '{}', '{}')
@@ -78,53 +77,94 @@ def test_delete_offer_by_assignee_task_id(cursor, task_dummy, offer_dummy, perso
     except Exception as e:
         raise e
 
-    # Get the total number of offers before removing the offer
+    # Update the offer
     query = r"""
-    SELECT COUNT(*)
-    FROM offer
-    ;
-    """
-    num_of_offers_before = sql_select(cursor, query)
-    try:
-        num_of_offers_before = int(num_of_offers_before[0][0])
-    except Exception as e:
-        raise e
-
-    # Delete the added offer
-    query = r"""
-    SELECT
-        delete_offer_by_assignee_and_task_id('{}', {})
-    ;""".format(offer_dummy.assignee, task_id)
+        SELECT
+            update_offer_by_assignee_taskid('{}', {}, {}, '{}')
+        ;
+    """.format(offer_dummy.assignee, task_id, 50, offer_dummy.offered_dt)
     try:
         sql(cursor, query)
     except Exception as e:
         raise e
 
-    # Get the total number of offers after removing the offer
+    # Check that the offer's status is changed to 'pending'
     query = r"""
-    SELECT COUNT(*)
+    SELECT offer.status_offer
     FROM offer
+    WHERE 1=1
+        AND offer.task_id = {}
+        AND offer.assignee = '{}'
     ;
-    """
-    num_of_offers_after = sql_select(cursor, query)
-    try:
-        num_of_offers_after = int(num_of_offers_after[0][0])
-    except Exception as e:
-        raise e
+    """.format(task_id, offer_dummy.assignee)
 
-    # Ensure that only the added offer got removed
-    assert num_of_offers_after == num_of_offers_before - 1
+    status_offer = sql_select(cursor, query)
 
-    # Check that the task_status is changed to 'open' if all offers are removed
+    # Ensure that the status of the edited offer is 'pending'
+    assert status_offer[0][0] == 'pending'
+
+    # Ensure that the status of the task is 'offered'
     query = r"""
     SELECT task.status_task
     FROM task
     WHERE 1=1
-        AND id = {}
+        AND task.id = {}
     ;
     """.format(task_id)
 
     status_task = sql_select(cursor, query)
+    assert status_task[0][0] == 'offered'
 
-    # Ensure that the status of task with no offers is 'open'
-    assert status_task[0][0] == 'open'
+def test_update_offer_with_accepted_task(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+    insert_new_person(cursor, person_task_dummy)
+    insert_new_person(cursor, person_offer_dummy)
+    insert_new_task(cursor, task_dummy)
+    task_id = get_new_task_id(cursor, task_dummy)
+
+    # Add an offer to update later
+    query = r"""
+        SELECT
+            insert_one_offer({}, {}, '{}', '{}')
+        ;
+    """.format(task_id, offer_dummy.price, offer_dummy.assignee, offer_dummy.offered_dt)
+    try:
+        sql(cursor, query)
+    except Exception as e:
+        raise e
+
+    # Change the `status_task` to 'accepted'
+    query = r"""
+        UPDATE task
+        SET
+            status_task = 'accepted'
+        WHERE 1=1
+            AND id = {}
+        ;
+    """.format(task_id)
+    try:
+        sql(cursor, query)
+    except Exception as e:
+        raise e
+
+    # Update the offer
+    query = r"""
+        SELECT
+            update_offer_by_assignee_taskid('{}', {}, {}, '{}')
+        ;
+    """.format(offer_dummy.assignee, task_id, 50, offer_dummy.offered_dt)
+    try:
+        sql(cursor, query)
+    except Exception as e:
+        raise e
+
+    # Check that the task's status is still 'accepted'
+    query = r"""
+    SELECT task.status_task
+    FROM task
+    WHERE 1=1
+        AND task.id = {}
+    ;
+    """.format(task_id)
+
+    status_task = sql_select(cursor, query)
+    assert status_task[0][0] == 'accepted'
