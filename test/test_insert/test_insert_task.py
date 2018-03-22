@@ -391,8 +391,40 @@ def test_insert_task_with_price_less_than_0(cursor, person_task_dummy, task_dumm
                 task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, -30
     )
 
-    # Raise IntegrityError as `start_dt` cannot be bigger than `end_dt`
+    # Raise IntegrityError as `price` must be bigger or equals 0
     with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_task_with_price_more_than_10000(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
+
+    # Add the task
+    query = r"""
+        SELECT
+            insert_one_task('{}', '{}', {}, '{}', '{}', '{}', '{}', {})
+        ;
+    """.format( task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
+                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, 10001
+    )
+
+    # Raise DataError as `price` cannot be bigger than 9999.99
+    with pytest.raises(DataError) as e_info:
+        sql(cursor, query)
+
+def test_insert_task_with_price_with_more_than_6_precises(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
+
+    # Add the task
+    query = r"""
+        SELECT
+            insert_one_task('{}', '{}', {}, '{}', '{}', '{}', '{}', {})
+        ;
+    """.format( task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
+                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, 9999.999
+    )
+
+    # Raise DataError as `price` can only have less or equals than 6 precises
+    with pytest.raises(DataError) as e_info:
         sql(cursor, query)
 
 def test_insert_task_with_invalid_start_dt(cursor, person_task_dummy, task_dummy):

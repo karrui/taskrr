@@ -7,6 +7,7 @@ from collections import namedtuple
 print()
 print("====================================================================")
 print("\t\tIMPORTANT", end="\n\n")
+print("The tests only work if all tables and functions have been created.")
 print("All queries executed during testing period will be discarded.")
 print("There should only be 1 machine running the tests at a time, to avoid overlapping.")
 print("====================================================================")
@@ -120,7 +121,7 @@ def person_task_dummy(Person):
 def person_offer_dummy(Person):
     assignee_info = ["offer_assignee_testing", "123123123", "offer_assignee@doesntexist.com", "2018-03-10 07:43:54.798"]
     return Person(*assignee_info)
-    
+
 @pytest.fixture
 def task_dummy(Task, person_task_dummy):
     task_info = ['dumb_title_testing', 'dumb_description_testing', 1, 'dumb_location_testing',

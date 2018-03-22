@@ -3,7 +3,7 @@ from os import getcwd
 import sys
 sys.path.append("{}/test".format(getcwd()))
 from executor import sql, sql_select
-from psycopg2 import IntegrityError
+from psycopg2 import IntegrityError, DataError
 
 @pytest.fixture
 def cursor(get_cursor):
@@ -305,7 +305,7 @@ def test_insert_offer_with_assignee_non_exist(cursor, task_dummy, offer_dummy, p
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_offer_with_status_offer_non_exis(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+def test_insert_offer_with_status_offer_non_exist(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
     insert_new_person(cursor, person_task_dummy)
     insert_new_person(cursor, person_offer_dummy)
     insert_new_task(cursor, task_dummy)
@@ -332,4 +332,91 @@ def test_insert_offer_with_status_offer_non_exis(cursor, task_dummy, offer_dummy
 
     # Raise IntegrityError as `status_offer` doesnt exist
     with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_offer_with_price_less_than_0(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+    insert_new_person(cursor, person_task_dummy)
+    insert_new_person(cursor, person_offer_dummy)
+    insert_new_task(cursor, task_dummy)
+    task_id = get_new_task_id(cursor, task_dummy)
+
+    query = r"""
+        INSERT INTO offer
+            (
+                task_id,
+                price,
+                assignee,
+                offered_dt,
+                status_offer
+            )
+        VALUES(
+            {},
+            {},
+            '{}',
+            '{}',
+            'Nexist'
+        )
+        ;
+    """.format(task_id, -10, offer_dummy.assignee, offer_dummy.offered_dt)
+
+    # Raise IntegrityError as `price` must be bigger or equals 0
+    with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_offer_with_price_less_than_10000(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+    insert_new_person(cursor, person_task_dummy)
+    insert_new_person(cursor, person_offer_dummy)
+    insert_new_task(cursor, task_dummy)
+    task_id = get_new_task_id(cursor, task_dummy)
+
+    query = r"""
+        INSERT INTO offer
+            (
+                task_id,
+                price,
+                assignee,
+                offered_dt,
+                status_offer
+            )
+        VALUES(
+            {},
+            {},
+            '{}',
+            '{}',
+            'Nexist'
+        )
+        ;
+    """.format(task_id, 10002, offer_dummy.assignee, offer_dummy.offered_dt)
+
+    # Raise IntegrityError as `price` cannot be bigger than 9999.99
+    with pytest.raises(DataError) as e_info:
+        sql(cursor, query)
+
+def test_insert_offer_with_price_more_than_6_precises(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+    insert_new_person(cursor, person_task_dummy)
+    insert_new_person(cursor, person_offer_dummy)
+    insert_new_task(cursor, task_dummy)
+    task_id = get_new_task_id(cursor, task_dummy)
+
+    query = r"""
+        INSERT INTO offer
+            (
+                task_id,
+                price,
+                assignee,
+                offered_dt,
+                status_offer
+            )
+        VALUES(
+            {},
+            {},
+            '{}',
+            '{}',
+            'Nexist'
+        )
+        ;
+    """.format(task_id, 9999.999, offer_dummy.assignee, offer_dummy.offered_dt)
+
+    # Raise DataError as `price` can only have less or equals than 6 precises
+    with pytest.raises(DataError) as e_info:
         sql(cursor, query)
