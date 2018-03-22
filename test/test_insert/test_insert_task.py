@@ -51,12 +51,12 @@ def test_insert_task_full(cursor, person_task_dummy, task_dummy):
         WHERE 1=1
             AND task.title = '{}'
             AND task.description = '{}'
-            AND task.category_id = '{}'
+            AND task.category_id = {}
             AND task.location = '{}'
             AND task.requester = '{}'
             AND task.start_dt = '{}'
             AND task.end_dt = '{}'
-            AND task.price = '{}'
+            AND task.price = {}
             AND task.status_task = 'open'
             AND task.assignee IS NULL
     )
