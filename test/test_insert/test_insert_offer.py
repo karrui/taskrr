@@ -76,7 +76,7 @@ def test_insert_offer_full(cursor, task_dummy, offer_dummy, person_task_dummy, p
     except Exception as e:
         raise e
 
-    # Ensure that the new person exists in the table
+    # Ensure that the new offer exists in the table
     query = r"""
     SELECT 1
     FROM offer
@@ -94,6 +94,19 @@ def test_insert_offer_full(cursor, task_dummy, offer_dummy, person_task_dummy, p
 
     data = sql_select(cursor, query)
     assert (1,) in data
+
+    # Ensure the `status_task` is 'offered'
+    query = r"""
+    SELECT task.status_task
+    FROM task
+    WHERE 1=1
+        AND id = {}
+    ;
+    """.format(task_id)
+
+    data = sql_select(cursor, query)
+    assert data[0][0] == 'offered'
+
 
 def test_insert_offer_with_same_requester_assignee(cursor, task_dummy, offer_dummy, person_task_dummy):
     insert_new_person(cursor, person_task_dummy)
