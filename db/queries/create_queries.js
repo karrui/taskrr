@@ -305,12 +305,18 @@ exports.FUNCTION_INSERT_ONE_OFFER = `
                     assignee,
                     offered_dt
                 )
-            VALUES(
+            SELECT
                 _task_id,
                 _price,
                 _assignee,
                 _offered_dt
-            )
+            WHERE 1=1
+                AND _assignee IS DISTINCT FROM (
+                    SELECT task.requester
+                    FROM task
+                    WHERE 1=1
+                        AND task.id = _task_id
+                )
             ;
             UPDATE task
             SET

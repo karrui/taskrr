@@ -109,3 +109,26 @@ def Offer_status():
     fields = ( 'status')
     Offer_status = namedtuple('Offer_status', fields)
     return Offer_status
+
+## Dummy objects
+@pytest.fixture
+def person_task_dummy(Person):
+    requester_info = ["task_requester_testing", "123123123", "task_requester@doesntexist.com", "2018-03-10 17:43:54.798"]
+    return Person(*requester_info)
+
+@pytest.fixture
+def person_offer_dummy(Person):
+    assignee_info = ["offer_assignee_testing", "123123123", "offer_assignee@doesntexist.com", "2018-03-10 07:43:54.798"]
+    return Person(*assignee_info)
+    
+@pytest.fixture
+def task_dummy(Task, person_task_dummy):
+    task_info = ['dumb_title_testing', 'dumb_description_testing', 1, 'dumb_location_testing',
+                    person_task_dummy.username, '2018-03-19 17:43:54.798', '2018-03-19 19:43:54.798',
+                    123.59, 'open']
+    return Task(*task_info)
+
+@pytest.fixture
+def offer_dummy(Offer, person_offer_dummy):
+    offer_info = [0, 12, person_offer_dummy.username, "2018-02-10 20:43:54.798", 'pending']
+    return Offer(*offer_info)

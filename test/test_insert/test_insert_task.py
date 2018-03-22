@@ -10,39 +10,26 @@ from psycopg2 import IntegrityError, DataError
 def cursor(get_cursor):
     return get_cursor
 
-@pytest.fixture
-def person_task_requester(Person):
-    requester_info = ["task_requester_testing", "123123123", "task_requester@doesntexist.com", "2018-03-10 17:43:54.798"]
-    return Person(*requester_info)
-
-@pytest.fixture
-def task_dummy(Task, person_task_requester):
-    task_info = ['dumb_title_testing', 'dumb_description_testing', 1, 'dumb_location_testing',
-                    'task_requester_testing', '2018-03-19 17:43:54.798', '2018-03-19 19:43:54.798',
-                    123.59, 'open']
-    return Task(*task_info)
-
-def insert_new_requester(cursor, person_task_requester):
+def insert_new_requester(cursor, person_task_dummy):
     # Add the requester
     query = r"""
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format(person_task_requester.username, person_task_requester.password, person_task_requester.email, person_task_requester.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
 
     try:
         sql(cursor, query)
     except Exception as e:
         raise e
 
-
-def test_insert_task_full(cursor, person_task_requester, task_dummy):
+def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     # Add the requester
     query = r"""
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format(person_task_requester.username, person_task_requester.password, person_task_requester.email, person_task_requester.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
 
     try:
         sql(cursor, query)
@@ -90,8 +77,8 @@ def test_insert_task_full(cursor, person_task_requester, task_dummy):
     data = sql_select(cursor, query)
     assert (1,) in data
 
-def test_insert_task_without_title(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_title(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -124,8 +111,8 @@ def test_insert_task_without_title(cursor, person_task_requester, task_dummy):
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_without_description(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_description(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -158,8 +145,8 @@ def test_insert_task_without_description(cursor, person_task_requester, task_dum
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_without_category_id(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_category_id(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -192,8 +179,8 @@ def test_insert_task_without_category_id(cursor, person_task_requester, task_dum
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_without_location(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_location(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -258,8 +245,8 @@ def test_insert_task_without_requester(cursor, task_dummy):
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_without_start_dt(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_start_dt(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -292,8 +279,8 @@ def test_insert_task_without_start_dt(cursor, person_task_requester, task_dummy)
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_without_end_dt(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_end_dt(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -326,8 +313,8 @@ def test_insert_task_without_end_dt(cursor, person_task_requester, task_dummy):
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_without_price(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_without_price(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -360,8 +347,8 @@ def test_insert_task_without_price(cursor, person_task_requester, task_dummy):
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_start_dt_bigger_end_dt(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_with_start_dt_bigger_end_dt(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -376,8 +363,8 @@ def test_insert_task_with_start_dt_bigger_end_dt(cursor, person_task_requester, 
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_invalid_category_id(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_with_invalid_category_id(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -392,8 +379,8 @@ def test_insert_task_with_invalid_category_id(cursor, person_task_requester, tas
     with pytest.raises(DataError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_price_less_than_0(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_with_price_less_than_0(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -408,8 +395,8 @@ def test_insert_task_with_price_less_than_0(cursor, person_task_requester, task_
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_invalid_start_dt(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_with_invalid_start_dt(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -424,8 +411,8 @@ def test_insert_task_with_invalid_start_dt(cursor, person_task_requester, task_d
     with pytest.raises(DataError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_invalid_end_dt(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_with_invalid_end_dt(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -440,8 +427,8 @@ def test_insert_task_with_invalid_end_dt(cursor, person_task_requester, task_dum
     with pytest.raises(DataError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_non_exist_category_id(cursor, person_task_requester, task_dummy):
-    insert_new_requester(cursor, person_task_requester)
+def test_insert_task_with_non_exist_category_id(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -456,7 +443,7 @@ def test_insert_task_with_non_exist_category_id(cursor, person_task_requester, t
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_task_with_non_exist_requester(cursor, person_task_requester, task_dummy):
+def test_insert_task_with_non_exist_requester(cursor, person_task_dummy, task_dummy):
     # Add the task
     query = r"""
         SELECT
