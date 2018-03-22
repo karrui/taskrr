@@ -30,7 +30,7 @@ def test_insert_person_full_with_correct_role(cursor, person_bob):
     SELECT 1
     FROM person
     WHERE EXISTS (
-        SELECT id
+        SELECT person.id
         FROM person
         WHERE 1=1
             AND person.username = '{}'

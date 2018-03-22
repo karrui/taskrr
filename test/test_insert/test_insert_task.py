@@ -55,7 +55,7 @@ def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     SELECT 1
     FROM task
     WHERE EXISTS (
-        SELECT id
+        SELECT task.id
         FROM task
         WHERE 1=1
             AND task.title = '{}'
@@ -454,5 +454,81 @@ def test_insert_task_with_non_exist_requester(cursor, person_task_dummy, task_du
     )
 
     # Raise IntegrityError as `requester` doesnt exist
+    with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_task_with_non_exist_task_status(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
+
+    # Add the task
+    query = r"""
+        INSERT INTO task
+            (
+                title,
+                description,
+                category_id,
+                location,
+                requester,
+                start_dt,
+                end_dt,
+                price,
+                status_task
+            )
+        VALUES
+            (
+                '{}',
+                '{}',
+                {},
+                '{}',
+                '{}',
+                '{}',
+                '{}',
+                {},
+                'Nexist'
+            )
+        ;
+    """.format( task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
+                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price
+    )
+
+    # Raise IntegrityError as `category_id` doesnt exist
+    with pytest.raises(IntegrityError) as e_info:
+        sql(cursor, query)
+
+def test_insert_task_with_non_exist_assignee(cursor, person_task_dummy, task_dummy):
+    insert_new_requester(cursor, person_task_dummy)
+
+    # Add the task
+    query = r"""
+        INSERT INTO task
+            (
+                title,
+                description,
+                category_id,
+                location,
+                requester,
+                start_dt,
+                end_dt,
+                price,
+                assignee
+            )
+        VALUES
+            (
+                '{}',
+                '{}',
+                {},
+                '{}',
+                '{}',
+                '{}',
+                '{}',
+                {},
+                'null_person_testing'
+            )
+        ;
+    """.format( task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
+                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price
+    )
+
+    # Raise IntegrityError as `category_id` doesnt exist
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
