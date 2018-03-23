@@ -1,5 +1,10 @@
 require('dotenv').config()
 
+
+// Comment out these config and tunnel if not
+// connecting to remote database like we are
+// If you are, add the .env variables to your .env
+// =========================================
 var config = {
     host: process.env.REMOTE_HOST,
     username: process.env.DB_USER,
@@ -16,6 +21,8 @@ var tunnel = require('tunnel-ssh');
             console.log(error);
         }
 });
+// Comment out until here
+// =========================================
 
 var express          = require('express');
 var app              = express();
