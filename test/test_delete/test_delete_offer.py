@@ -72,3 +72,44 @@ def test_delete_offer_by_assignee_task_id(cursor, task_dummy, offer_dummy, perso
 
     # Ensure that the status of task with no offers is 'open'
     assert status_task[0][0] == 'open'
+
+def test_delete_offer_with_task_id_non_exist(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
+    insert_new_person(cursor, person_task_dummy)
+    insert_new_person(cursor, person_offer_dummy)
+
+    # Get the total number of offers before removing the offer
+    query = r"""
+    SELECT COUNT(*)
+    FROM offer
+    ;
+    """
+    num_of_offers_before = sql_select(cursor, query)
+    try:
+        num_of_offers_before = int(num_of_offers_before[0][0])
+    except Exception as e:
+        raise e
+
+    # Delete the added offer with an invalid task_id
+    query = r"""
+        SELECT
+            delete_offer_by_assignee_and_task_id('{}', {})
+    ;""".format(offer_dummy.assignee, -1)
+    try:
+        sql(cursor, query)
+    except Exception as e:
+        raise e
+
+    # Get the total number of offers after trying to remove the offer
+    query = r"""
+    SELECT COUNT(*)
+    FROM offer
+    ;
+    """
+    num_of_offers_after = sql_select(cursor, query)
+    try:
+        num_of_offers_after = int(num_of_offers_after[0][0])
+    except Exception as e:
+        raise e
+
+    # Ensure that no offers got deleted
+    assert num_of_offers_after == num_of_offers_before

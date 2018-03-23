@@ -26,6 +26,26 @@ def test_delete_task_by_task_id(cursor, person_task_dummy, task_dummy):
     # Get the task_id of the created task
     task_id = get_new_task_id(cursor, task_dummy)
 
+    # Remove the task
+    query = r"""
+        WITH test_query AS (
+            SELECT
+                delete_one_task_by_task_id({})
+        )
+        SELECT COUNT(*) FROM test_query;
+    ;""".format(task_id)
+    try:
+        row_count = sql_select(cursor, query)
+    except Exception as e:
+        raise e
+
+    # Ensure that only the added task got removed
+    assert len(row_count) == 1
+
+def test_delete_task_with_task_id_non_exist(cursor, person_task_dummy, task_dummy):
+    # Add the requester
+    insert_new_person(cursor, person_task_dummy)
+
     # Get the total number of tasks before removing the task
     query = r"""
     SELECT COUNT(*)
@@ -40,11 +60,11 @@ def test_delete_task_by_task_id(cursor, person_task_dummy, task_dummy):
 
     # Remove the task
     query = r"""
-    SELECT
-        delete_one_task_by_task_id({})
-    ;""".format(task_id)
+        SELECT
+            delete_one_task_by_task_id({})
+    ;""".format(-1)
     try:
-        sql(cursor, query)
+        row_count = sql_select(cursor, query)
     except Exception as e:
         raise e
 
@@ -60,5 +80,5 @@ def test_delete_task_by_task_id(cursor, person_task_dummy, task_dummy):
     except Exception as e:
         raise e
 
-    # Ensure that only the added task got removed
-    assert num_of_tasks_after == num_of_tasks_before - 1
+    # Ensure that no tasks got removed
+    assert num_of_tasks_after == num_of_tasks_before
