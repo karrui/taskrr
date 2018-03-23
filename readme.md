@@ -96,11 +96,16 @@ DB_PASS=____
 DB_PORT=5432
 DB_DATABASE=cs2102
 
-REMOTE_HOST=192.168.1.120
-REMOTE_DEST_PORT=6000
-
 SESSION_SECRET=thisapplicationisthebest_ohohohohohoohoho
 ```
+If SSHing to a remote database, add in the below variables to the `.env`.
+```
+REMOTE_HOST=<<The remote host URL>>
+REMOTE_DEST_PORT=<< The remote port number>>
+```
+NOTE: The application by default uses the same password for SSHing as your `DB_PASS` entered above.
+NOTE: If not using a remote database, comment out the relevant parts (highlighted in `app.js`) or app will fail to run.
+
 ## Running the application
 Go to the root of the folder (where app.js is) and type
 ```
