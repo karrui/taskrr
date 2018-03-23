@@ -124,4 +124,5 @@ def test_update_offer_with_accepted_task(cursor, task_dummy, offer_dummy, person
     status_task = sql_select(cursor, query)
 
     # Ensure that the task's status is still 'accepted'
+    
     assert status_task[0][0] == 'accepted'
