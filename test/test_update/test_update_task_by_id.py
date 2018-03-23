@@ -90,7 +90,7 @@ def test_update_task_by_id(cursor, person_task_dummy, task_dummy, new_edited_tas
 
     # Check that the task has been edited
     query = r"""
-    SELECT 1
+    SELECT COUNT(*)
     FROM task
     WHERE 1=1
         AND task.id = {}

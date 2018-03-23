@@ -78,9 +78,6 @@ def test_insert_offer_full(cursor, task_dummy, offer_dummy, person_task_dummy, p
 
     # Ensure that the new offer exists in the table
     query = r"""
-    SELECT 1
-    FROM offer
-    WHERE EXISTS (
         SELECT offer.id
         FROM offer
         WHERE 1=1
@@ -89,11 +86,10 @@ def test_insert_offer_full(cursor, task_dummy, offer_dummy, person_task_dummy, p
             AND offer.assignee = '{}'
             AND offer.offered_dt = '{}'
             AND offer.status_offer = 'pending'
-    )
     ;""".format(task_id, offer_dummy.price, offer_dummy.assignee, offer_dummy.offered_dt)
 
     data = sql_select(cursor, query)
-    assert (1,) in data
+    assert len(data) == 1
 
     # Ensure the `status_task` is 'offered'
     query = r"""

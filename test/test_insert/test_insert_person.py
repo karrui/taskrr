@@ -27,10 +27,7 @@ def test_insert_person_full_with_correct_role(cursor, person_bob):
 
     # Ensure that the new person exists in the table
     query = r"""
-    SELECT 1
-    FROM person
-    WHERE EXISTS (
-        SELECT person.id
+    SELECT person.id
         FROM person
         WHERE 1=1
             AND person.username = '{}'
@@ -38,11 +35,10 @@ def test_insert_person_full_with_correct_role(cursor, person_bob):
             AND person.email = '{}'
             AND person.created_dt = '{}'
             AND person.role = 'member'
-    )
     ;""".format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
 
     data = sql_select(cursor, query)
-    assert (1,) in data
+    assert len(data) == 1
 
 def test_insert_person_without_username(cursor, person_bob):
     query = r"""

@@ -27,7 +27,7 @@ def test_insert_category(cursor, category_meow):
 
     # Ensure that the new category exists in the table
     query = r"""
-    SELECT 1
+    SELECT COUNT(*)
     FROM category
     WHERE 1=1
         AND category.name = 'meow'

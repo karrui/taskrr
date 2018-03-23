@@ -43,9 +43,6 @@ def test_insert_task_full(cursor, person_task_dummy, task_dummy):
 
     # Ensure that the new task exists in the table
     query = r"""
-    SELECT 1
-    FROM task
-    WHERE EXISTS (
         SELECT task.id
         FROM task
         WHERE 1=1
@@ -59,14 +56,13 @@ def test_insert_task_full(cursor, person_task_dummy, task_dummy):
             AND task.price = {}
             AND task.status_task = 'open'
             AND task.assignee IS NULL
-    )
     ;
     """.format(task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
                 task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price
     )
 
     data = sql_select(cursor, query)
-    assert (1,) in data
+    assert len(data) == 1
 
 def test_insert_task_without_title(cursor, person_task_dummy, task_dummy):
     insert_new_requester(cursor, person_task_dummy)
