@@ -17,7 +17,8 @@ try:
     test_env = environ['IP_ADDR']
 except:
     print("No 'pytest.ini' file is found.")
-    
+    print()
+
 # Create an SSH tunnel
 tunnel = SSHTunnelForwarder(
     (environ['IP_ADDR'], 22),
