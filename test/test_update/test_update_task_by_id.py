@@ -113,4 +113,6 @@ def test_update_task_by_id(cursor, person_task_dummy, task_dummy, new_edited_tas
     )
 
     data = sql_select(cursor, query)
+
+    # Ensure that there are only 1 task with the unique details
     assert (1,) in data

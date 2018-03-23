@@ -34,4 +34,6 @@ def test_insert_category(cursor, category_meow):
     ;"""
 
     data = sql_select(cursor, query)
+
+    # Ensure that there is only 1 category added
     assert (1,) in data

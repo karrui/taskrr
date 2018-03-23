@@ -38,6 +38,8 @@ def test_insert_person_full_with_correct_role(cursor, person_bob):
     ;""".format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
 
     data = sql_select(cursor, query)
+
+    # Ensure that there is only 1 person added
     assert len(data) == 1
 
 def test_insert_person_without_username(cursor, person_bob):

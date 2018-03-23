@@ -62,6 +62,8 @@ def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     )
 
     data = sql_select(cursor, query)
+
+    # Ensure that there is only 1 task got inserted
     assert len(data) == 1
 
 def test_insert_task_without_title(cursor, person_task_dummy, task_dummy):

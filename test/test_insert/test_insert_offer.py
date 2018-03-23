@@ -89,6 +89,8 @@ def test_insert_offer_full(cursor, task_dummy, offer_dummy, person_task_dummy, p
     ;""".format(task_id, offer_dummy.price, offer_dummy.assignee, offer_dummy.offered_dt)
 
     data = sql_select(cursor, query)
+
+    # Ensure that there is only 1 offer added
     assert len(data) == 1
 
     # Ensure the `status_task` is 'offered'
@@ -101,6 +103,8 @@ def test_insert_offer_full(cursor, task_dummy, offer_dummy, person_task_dummy, p
     """.format(task_id)
 
     data = sql_select(cursor, query)
+
+    # Ensure that the task's status is changed to `offered` after adding an offer
     assert data[0][0] == 'offered'
 
 
@@ -137,6 +141,8 @@ def test_insert_offer_with_same_requester_assignee(cursor, task_dummy, offer_dum
     ;""".format(task_id, offer_dummy.price, person_task_dummy.username, offer_dummy.offered_dt)
 
     data = sql_select(cursor, query)
+
+    # Ensure that the offer, having the same requester and assignee, doesnt get inserted
     assert (1,) not in data
 
 def test_insert_offer_without_task_id(cursor, task_dummy, offer_dummy, person_task_dummy, person_offer_dummy):
