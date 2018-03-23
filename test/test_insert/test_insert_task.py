@@ -2,7 +2,7 @@ import pytest
 from os import getcwd
 import sys
 sys.path.append("{}/test".format(getcwd()))
-from executor import sql, sql_select
+from executor import sql, sql_select, insert_new_person
 from read_file import read_csv
 from psycopg2 import IntegrityError, DataError
 
@@ -10,22 +10,9 @@ from psycopg2 import IntegrityError, DataError
 def cursor(get_cursor):
     return get_cursor
 
-def insert_new_requester(cursor, person_task_dummy):
-    # Add the requester
-    query = r"""
-        SELECT
-            insert_one_person('{}', '{}', '{}', '{}')
-        ;
-    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
-
-    try:
-        sql(cursor, query)
-    except Exception as e:
-        raise e
-
 def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     # Add the requester
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -67,7 +54,7 @@ def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     assert len(data) == 1
 
 def test_insert_task_without_title(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -101,7 +88,7 @@ def test_insert_task_without_title(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_without_description(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -135,7 +122,7 @@ def test_insert_task_without_description(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_without_category_id(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -169,7 +156,7 @@ def test_insert_task_without_category_id(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_without_location(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -235,7 +222,7 @@ def test_insert_task_without_requester(cursor, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_without_start_dt(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -269,7 +256,7 @@ def test_insert_task_without_start_dt(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_without_end_dt(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -303,7 +290,7 @@ def test_insert_task_without_end_dt(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_without_price(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -337,7 +324,7 @@ def test_insert_task_without_price(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_with_start_dt_bigger_end_dt(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -353,7 +340,7 @@ def test_insert_task_with_start_dt_bigger_end_dt(cursor, person_task_dummy, task
         sql(cursor, query)
 
 def test_insert_task_with_invalid_category_id(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -369,7 +356,7 @@ def test_insert_task_with_invalid_category_id(cursor, person_task_dummy, task_du
         sql(cursor, query)
 
 def test_insert_task_with_price_less_than_0(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -385,7 +372,7 @@ def test_insert_task_with_price_less_than_0(cursor, person_task_dummy, task_dumm
         sql(cursor, query)
 
 def test_insert_task_with_price_more_than_10000(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -401,7 +388,7 @@ def test_insert_task_with_price_more_than_10000(cursor, person_task_dummy, task_
         sql(cursor, query)
 
 def test_insert_task_with_price_with_more_than_6_precises(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -417,7 +404,7 @@ def test_insert_task_with_price_with_more_than_6_precises(cursor, person_task_du
         sql(cursor, query)
 
 def test_insert_task_with_invalid_start_dt(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -433,7 +420,7 @@ def test_insert_task_with_invalid_start_dt(cursor, person_task_dummy, task_dummy
         sql(cursor, query)
 
 def test_insert_task_with_invalid_end_dt(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -449,7 +436,7 @@ def test_insert_task_with_invalid_end_dt(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
 
 def test_insert_task_with_non_exist_category_id(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -479,7 +466,7 @@ def test_insert_task_with_non_exist_requester(cursor, person_task_dummy, task_du
         sql(cursor, query)
 
 def test_insert_task_with_non_exist_task_status(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
@@ -517,7 +504,7 @@ def test_insert_task_with_non_exist_task_status(cursor, person_task_dummy, task_
         sql(cursor, query)
 
 def test_insert_task_with_non_exist_assignee(cursor, person_task_dummy, task_dummy):
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""

@@ -113,13 +113,23 @@ def Offer_status():
 
 ## Dummy objects
 @pytest.fixture
+def category_meow(Category):
+    category_info = [12, 'meow']
+    return Category(*category_info)
+
+@pytest.fixture
 def person_task_dummy(Person):
-    requester_info = ["task_requester_testing", "123123123", "task_requester@doesntexist.com", "2018-03-10 17:43:54.798"]
+    requester_info = ["task_requester_testing", "123ml12$#_3k", "task_requester@doesntexist.com", "2018-03-10 17:43:54.798"]
     return Person(*requester_info)
 
 @pytest.fixture
 def person_offer_dummy(Person):
-    assignee_info = ["offer_assignee_testing", "123123123", "offer_assignee@doesntexist.com", "2018-03-10 07:43:54.798"]
+    assignee_info = ["offer_assignee_testing", "123ml12$#_3k", "offer_assignee@doesntexist.com", "2018-03-10 07:43:54.798"]
+    return Person(*assignee_info)
+
+@pytest.fixture
+def person_offer_dummy_2(Person):
+    assignee_info = ["offer_assignee_test_2", "123ml12$#_3k", "offer_assign2@doesntexist.com", "2018-03-10 01:43:54.798"]
     return Person(*assignee_info)
 
 @pytest.fixture
@@ -132,4 +142,9 @@ def task_dummy(Task, person_task_dummy):
 @pytest.fixture
 def offer_dummy(Offer, person_offer_dummy):
     offer_info = [0, 12, person_offer_dummy.username, "2018-02-10 20:43:54.798", 'pending']
+    return Offer(*offer_info)
+
+@pytest.fixture
+def offer_dummy_2(Offer, person_offer_dummy_2):
+    offer_info = [0, 20, person_offer_dummy_2.username, "2018-02-11 20:43:54.798", 'pending']
     return Offer(*offer_info)

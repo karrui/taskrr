@@ -9,17 +9,12 @@ from psycopg2 import IntegrityError
 def cursor(get_cursor):
     return get_cursor
 
-@pytest.fixture
-def person_bob(Person):
-    bob_info = ['Bob_testing_is_not_real', '123123123', 'bob@doesntexist.com', '2018-03-19 17:43:54.798']
-    return Person(*bob_info)
-
-def test_insert_person_full_with_correct_role(cursor, person_bob):
+def test_insert_person_full_with_correct_role(cursor, person_task_dummy):
     query = r"""
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
     try:
         sql(cursor, query)
     except Exception as e:
@@ -35,14 +30,14 @@ def test_insert_person_full_with_correct_role(cursor, person_bob):
             AND person.email = '{}'
             AND person.created_dt = '{}'
             AND person.role = 'member'
-    ;""".format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
+    ;""".format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
 
     data = sql_select(cursor, query)
 
     # Ensure that there is only 1 person added
     assert len(data) == 1
 
-def test_insert_person_without_username(cursor, person_bob):
+def test_insert_person_without_username(cursor, person_task_dummy):
     query = r"""
         INSERT INTO person
             (
@@ -56,13 +51,13 @@ def test_insert_person_without_username(cursor, person_bob):
             '{}'
         )
         ;
-    """.format(person_bob.password, person_bob.email, person_bob.created_dt)
+    """.format(person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
 
     # Raise IntegrityError as `username` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_person_without_password(cursor, person_bob):
+def test_insert_person_without_password(cursor, person_task_dummy):
     query = r"""
         INSERT INTO person
             (
@@ -76,13 +71,13 @@ def test_insert_person_without_password(cursor, person_bob):
             '{}'
         )
         ;
-    """.format(person_bob.username, person_bob.email, person_bob.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.email, person_task_dummy.created_dt)
 
     # Raise IntegrityError as `password` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_person_without_email(cursor, person_bob):
+def test_insert_person_without_email(cursor, person_task_dummy):
     query = r"""
         INSERT INTO person
             (
@@ -96,13 +91,13 @@ def test_insert_person_without_email(cursor, person_bob):
             '{}'
         )
         ;
-    """.format(person_bob.username, person_bob.password, person_bob.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.created_dt)
 
     # Raise IntegrityError as `email` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_person_without_created_dt(cursor, person_bob):
+def test_insert_person_without_created_dt(cursor, person_task_dummy):
     query = r"""
         INSERT INTO person
             (
@@ -116,20 +111,20 @@ def test_insert_person_without_created_dt(cursor, person_bob):
             '{}'
         )
         ;
-    """.format(person_bob.username, person_bob.password, person_bob.email)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email)
 
     # Raise IntegrityError as `created_dt` cannot be NULL
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_person_with_duplicate_username(cursor, person_bob):
+def test_insert_person_with_duplicate_username(cursor, person_task_dummy):
 
     # Add normal person
     query = r"""
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
     try:
         sql(cursor, query)
     except Exception as e:
@@ -140,20 +135,20 @@ def test_insert_person_with_duplicate_username(cursor, person_bob):
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format(person_bob.username, person_bob.password, 'notbob@doesntexist.com', person_bob.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, 'notbob@doesntexist.com', person_task_dummy.created_dt)
 
     # Raise IntegrityError as `username` must be UNIQUE
     with pytest.raises(IntegrityError) as e_info:
         sql(cursor, query)
 
-def test_insert_person_with_duplicate_email(cursor, person_bob):
+def test_insert_person_with_duplicate_email(cursor, person_task_dummy):
 
     # Add normal person
     query = r"""
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format(person_bob.username, person_bob.password, person_bob.email, person_bob.created_dt)
+    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
     try:
         sql(cursor, query)
     except Exception as e:
@@ -164,7 +159,7 @@ def test_insert_person_with_duplicate_email(cursor, person_bob):
         SELECT
             insert_one_person('{}', '{}', '{}', '{}')
         ;
-    """.format('Not_bob_testing_real',person_bob.password, person_bob.email, person_bob.created_dt)
+    """.format('Not_bob_testing_real',person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
 
     # Raise IntegrityError as `email` must be UNIQUE
     with pytest.raises(IntegrityError) as e_info:

@@ -2,7 +2,7 @@ import pytest
 from os import getcwd
 import sys
 sys.path.append("{}/test".format(getcwd()))
-from executor import sql, sql_select
+from executor import sql_select
 from read_file import read_csv
 
 @pytest.fixture

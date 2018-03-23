@@ -8,11 +8,6 @@ from executor import sql, sql_select
 def cursor(get_cursor):
     return get_cursor
 
-@pytest.fixture
-def category_meow(Category):
-    category_info = [12, 'meow']
-    return Category(*category_info)
-
 def test_insert_category(cursor, category_meow):
     query = r"""
         INSERT INTO category (id, name)

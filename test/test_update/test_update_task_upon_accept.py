@@ -2,73 +2,12 @@ import pytest
 from os import getcwd
 import sys
 sys.path.append("{}/test".format(getcwd()))
-from executor import sql, sql_select
+from executor import sql, sql_select, insert_new_person, insert_new_task, get_new_task_id
 from psycopg2 import IntegrityError
 
 @pytest.fixture
 def cursor(get_cursor):
     return get_cursor
-
-@pytest.fixture
-def person_offer_dummy_2(Person):
-    assignee_info = ["offer_assignee_test_2", "123123123", "offer_assign2@doesntexist.com", "2018-03-10 01:43:54.798"]
-    return Person(*assignee_info)
-
-@pytest.fixture
-def offer_dummy_2(Offer, person_offer_dummy_2):
-    offer_info = [0, 20, person_offer_dummy_2.username, "2018-02-11 20:43:54.798", 'pending']
-    return Offer(*offer_info)
-
-def insert_new_person(cursor, new_person):
-    # Add the requester
-    query = r"""
-        SELECT
-            insert_one_person('{}', '{}', '{}', '{}')
-        ;
-    """.format(new_person.username, new_person.password, new_person.email, new_person.created_dt)
-
-    try:
-        sql(cursor, query)
-    except Exception as e:
-        raise e
-
-def insert_new_task(cursor, task_dummy):
-    query = r"""
-        SELECT
-            insert_one_task('{}', '{}', {}, '{}', '{}', '{}', '{}', {})
-        ;
-    """.format( task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
-                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price
-    )
-    try:
-        sql(cursor, query)
-    except Exception as e:
-        raise e
-
-def get_new_task_id(cursor, task_dummy):
-    query = r"""
-        SELECT id
-        FROM task
-        WHERE 1=1
-            AND task.title = '{}'
-            AND task.description = '{}'
-            AND task.category_id = '{}'
-            AND task.location = '{}'
-            AND task.requester = '{}'
-            AND task.start_dt = '{}'
-            AND task.end_dt = '{}'
-            AND task.price = '{}'
-            AND task.status_task = 'open'
-            AND task.assignee IS NULL
-        ;
-    """.format(task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
-                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price)
-
-    try:
-        data = sql_select(cursor, query)
-        return data[0][0]
-    except Exception as e:
-        raise e
 
 def test_update_task_upon_accept_offer(cursor, task_dummy, offer_dummy, offer_dummy_2, person_task_dummy, person_offer_dummy, person_offer_dummy_2):
     insert_new_person(cursor, person_task_dummy)

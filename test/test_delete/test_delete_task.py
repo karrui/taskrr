@@ -2,7 +2,7 @@ import pytest
 from os import getcwd
 import sys
 sys.path.append("{}/test".format(getcwd()))
-from executor import sql, sql_select
+from executor import sql, sql_select, get_new_task_id, insert_new_person
 from read_file import read_csv
 from psycopg2 import IntegrityError
 
@@ -10,47 +10,9 @@ from psycopg2 import IntegrityError
 def cursor(get_cursor):
     return get_cursor
 
-def get_new_task_id(cursor, task_dummy):
-    query = r"""
-        SELECT id
-        FROM task
-        WHERE 1=1
-            AND task.title = '{}'
-            AND task.description = '{}'
-            AND task.category_id = '{}'
-            AND task.location = '{}'
-            AND task.requester = '{}'
-            AND task.start_dt = '{}'
-            AND task.end_dt = '{}'
-            AND task.price = '{}'
-            AND task.status_task = 'open'
-            AND task.assignee IS NULL
-        ;
-    """.format(task_dummy.title, task_dummy.description, task_dummy.category_id, task_dummy.location,
-                task_dummy.requester, task_dummy.start_dt, task_dummy.end_dt, task_dummy.price)
-
-    try:
-        data = sql_select(cursor, query)
-        return data[0][0]
-    except Exception as e:
-        raise e
-
-def insert_new_requester(cursor, person_task_dummy):
-    # Add the requester
-    query = r"""
-        SELECT
-            insert_one_person('{}', '{}', '{}', '{}')
-        ;
-    """.format(person_task_dummy.username, person_task_dummy.password, person_task_dummy.email, person_task_dummy.created_dt)
-
-    try:
-        sql(cursor, query)
-    except Exception as e:
-        raise e
-
 def test_delete_task_by_task_id(cursor, person_task_dummy, task_dummy):
     # Add the requester
-    insert_new_requester(cursor, person_task_dummy)
+    insert_new_person(cursor, person_task_dummy)
 
     # Add the task
     query = r"""
