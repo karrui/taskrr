@@ -15,4 +15,4 @@ Gets log in form
 Get task by task id:
 > `GET /tasks/{id}`
 
-... etc to be continued
+... etc
