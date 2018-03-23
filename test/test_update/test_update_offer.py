@@ -148,14 +148,20 @@ def test_update_offer_with_accepted_task(cursor, task_dummy, offer_dummy, person
 
     # Update the offer
     query = r"""
-        SELECT
-            update_offer_by_assignee_taskid('{}', {}, {}, '{}')
+        WITH test_query AS (
+            SELECT
+                update_offer_by_assignee_taskid('{}', {}, {}, '{}')
+        )
+        SELECT COUNT(*) FROM test_query
         ;
     """.format(offer_dummy.assignee, task_id, 50, offer_dummy.offered_dt)
     try:
-        sql(cursor, query)
+        row_count = sql_select(cursor, query)
     except Exception as e:
         raise e
+
+    # Ensure that only 1 row got updated
+    assert len(row_count) == 1
 
     # Check that the task's status is still 'accepted'
     query = r"""

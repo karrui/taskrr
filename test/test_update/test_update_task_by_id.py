@@ -77,16 +77,22 @@ def test_update_task_by_id(cursor, person_task_dummy, task_dummy, new_edited_tas
 
     # Update the task's details
     query = r"""
-        SELECT
-            update_task_by_id({}, '{}', '{}', {}, '{}', '{}', '{}', {})
+        WITH test_query AS (
+            SELECT
+                update_task_by_id({}, '{}', '{}', {}, '{}', '{}', '{}', {})
+        )
+        SELECT COUNT(*) FROM test_query
     ;
     """.format(task_id, new_edited_task_dummy.title, new_edited_task_dummy.description, new_edited_task_dummy.category_id,
                 new_edited_task_dummy.location, new_edited_task_dummy.start_dt, new_edited_task_dummy.end_dt,
                 new_edited_task_dummy.price)
     try:
-        sql(cursor, query)
+        row_count = sql_select(cursor, query)
     except Exception as e:
         raise e
+
+    # Ensure that only 1 row got edited
+    assert len(row_count) == 1
 
     # Check that the task has been edited
     query = r"""
