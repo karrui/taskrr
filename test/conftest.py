@@ -5,12 +5,12 @@ from sshtunnel import SSHTunnelForwarder
 from collections import namedtuple
 
 print()
-print("====================================================================")
+print("=========================================================================================")
 print("\t\tIMPORTANT", end="\n\n")
 print("The tests only work if all tables and functions have been created.")
 print("All queries executed during testing period will be discarded.")
 print("There should only be 1 machine running the tests at a time, to avoid overlapping.")
-print("====================================================================")
+print("=========================================================================================")
 print()
 
 try:
