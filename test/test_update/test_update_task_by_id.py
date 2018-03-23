@@ -4,7 +4,7 @@ import sys
 sys.path.append("{}/test".format(getcwd()))
 from executor import sql, sql_select
 from read_file import read_csv
-from psycopg2 import IntegrityError, DataError
+from psycopg2 import IntegrityError
 
 @pytest.fixture
 def cursor(get_cursor):

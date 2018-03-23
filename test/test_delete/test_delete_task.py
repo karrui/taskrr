@@ -4,7 +4,7 @@ import sys
 sys.path.append("{}/test".format(getcwd()))
 from executor import sql, sql_select
 from read_file import read_csv
-from psycopg2 import IntegrityError, DataError
+from psycopg2 import IntegrityError
 
 @pytest.fixture
 def cursor(get_cursor):
@@ -89,7 +89,7 @@ def test_delete_task_by_task_id(cursor, person_task_dummy, task_dummy):
         sql(cursor, query)
     except Exception as e:
         raise e
-        
+
     # Get the total number of tasks after removing the task
     query = r"""
     SELECT COUNT(*)
