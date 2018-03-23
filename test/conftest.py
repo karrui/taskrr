@@ -13,6 +13,11 @@ print("There should only be 1 machine running the tests at a time, to avoid over
 print("====================================================================")
 print()
 
+try:
+    test_env = environ['IP_ADDR']
+except:
+    print("No 'pytest.ini' file is found.")
+    
 # Create an SSH tunnel
 tunnel = SSHTunnelForwarder(
     (environ['IP_ADDR'], 22),
