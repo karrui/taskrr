@@ -108,7 +108,7 @@ $ node app.js
 ```
 By default, app will run on `localhost` at port `5000`.
 
-From your browser, ou can access the app at:
+From your browser, you can access the app at:
 ```
 http://localhost:5000/
 ```
