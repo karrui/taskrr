@@ -5,10 +5,6 @@ sys.path.append("{}/test".format(getcwd()))
 from executor import sql, sql_select, insert_new_person, insert_new_task, get_new_task_id
 from psycopg2 import IntegrityError
 
-@pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
 def test_update_task_upon_accept_offer(cursor, task_dummy, offer_dummy, offer_dummy_2, person_task_dummy, person_offer_dummy, person_offer_dummy_2):
     insert_new_person(cursor, person_task_dummy)
     insert_new_person(cursor, person_offer_dummy)

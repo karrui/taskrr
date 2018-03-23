@@ -6,10 +6,6 @@ from executor import sql, sql_select, insert_new_person
 from read_file import read_csv
 from psycopg2 import IntegrityError, DataError
 
-@pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
 def test_insert_task_full(cursor, person_task_dummy, task_dummy):
     # Add the requester
     insert_new_person(cursor, person_task_dummy)

@@ -7,10 +7,6 @@ from read_file import read_csv
 from psycopg2 import IntegrityError
 
 @pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
-@pytest.fixture
 def new_edited_task_dummy(Task, person_task_dummy):
     task_info = ['dumb_title_test', 'dumb_description_test', 2, 'dumb_location_test',
                     person_task_dummy.username, '2018-03-20 17:43:54.798', '2018-03-21 19:43:54.798',

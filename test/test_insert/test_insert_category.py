@@ -4,10 +4,6 @@ import sys
 sys.path.append("{}/test".format(getcwd()))
 from executor import sql, sql_select
 
-@pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
 def test_insert_category(cursor, category_meow):
     query = r"""
         INSERT INTO category (id, name)

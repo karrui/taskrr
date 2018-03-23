@@ -5,10 +5,6 @@ sys.path.append("{}/test".format(getcwd()))
 from executor import sql, sql_select
 from psycopg2 import IntegrityError
 
-@pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
 def test_insert_person_full_with_correct_role(cursor, person_task_dummy):
     query = r"""
         SELECT

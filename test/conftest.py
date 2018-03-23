@@ -74,7 +74,7 @@ def generate_rollback(request):
     request.addfinalizer(close_rollback)
 
 @pytest.fixture
-def get_cursor():
+def cursor():
     return cur
 
 @pytest.fixture()

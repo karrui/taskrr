@@ -6,10 +6,6 @@ from executor import sql, sql_select, get_new_task_id, insert_new_person
 from read_file import read_csv
 from psycopg2 import IntegrityError
 
-@pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
 def test_delete_task_by_task_id(cursor, person_task_dummy, task_dummy):
     # Add the requester
     insert_new_person(cursor, person_task_dummy)

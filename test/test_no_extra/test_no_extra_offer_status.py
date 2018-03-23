@@ -5,10 +5,6 @@ sys.path.append("{}/test".format(getcwd()))
 from executor import sql_select
 from read_file import read_csv
 
-@pytest.fixture
-def cursor(get_cursor):
-    return get_cursor
-
 def test_no_extra_added_offer_status(cursor):
     query = r"""
         SELECT
