@@ -1,12 +1,16 @@
 # SQL Documentation
+
+## Database schema:
+![](./images/DatabaseSchema.png)
+
 ## ER Diagram:
-![er diagram](./images/ERDiagram.png)
+![](./images/ERDiagram.png)
 
 # Queries
-# SQL Commands for the schema
+## SQL Commands for the schema
 
-## CREATE queries
-### Person table
+### CREATE queries
+#### Person table
 ```
 CREATE TABLE IF NOT EXISTS person (
     id SERIAL PRIMARY KEY,
@@ -18,4 +22,4 @@ CREATE TABLE IF NOT EXISTS person (
 )
 ```
 
-### ... table
+#### ... table

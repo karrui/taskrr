@@ -8,26 +8,30 @@
 
 ___
 
-#### 1. Create a `pytest.ini` in `test/` in the format:
+#### 1. Install the Python's dependencies:
+```
+pip install -r requirements.txt
+```
+
+#### 2. Create a `pytest.ini` file in `test/` in the format:
 
 ```
 [pytest]
 env =
-    IP_ADDR=...
-    SSH_USERNAME=...
-    SSH_PASSWORD=...
-    DATABASE=...
-    DB_USERNAME=...
-    DB_PASSWORD=...
-
+    IP_ADDR=____
+    SSH_USERNAME=____
+    SSH_PASSWORD=____
+    DATABASE=____
+    DB_USERNAME=____
+    DB_PASSWORD=____
 ```
 
-#### 2. Run the following command in the main repo directory to run all tests, with output printed to stdout:
+#### 3. Run the test with `pytest`:
 
 ```
 pytest -c test/pytest.ini -v -s
 ```
 Option parameters:
-- `-c`: use an `pytest.ini` file.
+- `-c`: use a `pytest.ini` file.
 - `-v`: show all test functions, not just filenames.
 - `-s`: show all stdout by in the tests.
