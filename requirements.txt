@@ -1,0 +1,4 @@
+psycopg2==2.7.4
+pytest==3.4.2
+pytest-env==0.6.2
+sshtunnel==0.1.3
