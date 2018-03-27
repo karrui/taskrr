@@ -1,0 +1,27 @@
+<% include partials/header %>
+<link href="/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
+
+<div class="container">
+    <% if (currentUser.username != task.requester)  { %>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1>
+                        You aren't authorized to access here!!</h1>
+                    <div>
+                        <a href="/" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-home"></span>
+                            Home </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } else { %>
+          <div class="container">
+    <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="javascript:history.back()">
+        < Back</a>
+        </nav>
+        
+</div>
+<% include partials/footer %>
