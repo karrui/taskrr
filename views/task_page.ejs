@@ -159,7 +159,7 @@
                 <a class="btn btn-info" href="/login">Login to offer!</a>
                 <a href="/signup">Or sign up now!</a>
               <% } else if (loggedIn && typeof offerByUser != 'undefined') { %>
-              <% } else if (loggedIn && currentUser.username != task.requester) { %>
+              <% } else if (loggedIn && currentUser.username != task.requester && currentUser.role != 'admin') { %>
                 <form action="/new/offer/<%=task.id%>" method="POST">
                   <div class="form-group">
                     <div id="offer_info" style="display:none;" class="input-group">
