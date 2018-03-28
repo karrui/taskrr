@@ -438,7 +438,7 @@ app.post("/new/offer/:id", isLoggedIn, function(req, res) {
 
 app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
     var task_id = req.params['id'];
-    var assignee = res.locals.currentUser.username;
+    var assignee = req.body.assignee;
     var newPrice = req.body.price;
     var newOffered_dt = new Date().toISOString();
 
@@ -457,7 +457,14 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
 
 app.post("/delete/offer/:id", isLoggedIn, function(req, res) {
     var task_id = req.body.task_id;
-    var assignee = res.locals.currentUser.username;
+    var assignee = req.body.assignee;
+
+    // extra check
+    if (assignee != res.locals.currentUser.username && res.locals.currentUser.role != 'admin') {
+        req.flash('message', "Oops, you tried to do something you shouldn't have!")
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    }
 
     var promise = executer.deleteOfferByAssigneeAndTaskId(assignee, task_id)
     .then(function() {

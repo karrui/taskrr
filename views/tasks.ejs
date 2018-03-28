@@ -88,7 +88,7 @@
                         <% } %>
                     </p>
                     <p>Starting offer: $<%= task.price %></p>
-                    <% if (loggedIn && currentUser.username == task.requester) { %>
+                    <% if (loggedIn && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
                         <form action="/delete/task/<%=task.id%>" method="POST">
                         <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                         <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
