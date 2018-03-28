@@ -564,11 +564,12 @@ app.post("/reject/offer/:id", isLoggedIn, function(req, res) {
 // =====================================
 // CATEGORIES APIs =====================
 // =====================================
+var allCategories;
 app.get("/categories", redirection, function(req, res) {
     var promise = executer.getCategories()
     .then(results => {
-        var categories = results.rows;
-        res.render("categories", { categories: categories });
+        allCategories = results.rows;
+        res.render("categories", { categories: allCategories });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -579,7 +580,10 @@ app.get("/categories/:id", redirection, function(req, res) {
     var promise = executer.getTasksByCategoryId(req.params['id'])
     .then(results => {
         var tasks = results.rows;
-        res.render("tasks", { tasks: tasks });
+        if (allCategories != null) {
+            var categoryName = allCategories[req.params['id'] - 1].name;
+        }
+        res.render("tasks", { tasks: tasks, categoryName: categoryName });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
