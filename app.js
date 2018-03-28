@@ -201,6 +201,8 @@ app.get('/profile', isLoggedIn, function(req, res) {
     });
 });
 
+// Task related starts here
+
 app.get('/profile/tasks', isLoggedIn, function(req, res) {
     var promise = executer.getTasksByRequester(req.user.username)
     .then(results => {
@@ -254,6 +256,7 @@ app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
     });
 });
 
+// Offers related starts here
 app.get('/profile/offers', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithOffersByOfferAssignee(req.user.username)
     .then(results => {
@@ -267,9 +270,43 @@ app.get('/profile/offers', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/tasks/:id', isLoggedIn, function(req, res) {
-    let redirectUrl = '/tasks/' + req.params.id;
-    res.redirect(301, redirectUrl);
+app.get('/profile/offers/pending', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithPendingOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers_pending", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/offers/accepted', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithAcceptedOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers_accepted", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/offers/rejected', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithRejectedOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers_rejected", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
 });
 
 // =====================================

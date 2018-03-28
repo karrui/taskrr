@@ -11,8 +11,8 @@
 
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/profile/tasks" class="btn btn-sm btn-info active">Your tasks</a>
-        <a href="/profile/offers" class="btn btn-primary btn-sm">Your offers</a>
+        <a href="/profile/tasks" class="btn btn-sm btn-info">Your tasks</a>
+        <a href="/profile/offers" class="btn btn-primary active btn-sm">Your offers</a>
         <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
         <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
@@ -20,8 +20,9 @@
     <div class="page-header text-center">
             <h1><span class="fa fa-anchor"></span> Current offers</h1>
             <a href="/profile/offers" class="btn btn-primary active btn-sm">All your offers</a>
-            <a href="/profile/offers/accepted" class="btn btn-info btn-sm">Accepted offers</a>
-            <a href="/profile/offers/rejected" class="btn btn-warning btn-sm">Rejected offers</a>
+            <a href="/profile/offers/accepted" class="btn btn-default btn-sm">Accepted offers</a>
+            <a href="/profile/offers/pending" class="btn btn-default btn-sm">Pending offers</a>
+            <a href="/profile/offers/rejected" class="btn btn-default btn-sm">Rejected offers</a>
         </div>
     
     <div class="row">
@@ -49,6 +50,7 @@
                                 </span>
                             <% } %>
                         </p>
+                    <p>Task original price: $<%= task.task_price %></p>
                     <p>You offered: $<%= task.offer_price %></p>
                     <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                     <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
