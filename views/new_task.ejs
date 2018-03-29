@@ -9,47 +9,67 @@
             <% if (typeof message != 'undefined' && message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
             <% } %>
-                <form action="/tasks" method="POST">
-                
+                <form role="form" data-toggle="validator" action="/tasks" method="POST">
                 <div class="form-group">
+                    <label for="title" class="control-label">title</label>
                     <input class="form-control" type="text" name="title" placeholder="title" aria-describedby="task-title" required="true">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
+                    <label for="description" class="control-label">description</label>
                     <textarea class="form-control" rows="5" name="description" placeholder="Give a brief description of what task this is" required="true"></textarea>
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
+                    <label for="category_id" class="control-label">category</label>
                     <select class="form-control" name="category_id" required>
                         <option value="" selected disabled>Choose a category</option>
                         <% categories.forEach(function(category) { %>
                         <option value="<%= category.id %>"><%= category.name %></option>
                         <% }); %>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="location" class="control-label">location</label>
                     <input type="text" class="form-control" name="location" placeholder="location" required="true">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <div class="row">
                         <div class='col-sm-12'>
+                            <label for="start_dt" class="control-label">start date & time</label>
                             <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="Enter start date and time" required="true">
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                            <div class="help-block with-errors"></div>
+                            <label for="end_dt" class="control-label">end date & time</label>
                             <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="Enter end date and time" required="true">
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>                    
                 </div>
     
                 <div class="form-group">
+                    <label for="price" class="control-label">suggested price</label>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" name="price" class="form-control" placeholder="Enter your suggested price" required="true">
+                            <input type="number" name="price" class="form-control" placeholder="Enter your suggested price" required="true" min="1" max="9999">
                         </div>
+                        <div class="help-block with-errors">Maximum price is $9,999</div>
                     </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-default btn-block">Submit!</button>
+                    <button type="submit" class="btn btn-primary btn-default btn-block">Submit!</button>
                 </div>
             </form>
             <a href="/tasks">Go back</a>
         </div>
         <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript" src="/script/validator.min.js"></script>
         <script type="text/javascript">
             $(function () {
                 $('#datetimepicker_start').datetimepicker({

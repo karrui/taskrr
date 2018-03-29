@@ -22,20 +22,27 @@
     <div class="row">
         <h1 style="text-align: center;">Edit task</h1>
         <div style="width:40%; margin: 0 auto">
-             <!-- show any errors from invalid query -->
-             <% if (typeof message != 'undefined' && message.length > 0) { %>
+            <!-- show any errors from invalid query -->
+            <% if (typeof message != 'undefined' && message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
             <% } %>
-                <form action="/edit/task/<%=task.id%>" method="POST">
+                <form data-toggle="validator" role="form" action="/edit/task/<%=task.id%>" method="POST">
                 
                 <div class="form-group">
+                    <label for="title" class="control-label">title</label>
                     <input class="form-control" type="text" name="title" value="<%=task.title%>" aria-describedby="task-title" required="true">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                     <input class="form-control" type="hidden" name="id" value="<%=task.id%>" readonly>
                 </div>
                 <div class="form-group">
+                    <label for="description" class="control-label">description</label>
                     <textarea class="form-control" rows="5" name="description" required="true"><%=task.description%></textarea>
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
+                    <label for="category_id" class="control-label">category</label>
                     <select class="form-control" name="category_id" required="true">
                         <% categories.forEach(function(category) { %>
                             <% if (category.id == task.category_id) { %>
@@ -43,27 +50,41 @@
                             <% } else { %>
                                 <option value="<%= category.id %>"><%= category.name %></option>
                         <%  } }); %>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                        <div class="help-block with-errors"></div>
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="location" class="control-label">location</label>
                     <input type="text" class="form-control" name="location" value="<%=task.location%>" required="true">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <div class="row">
                         <div class='col-sm-12'>
+                            <label for="start_dt" class="control-label">start date & time</label>
                             <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" placeholder="<%=task.start_dt.toLocaleString('en-GB', { hour12: true })%>" required="true">
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                            <div class="help-block with-errors"></div>
+                            <label for="end_dt" class="control-label">end date & time</label>
                             <input type='text' class="form-control" id='datetimepicker_end' name="end_dt" placeholder="<%=task.end_dt.toLocaleString('en-GB', { hour12: true })%>" required="true">
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>                    
                 </div>
                 <div class="form-group">
+                    <label for="price" class="control-label">suggested price</label>
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
-                        <input type="text" name="price" class="form-control" value="<%= task.price%>" required="true">
+                        <input type="number" name="price" class="form-control" value="<%= task.price%>" required="true" max="9999">
                     </div>
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    <div class="help-block with-errors">Maximum price is $9,999</div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-warning btn-block">Edit!</button>
+                    <button type="submit" class="btn btn-primary btn-warning btn-block">Edit!</button>
                 </div>
             </form>
             <% if (typeof prevUrl != 'undefined') { %>
@@ -118,6 +139,7 @@
         });
         </script>
         <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript" src="/script/validator.min.js"></script>
         <script type="text/javascript">
             $(function () {
                 $('#datetimepicker_start').datetimepicker({
