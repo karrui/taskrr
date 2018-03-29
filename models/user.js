@@ -26,7 +26,7 @@ function User(){
         const pool = new pg.Pool(config)
         const client = await pool.connect()
         
-        console.log(this.username + ' + ' + this.email +' will be saved');
+        // console.log(this.username + ' + ' + this.email +' will be saved');
         
 		const text = 'INSERT INTO person(username, password, email, created_dt) VALUES($1, $2, $3, $4)';
         const values = [this.username, this.password, this.email, this.created_dt];
@@ -36,7 +36,7 @@ function User(){
                     console.log(err);
                     return console.error('error running query', err);
                 }
-                console.log(result.rows);
+                // console.log(result.rows);
             });
             
             client.query('SELECT * FROM view_person_all_info ORDER BY id desc limit 1', null, function(err, result){
@@ -64,7 +64,7 @@ function User(){
 
 User.findOne = function(username, callback) {
     var isNotAvailable = false; //we are assuming the username is taken
-    console.log('Finding username: ' + username);
+    // console.log('Finding username: ' + username);
     
     //check if there is a user available for this username;
     executer.getUserByName(username)
@@ -78,7 +78,7 @@ User.findOne = function(username, callback) {
             user.email = result.rows[0]['email'];
             user.id = result.rows[0]['id'];
             user.role = result.rows[0]['role'];
-            console.log(username + ' already exists...');
+            // console.log(username + ' already exists...');
             return callback(false, isNotAvailable, user);
         }
         else{
@@ -97,7 +97,7 @@ User.findOne = function(username, callback) {
 };
 
 User.findById = function(id, callback){
-    console.log("Finding user by id...");
+    // console.log("Finding user by id...");
     
     executer.getUserById(id)
     .then(result => {
@@ -109,7 +109,7 @@ User.findById = function(id, callback){
             user.email = result.rows[0]['email'];
             user.id = result.rows[0]['id'];
             user.role = result.rows[0]['role'];
-            console.log("User found: %s", user.username);
+            // console.log("User found: %s", user.username);
             return callback(null, user);
         }
     })
