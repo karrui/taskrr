@@ -275,28 +275,27 @@ exports.TASK_WITH_OPEN_STATUS_BY_REQUESTER = `
     ;
 `
 
-// Note that ILIKE is pretty inefficient
+// Search all tasks, having title and/or description contains all the words in the search sentence
+/* Input:
+_search_string    TEXT            DEFAULT NULL
+*/
 exports.TASK_BY_SEARCH_MATCH_NAME_OR_DESCRIPTION = `
-    SELECT
-        view_all_task.id,
-        view_all_task.title,
-        view_all_task.description,
-        view_all_task.category_id,
-        view_all_task.category_name,
-        view_all_task.location,
-        view_all_task.requester,
-        view_all_task.start_dt,
-        view_all_task.end_dt,
-        view_all_task.price,
-        view_all_task.status_task,
-        view_all_task.assignee
-    FROM view_all_task
-    WHERE 1=1
-        AND (view_all_task.title ILIKE '%' || $1 || '%'
-        OR view_all_task.description ILIKE '%' || $1 || '%')
-    ORDER BY
-        view_all_task.id DESC
-    ;
+    SELECT * FROM get_tasks_with_basic_search($1);
+`
+
+/* Input:
+_search_string    TEXT            DEFAULT NULL,
+_category_id      TEXT            DEFAULT NULL,
+_location         TEXT            DEFAULT NULL,
+_requester        TEXT            DEFAULT NULL,
+_start_dt         TEXT            DEFAULT NULL,
+_min_price        TEXT            DEFAULT NULL,
+_max_price        TEXT            DEFAULT NULL,
+_status_task      TEXT            DEFAULT NULL,
+_assignee         TEXT            DEFAULT NULL
+*/
+exports.TASK_ADVANCED_SEARCH = `
+    SELECT * FROM get_tasks_with_advanced_search($1, $2, $3, $4, $5, $6, $7, $8, $9);
 `
 
 exports.OFFERS_BY_TASKID = `

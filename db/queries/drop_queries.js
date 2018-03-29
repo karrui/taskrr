@@ -36,3 +36,11 @@ exports.VIEW_ALL_OFFER = `
 exports.FUNCTIONS_ALL = `
     SELECT information_schema.f_delfunc('public');
 `
+
+exports.FUNCTION_DROPPING_ALL_FUNCTIONS = `
+    DROP FUNCTION IF EXISTS information_schema.f_delfunc(TEXT);
+`
+
+exports.EXTENSION_FUZZYSTRMATCH = `
+    DROP EXTENSION IF EXISTS fuzzystrmatch;
+`

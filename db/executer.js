@@ -89,6 +89,10 @@ exports.createAllFunctions = async function createAllFunctions() {
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
+    execute(queries.create.FUNCTION_GET_STRING_MATCHING_PERCENT);
+    execute(queries.create.FUNCTION_TASK_BASIC_SEARCH);
+    execute(queries.create.FUNCTION_TASK_ADVANCED_SEARCH);
+    execute(queries.create.FUNCTION_DROP_ALL_FUNCTIONS);
 }
 
 exports.createAllIndexes = async function createAllIndexes() {
@@ -98,6 +102,10 @@ exports.createAllIndexes = async function createAllIndexes() {
     execute(queries.create.INDEX_TABLE_OFFER);
 }
 
+exports.createAllExtensions = async function createAllExtensions() {
+    console.log("Creating extensions.");
+    execute(queries.create.EXTENSION_FUZZYSTRMATCH);
+}
 //==================================================================================================================================================
 // 2. Prepare sample data
 
@@ -296,6 +304,10 @@ exports.dropAllFunctions = async function dropAllFunctions() {
     execute(queries.drop.FUNCTIONS_ALL);
 }
 
+exports.dropAllExtensions = async function dropAllExtensions() {
+    console.log("Removing all extensions.");
+    execute(queries.drop.EXTENSION_FUZZYSTRMATCH);
+}
 //==================================================================================================================================================
 // 3. Insert
 
@@ -387,7 +399,6 @@ exports.getAllTasks = async function getAllTasks() {
     return execute(queries.get.ALL_TASKS);
 }
 
-
 exports.getTasksWithOffersByOfferAssignee = async function getTasksWithOffersByOfferAssignee(offer_assignee) {
     console.log('Attempting to get tasks with offers by assignee: %s', offer_assignee);
     return execute(queries.get.TASK_WITH_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
@@ -443,6 +454,13 @@ exports.getTasksBySearchMatchNameOrDescription = async function getTasksBySearch
     return execute(queries.get.TASK_BY_SEARCH_MATCH_NAME_OR_DESCRIPTION, [search_string]);
 }
 
+exports.getTasksByAdvancedSearch = async function getTasksByAdvancedSearch(search_string, category_id, location,
+                                                        requester, start_dt, min_price, max_price, status_task, assignee) {
+    console.log('Attempting to get tasks by advanced search string: \"%s\"', search_string);
+    return execute(queries.get.TASK_ADVANCED_SEARCH, [search_string, category_id, location,
+                                                    requester, start_dt, min_price, max_price,
+                                                    status_task, assignee]);
+}
 // ======================================================
 // 6.4. Offer
 

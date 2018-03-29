@@ -89,7 +89,9 @@ const executer = require('./db/executer');
 // // Creates Tables + Views + Functions when server starts
 executer.createAllTables();
 executer.createAllViews();
+executer.dropAllExtensions();
 executer.dropAllFunctions();
+executer.createAllExtensions();
 executer.createAllFunctions();
 executer.createAllIndexes();
 
@@ -526,7 +528,7 @@ app.post("/accept/offer/:id", isLoggedIn, function(req, res) {
         req.flash('message', "You are not the user who requested for this task!")
         res.redirect(403, redirectUrl);
     }
-    var promise = executer.updateTaskUponAcceptingOfferByTaskID(task_id, assignee, offer_price) 
+    var promise = executer.updateTaskUponAcceptingOfferByTaskID(task_id, assignee, offer_price)
     .then(function() {
         req.flash('offer_success', "Offer accepted!");
         var redirectUrl = "/tasks/" + task_id;
@@ -548,7 +550,7 @@ app.post("/reject/offer/:id", isLoggedIn, function(req, res) {
         req.flash('message', "You are not the user who requested for this task!")
         res.redirect(403, redirectUrl);
     }
-    var promise = executer.updateTaskUponRejectingOfferByTaskID(task_id, offer_id) 
+    var promise = executer.updateTaskUponRejectingOfferByTaskID(task_id, offer_id)
     .then(function() {
         req.flash('offer_success', "Offer rejected!");
         var redirectUrl = "/tasks/" + task_id;
