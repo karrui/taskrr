@@ -2,6 +2,18 @@ body {
     font-family: "Lato";
 }
 
+.jumbotron {
+    padding: 0 0;
+}
+
+.jumbotron h1 {
+    font-size: 4em;
+}
+
+.jumbotron p {
+    font-size: 1.5em;
+}
+
 #landing {
     background: url(https://i.imgur.com/ThMB6BV.jpg);
     background-size: cover;

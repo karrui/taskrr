@@ -9,14 +9,20 @@
         <span class="breadcrumb-item active"> Tasks</span>
     </nav>
     
-     <!-- show any error messages -->
-     <% if (typeof message != 'undefined' && message.length > 0) { %>
+    <!-- show any error messages -->
+    <% if (typeof message != 'undefined' && message.length > 0) { %>
         <div class="alert alert-danger alert-dismissible"><%= message %></div>
     <% } %>
     <!-- show any success messages -->
     <% if (typeof success != 'undefined' && success.length > 0) { %>
         <div class="alert alert-success alert-dismissible"><%= success %></div>
     <% } %>
+
+    <h1>
+        <% if (typeof categoryName != 'undefined') { %>
+            <%=categoryName%>
+        <% } %>
+    </h1>
     
     <header class="jumbotron">
         <div class="container">
@@ -88,7 +94,7 @@
                         <% } %>
                     </p>
                     <p>Starting offer: $<%= task.price %></p>
-                    <% if (loggedIn && currentUser.username == task.requester) { %>
+                    <% if (loggedIn && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
                         <form action="/delete/task/<%=task.id%>" method="POST">
                         <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                         <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>

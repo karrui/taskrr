@@ -201,6 +201,8 @@ app.get('/profile', isLoggedIn, function(req, res) {
     });
 });
 
+// Task related starts here
+
 app.get('/profile/tasks', isLoggedIn, function(req, res) {
     var promise = executer.getTasksByRequester(req.user.username)
     .then(results => {
@@ -254,6 +256,7 @@ app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
     });
 });
 
+// Offers related starts here
 app.get('/profile/offers', isLoggedIn, function(req, res) {
     var promise = executer.getTasksWithOffersByOfferAssignee(req.user.username)
     .then(results => {
@@ -267,9 +270,43 @@ app.get('/profile/offers', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/tasks/:id', isLoggedIn, function(req, res) {
-    let redirectUrl = '/tasks/' + req.params.id;
-    res.redirect(301, redirectUrl);
+app.get('/profile/offers/pending', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithPendingOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers_pending", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/offers/accepted', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithAcceptedOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers_accepted", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get('/profile/offers/rejected', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithRejectedOffersByOfferAssignee(req.user.username)
+    .then(results => {
+        var tasks = results.rows;
+        res.render("user_offers_rejected", {
+            tasks: tasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
 });
 
 // =====================================
@@ -438,7 +475,7 @@ app.post("/new/offer/:id", isLoggedIn, function(req, res) {
 
 app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
     var task_id = req.params['id'];
-    var assignee = res.locals.currentUser.username;
+    var assignee = req.body.assignee;
     var newPrice = req.body.price;
     var newOffered_dt = new Date().toISOString();
 
@@ -457,7 +494,14 @@ app.post("/edit/offer/:id", isLoggedIn, function(req, res) {
 
 app.post("/delete/offer/:id", isLoggedIn, function(req, res) {
     var task_id = req.body.task_id;
-    var assignee = res.locals.currentUser.username;
+    var assignee = req.body.assignee;
+
+    // extra check
+    if (assignee != res.locals.currentUser.username && res.locals.currentUser.role != 'admin') {
+        req.flash('message', "Oops, you tried to do something you shouldn't have!")
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    }
 
     var promise = executer.deleteOfferByAssigneeAndTaskId(assignee, task_id)
     .then(function() {
@@ -520,11 +564,12 @@ app.post("/reject/offer/:id", isLoggedIn, function(req, res) {
 // =====================================
 // CATEGORIES APIs =====================
 // =====================================
+var allCategories;
 app.get("/categories", redirection, function(req, res) {
     var promise = executer.getCategories()
     .then(results => {
-        var categories = results.rows;
-        res.render("categories", { categories: categories });
+        allCategories = results.rows;
+        res.render("categories", { categories: allCategories });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -535,7 +580,10 @@ app.get("/categories/:id", redirection, function(req, res) {
     var promise = executer.getTasksByCategoryId(req.params['id'])
     .then(results => {
         var tasks = results.rows;
-        res.render("tasks", { tasks: tasks });
+        if (allCategories != null) {
+            var categoryName = allCategories[req.params['id'] - 1].name;
+        }
+        res.render("tasks", { tasks: tasks, categoryName: categoryName });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });

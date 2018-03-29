@@ -6,23 +6,23 @@
         You are currently at:
         <a class="breadcrumb-item" href="/">Home</a> >
         <a class="breadcrumb-item" href="/profile">Profile</a> >
-        <span class="breadcrumb-item active"> My tasks</span>
+        <span class="breadcrumb-item active"> My offers</span>
     </nav>
 
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/profile/tasks" class="btn btn-sm btn-primary active">Your tasks</a>
-        <a href="/profile/offers" class="btn btn-info btn-sm">Your offers</a>
+        <a href="/profile/tasks" class="btn btn-sm btn-info">Your tasks</a>
+        <a href="/profile/offers" class="btn btn-primary active btn-sm">Your offers</a>
         <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
         <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
     <div class="page-header text-center">
-            <h1><span class="fa fa-anchor"></span> Current tasks</h1>
-            <a href="/profile/tasks" class="btn btn-default btn-sm">All your tasks</a>
-            <a href="/profile/tasks/open" class="btn btn-default btn-sm">Open tasks</a>
-            <a href="/profile/tasks/offered" class="btn btn-default btn-sm">Offered tasks</a>
-            <a href="/profile/tasks/accepted" class="btn btn-primary btn-sm">Accepted tasks</a>
+            <h1><span class="fa fa-anchor"></span> Current offers</h1>
+            <a href="/profile/offers" class="btn btn-default btn-sm">All your offers</a>
+            <a href="/profile/offers/accepted" class="btn btn-default btn-sm">Accepted offers</a>
+            <a href="/profile/offers/pending" class="btn btn-primary active btn-sm">Pending offers</a>
+            <a href="/profile/offers/rejected" class="btn btn-default btn-sm">Rejected offers</a>
         </div>
     
     <div class="row">
@@ -50,30 +50,15 @@
                                 </span>
                             <% } %>
                         </p>
-                    <p>Starting offer: <%= task.price %></p>
+                    <p>Task original price: $<%= task.task_price %></p>
+                    <p>You offered: $<%= task.offer_price %></p>
                     <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
+                    <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
+                </div>
+                <div class="panel-footer">Requested by: <%= task.requester %></div>
             </div>
+            
             <% }); %>
         </div>
-
-        <!-- Dialog show event handler -->
-    <script type="text/javascript">
-        $('#confirmDelete').on('show.bs.modal', function (e) {
-            $message = $(e.relatedTarget).attr('data-message');
-            $(this).find('.modal-body p').text($message);
-            $title = $(e.relatedTarget).attr('data-title');
-            $(this).find('.modal-title').text($title);
-        
-            // Pass form reference to modal for submission on yes/ok
-            var form = $(e.relatedTarget).closest('form');
-            $(this).find('.modal-footer #confirm').data('form', form);
-        });
-        
-        // <!-- Form confirm (yes/ok) handler, submits form -->
-        $('#confirmDelete').find('.modal-footer #confirm').on('click', function(){
-            $(this).data('form').submit();
-        });
-    </script>
-        
         
         <% include partials/footer %>

@@ -35,10 +35,25 @@
                     <p>Description: <%= task.description %></p>
                     <p>Start: <%= task.start_dt %></p>
                     <p>End: <%= task.end_dt %></p>
-                    <p>Status: <%= task.status_task %></p>
+                    <p>Status: 
+                            <% if (task.status_task === 'accepted') { %>
+                                <span class="label label-success lb-md">
+                                    <%= task.status_task %>
+                                </span>
+                            <% } else if (task.status_task === 'offered') { %>
+                                <span class="label label-info lb-md">
+                                    <%= task.status_task %>
+                                </span>
+                            <% } else { %>
+                                <span class="label label-warning lb-md">
+                                    <%= task.status_task %>
+                                </span>
+                            <% } %>
+                        </p>
                     <p>Starting offer: <%= task.price %></p>
                     <form action="/delete/task/<%=task.id%>" method="POST">
                         <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
+                        <% if (task.status_task != 'accepted') { %>
                         <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
                         
                             <input type="hidden" name="id" value="<%=task.id%>" readonly>
@@ -65,6 +80,7 @@
                             </div>
                             </div>
                         </div>
+                        <% } %>
                 </div>
             </div>
             <% }); %>

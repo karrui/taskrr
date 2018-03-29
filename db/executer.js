@@ -389,8 +389,23 @@ exports.getAllTasks = async function getAllTasks() {
 
 
 exports.getTasksWithOffersByOfferAssignee = async function getTasksWithOffersByOfferAssignee(offer_assignee) {
-    console.log('Attempting to get tasks and offers by assignee: %s', offer_assignee);
+    console.log('Attempting to get tasks with offers by assignee: %s', offer_assignee);
     return execute(queries.get.TASK_WITH_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
+}
+
+exports.getTasksWithAcceptedOffersByOfferAssignee = async function getTasksWithAcceptedOffersByOfferAssignee(offer_assignee) {
+    console.log('Attempting to get tasks with accepted offers by assignee: %s', offer_assignee);
+    return execute(queries.get.TASK_WITH_ACCEPTED_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
+}
+
+exports.getTasksWithPendingOffersByOfferAssignee = async function getTasksWithPendingOffersByOfferAssignee(offer_assignee) {
+    console.log('Attempting to get tasks with pending offers by assignee: %s', offer_assignee);
+    return execute(queries.get.TASK_WITH_PENDING_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
+}
+
+exports.getTasksWithRejectedOffersByOfferAssignee = async function getTasksWithRejectedOffersByOfferAssignee(offer_assignee) {
+    console.log('Attempting to get tasks with rejected offers by assignee: %s', offer_assignee);
+    return execute(queries.get.TASK_WITH_REJECTED_OFFER_BY_OFFER_ASSIGNEE, [offer_assignee]);
 }
 
 exports.getTasksByCategoryId = async function getTasksByCategoryId(category_id) {
