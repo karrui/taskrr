@@ -595,8 +595,31 @@ app.get("/categories/:id", redirection, function(req, res) {
 // =====================================
 // SEARCH APIs =========================
 // =====================================
-app.get("/search/task/", function(req, res) {
-    var promise = executer.getTasksBySearchMatchNameOrDescription(req.query.search) //$_GET["search"]
+
+app.get("/search/advanced/", function(req, res) {
+    var promise = executer.getCategories()
+    .then(results => {
+        var categories = results.rows;
+        res.render("adv_search", {categories: categories});
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.get("/search/", function(req, res) {
+    var search_string = req.query.search;
+    var category_id = req.query.category_id;
+    var location = req.query.location;
+    var requester = req.query.requester;
+    var start_dt = req.query.start_dt;
+    if (typeof start_dt != 'undefined' && start_dt != '') {
+        start_dt = moment(req.query.start_dt, 'DD/MM/YYYY').format();
+    }
+    var min_price = req.query.min_price;
+    var max_price = req.query.max_price;
+
+    var promise = executer.getTasksByAdvancedSearch(search_string, category_id, location, requester, start_dt, min_price, max_price)
     .then(results => {
         var tasks = results.rows;
         res.render("tasks", { tasks: tasks });
@@ -604,7 +627,7 @@ app.get("/search/task/", function(req, res) {
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
-})
+});
 
 
 // =====================================

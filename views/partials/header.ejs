@@ -17,17 +17,21 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 <a class="navbar-brand" href="/">Taskrr</a>
             </div>
-            <div class="collapse navbar-collapse">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-left">
                     <li><a href="/tasks">Tasks</a></li>
                     <li><a href="/categories">Categories</a></li>
                     <% if (loggedIn) { %>
                         <li>
-                            <p class="navbar-btn">
-                                <a href="/tasks/new" class="btn btn-primary">New task</a>
-                            </p>
+                            <a href="/tasks/new">New task</a>
                         </li>
                         <% } %>
                 </ul>
@@ -35,11 +39,23 @@
                     <% if (!loggedIn) { %>
                         <li><a href="/login">Login</a></li>
                         <li><a href="/signup">Signup</a></li>
-                        <% } else { %>
-                            <li><a href="/profile"><%= currentUser.username %></a></li>
-                            <li><a href="/logout">Logout</a></li>
-                            <% } %>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+                    <% } else { %>
+                        <li><a href="/profile"><%= currentUser.username %></a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    <% } %>
+                </ul>
+                <form class="navbar-form navbar-left navbar-input-group" id="navBarSearchForm" action="/search/" method="GET" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" placeholder="Search for tasks...">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit">Go!</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="/search/advanced/">Advanced Search...</a></li>
+                                </ul>
+                        </div><!-- /btn-group -->
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+        </div>
+    </nav>

@@ -39,22 +39,6 @@
         </div>
     </header>
 
-    <div class="row">
-        <form action="/search/task/" method="GET">
-            <div class="input-group col-md-6 col-sm-offset-3">
-                <input type="text" class="form-control" name="search" placeholder="Search for tasks...">
-                <div class="input-group-btn">
-                    <button class="btn btn-default" type="submit">Go!</button>
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li><a href="#">Advanced Search...</a></li>
-                        </ul>
-                </div><!-- /btn-group -->
-            </div><!-- /input-group -->
-        </form>
-    </div>
-    <br>
-
     <!--Each Task has:-->
     <!-- * id-->
     <!-- * DISPLAYED - title-->
@@ -67,6 +51,12 @@
     <!-- * DISPLAYED - price-->
     <!-- * status_task-->
     <!-- * assignee-->
+
+    <% if (typeof is_search != 'undefined' && is_search) { %>
+    <div class="row">
+
+    </div>
+    <% } %>
     
     <div class="row">
         <% tasks.forEach(function(task) { %>

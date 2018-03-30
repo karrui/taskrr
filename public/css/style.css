@@ -14,6 +14,10 @@ body {
     font-size: 1.5em;
 }
 
+@media only screen and (min-width: 1000px) {
+#navBarSearchForm input[type=text]{width:400px !important;}
+}
+
 #landing {
     background: url(https://i.imgur.com/ThMB6BV.jpg);
     background-size: cover;

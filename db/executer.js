@@ -456,7 +456,7 @@ exports.getTasksBySearchMatchNameOrDescription = async function getTasksBySearch
 
 exports.getTasksByAdvancedSearch = async function getTasksByAdvancedSearch(search_string, category_id, location,
                                                         requester, start_dt, min_price, max_price, status_task, assignee) {
-    console.log('Attempting to get tasks by advanced search string: \"%s\"', search_string);
+    console.log('Attempting to get tasks by advanced search string: \"%s\", category_id: \"%s\", location \"%s\", requester: \"%s\", start_dt: \"%s\", min_price: \"%s\", max_price: \"%s\", status_task: \"%s\", assignee: \"%s\"', search_string, category_id, location, requester, start_dt, min_price, max_price, status_task, assignee);
     return execute(queries.get.TASK_ADVANCED_SEARCH, [search_string, category_id, location,
                                                     requester, start_dt, min_price, max_price,
                                                     status_task, assignee]);

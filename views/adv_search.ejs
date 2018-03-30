@@ -1,0 +1,85 @@
+<% include partials/header %>
+
+<link href="/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
+<!-- 
+var search_string = req.query.search_string;
+    var category_id = req.query.category_id;
+    var location = req.query.location;
+    var requester = req.query.requester;
+    var start_dt = req.query.start_dt;
+    var min_price = req.query.min_price;
+    var max_price = req.query.max_price; -->
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center;">Advanced Search</h1>
+        <div style="width:40%; margin: 0 auto">
+            <!-- show any errors from invalid query -->
+            <% if (typeof message != 'undefined' && message.length > 0) { %>
+                <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+            <form role="form" action="/search/" method="GET">
+                <div class="form-group">
+                    <label for="title" class="control-label">search string</label>
+                    <input class="form-control" type="text" name="search" placeholder="Search tasks by title / description...">
+                </div>
+                <div class="form-group">
+                    <label for="category_id" class="control-label">category</label>
+                    <select class="form-control" name="category_id">
+                        <option value="" selected>Choose a category</option>
+                        <% categories.forEach(function(category) { %>
+                        <option value="<%= category.id %>"><%= category.name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location" class="control-label">location</label>
+                    <input type="text" class="form-control" name="location" placeholder="Search tasks with location...">
+                </div>
+                <div class="form-group">
+                    <label for="title" class="control-label">requester</label>
+                    <input class="form-control" type="text" name="requester" placeholder="Search tasks by requester...">
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <label for="start_dt" class="control-label">start date</label>
+                            <input type='text' class="form-control" id='datetimepicker_start' name="start_dt" value="" placeholder="Search tasks starting on ...">
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="form-group">
+                    <label for="price" class="control-label">min price</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" name="min_price" class="form-control" placeholder="Search tasks with price starting from..." min="1" max="9999">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="price" class="control-label">max price</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="number" name="max_price" class="form-control" placeholder="Search tasks with maximum price..." min="1" max="9999">
+                                </div>
+                            </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-default btn-block">Submit!</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="/script/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker_start').datetimepicker({
+            minDate: moment(), 
+            useCurrent: false, //Important! See issue #1075
+            sideBySide: true,
+            format: "DD/MM/YYYY",
+            showTodayButton: true,
+            showClose: true,
+        });
+    });
+</script>
+</div>
+<% include partials/footer %>
