@@ -729,7 +729,6 @@ exports.FUNCTION_GET_STRING_MATCHING_PERCENT = `
                 WHEN (_string_a IS NULL OR _string_b IS NULL) THEN 1.00
                 WHEN (CHAR_LENGTH(_string_a) >= CHAR_LENGTH(_string_b)) THEN (
                     round(
-
                         (char_length(_string_a)-levenshtein(_string_a, _string_b)::NUMERIC) / char_length(_string_a), 2)
                 )
                 WHEN CHAR_LENGTH(_string_b) > CHAR_LENGTH(_string_a) THEN (
