@@ -644,8 +644,8 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             )
             AND task.category_id = coalesce(CAST(_category_id AS NUMERIC(6, 2)), task.category_id)
 
-            -- If location matches more than 60%
-            AND get_matching_percent(task.location, _location) >= 0.6
+            -- If location matches more than 40%
+            AND get_matching_percent(task.location, _location) >= 0.4
 
             -- If requester matches more than 80%
             AND get_matching_percent(task.requester, _requester) >= 0.8
@@ -717,14 +717,24 @@ exports.FUNCTION_GET_STRING_MATCHING_PERCENT = `
     RETURNS NUMERIC(3, 2) AS
     $BODY$
         BEGIN
+            if _string_a IS NOT NULL THEN
+                _string_a = LOWER(_string_a);
+            END if;
+            if _string_b IS NOT NULL THEN
+                _string_b = LOWER(_string_b);
+            END if;
+
             RETURN
             CASE
                 WHEN (_string_a IS NULL OR _string_b IS NULL) THEN 1.00
                 WHEN (CHAR_LENGTH(_string_a) >= CHAR_LENGTH(_string_b)) THEN (
-                    round(levenshtein(_string_a, _string_b)::NUMERIC / char_length(_string_a), 2)
+                    round(
+
+                        (char_length(_string_a)-levenshtein(_string_a, _string_b)::NUMERIC) / char_length(_string_a), 2)
                 )
                 WHEN CHAR_LENGTH(_string_b) > CHAR_LENGTH(_string_a) THEN (
-                    round(levenshtein(_string_a, _string_b)::NUMERIC / char_length(_string_b), 2)
+                    round(
+                        (char_length(_string_b)-levenshtein(_string_a, _string_b)::NUMERIC) / char_length(_string_b), 2)
                 )
             END AS _percent
         ;
