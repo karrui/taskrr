@@ -1,64 +1,84 @@
 <% include partials/header %>
 
-<div class="container">
+  <div class="container">
     <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
-        You are currently at:
-        <a class="breadcrumb-item" href="/">Home</a> >
-        <a class="breadcrumb-item" href="/profile">Profile</a> >
-        <span class="breadcrumb-item active"> My offers</span>
+      <a class="breadcrumb-item" href="javascript:history.back()">
+        < Back</a> | You are currently at:
+          <a class="breadcrumb-item" href="/">Home</a> >
+          <a class="breadcrumb-item" href="/profile">Profile</a> >
+          <span class="breadcrumb-item active"> My offers</span>
     </nav>
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/profile/tasks" class="btn btn-sm btn-info">Your tasks</a>
-        <a href="/profile/offers" class="btn btn-primary active btn-sm">Your offers</a>
-        <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
-        <a href="/categories" class="btn btn-default btn-sm">All categories</a>
+      <h1>
+        <span class="fa fa-anchor"></span> Profile Page</h1>
+      <a href="/profile/tasks" class="btn btn-sm btn-info">Your tasks</a>
+      <a href="/profile/offers" class="btn btn-primary active btn-sm">Your offers</a>
+      <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
+      <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
     <div class="page-header text-center">
-            <h1><span class="fa fa-anchor"></span> Current offers</h1>
-            <a href="/profile/offers" class="btn btn-default btn-sm">All your offers</a>
-            <a href="/profile/offers/accepted" class="btn btn-primary active btn-sm">Accepted offers</a>
-            <a href="/profile/offers/pending" class="btn btn-default btn-sm">Pending offers</a>
-            <a href="/profile/offers/rejected" class="btn btn-default btn-sm">Rejected offers</a>
-        </div>
-    
+      <h1>
+        <span class="fa fa-anchor"></span> Current offers</h1>
+      <a href="/profile/offers" class="btn btn-default btn-sm">All your offers</a>
+      <a href="/profile/offers/accepted" class="btn btn-primary active btn-sm">Accepted offers</a>
+      <a href="/profile/offers/pending" class="btn btn-default btn-sm">Pending offers</a>
+      <a href="/profile/offers/rejected" class="btn btn-default btn-sm">Rejected offers</a>
+    </div>
+
     <div class="row">
-        <% tasks.forEach(function(task) { %>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><%= task.title %></h3>
-                </div>
-                <div class="panel-body">
-                    <p>Description: <%= task.description %></p>
-                    <p>Start: <%= task.start_dt %></p>
-                    <p>End: <%= task.end_dt %></p>
-                    <p>Status: 
-                            <% if (task.status_task === 'accepted') { %>
-                                <span class="label label-success lb-md">
-                                    <%= task.status_task %>
-                                </span>
-                            <% } else if (task.status_task === 'offered') { %>
-                                <span class="label label-info lb-md">
-                                    <%= task.status_task %>
-                                </span>
-                            <% } else { %>
-                                <span class="label label-warning lb-md">
-                                    <%= task.status_task %>
-                                </span>
-                            <% } %>
-                        </p>
-                    <p>Task original price: $<%= task.task_price %></p>
-                    <p>You offered: $<%= task.offer_price %></p>
-                    <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
-                    <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
-                </div>
-                <div class="panel-footer">Requested by: <%= task.requester %></div>
-            </div>
-            
-            <% }); %>
+      <% tasks.forEach(function(task) { %>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              <%= task.title %>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <p>
+              <label>Description:</label>
+              <%= task.description %>
+            </p>
+            <p><label>Start:</label> <%= moment(task.start_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
+            <p><label>End:</label> <%= moment(task.end_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
+            <p>
+              <label>Status:</label>
+              <% if (task.status_task === 'accepted') { %>
+                <span class="label label-success lb-md">
+                  <%= task.status_task %>
+                </span>
+                <% } else if (task.status_task === 'offered') { %>
+                  <span class="label label-info lb-md">
+                    <%= task.status_task %>
+                  </span>
+                  <% } else { %>
+                    <span class="label label-warning lb-md">
+                      <%= task.status_task %>
+                    </span>
+                    <% } %>
+            </p>
+            <p>
+              <label>Location:</label>
+              <%=task.location%>
+            </p>
+            <p>
+              <label>Task original price:</label> $
+              <%= task.task_price %>
+            </p>
+            <p>
+              <label>You offered:</label> $
+              <%= task.offer_price %>
+            </p>
+            <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
+            <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
+          </div>
+          <div class="panel-footer">Requested by:
+            <%= task.requester %>
+          </div>
         </div>
-        
-        <% include partials/footer %>
+
+        <% }); %>
+    </div>
+
+    <% include partials/footer %>

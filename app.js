@@ -76,6 +76,7 @@ app.use(function(req,res,next){
     res.locals.currentUser = req.user;
     res.locals.loggedIn = loggedIn;
     res.locals.prevUrl = req.session.returnTo;
+    res.locals.moment = moment;
     next();
 })
 
@@ -329,7 +330,8 @@ app.get("/tasks/", redirection, function(req, res) {
         var tasks = results.rows;
         res.render("tasks", {   tasks: tasks,
                                 message: req.flash('message'),
-                                success: req.flash('success')});
+                                success: req.flash('success'),
+                                });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });

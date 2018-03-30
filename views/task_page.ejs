@@ -69,13 +69,13 @@
           <div class="col-md-12">
             <h3>Starts:</h3>
             <p class="start_dt">
-              <%= new Date(task.start_dt) %>
+              <%= moment(task.start_dt).format('dddd, DD MMMM YYYY, h:mm A') %>
             </p>
           </div>
           <div class="col-md-12">
             <h3>Ends:</h3>
             <p class="end_dt">
-              <%= new Date(task.end_dt) %>
+              <%= moment(task.end_dt).format('dddd, DD MMMM YYYY, h:mm A') %>
             </p>
           </div>
         </div>
@@ -184,7 +184,7 @@
                 <div class="panel-body alert-success">
                   You offered $
                   <%= offer.price %> at
-                  <%= new Date(offer.offered_dt + 'Z') %>
+                  <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %>
                 </div>
                 <div class="panel-footer">
                     <!-- Edit offer -->
@@ -234,7 +234,7 @@
                   <div class="panel-body">
                     <%= offer.assignee %> offered $
                     <%= offer.price %> at
-                    <%= new Date(offer.offered_dt + 'Z') %>
+                    <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %>
                   </div>
                 <% } %>
               <% if (loggedIn && currentUser.username == task.requester && offer.status_offer != 'rejected') { %>
