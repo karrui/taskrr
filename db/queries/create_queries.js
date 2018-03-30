@@ -645,7 +645,10 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             AND task.category_id = coalesce(CAST(_category_id AS NUMERIC(6, 2)), task.category_id)
 
             -- If location matches more than 40%
-            AND get_matching_percent(task.location, _location) >= 0.4
+            AND (
+                get_matching_percent(task.location, _location) >= 0.4
+                OR task.location ILIKE '%' || coalesce(_location, '') || '%'
+            )
 
             -- If requester matches more than 80%
             AND get_matching_percent(task.requester, _requester) >= 0.8
