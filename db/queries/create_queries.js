@@ -663,7 +663,7 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             AND task.status_task = coalesce(_status_task, task.status_task)
 
             -- If assignee matches more than 80%
-            AND get_matching_percent(task.assignee, _assignee) >= 0.8
+            AND get_matching_percent(coalesce(task.assignee, ''), _assignee) >= 0.8
 
         GROUP BY
             task.id
