@@ -618,8 +618,10 @@ app.get("/search/", function(req, res) {
     }
     var min_price = req.query.min_price;
     var max_price = req.query.max_price;
-
-    var promise = executer.getTasksByAdvancedSearch(search_string, category_id, location, requester, start_dt, min_price, max_price)
+    var status_task = req.query.status_task;
+    var assignee = req.query.assignee;
+    
+    var promise = executer.getTasksByAdvancedSearch(search_string, category_id, location, requester, start_dt, min_price, max_price, status_task, assignee)
     .then(results => {
         var tasks = results.rows;
         res.render("tasks", { tasks: tasks });

@@ -50,18 +50,30 @@ var search_string = req.query.search_string;
 
                 <div class="form-group">
                     <label for="price" class="control-label">min price</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" name="min_price" class="form-control" placeholder="Search tasks with price starting from..." min="1" max="9999">
-                        </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="number" name="min_price" class="form-control" placeholder="Search tasks with price starting from..." min="1" max="9999">
                     </div>
-                    <div class="form-group">
-                            <label for="price" class="control-label">max price</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" name="max_price" class="form-control" placeholder="Search tasks with maximum price..." min="1" max="9999">
-                                </div>
-                            </div>
+                    <label for="price" class="control-label">max price</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="number" name="max_price" class="form-control" placeholder="Search tasks with maximum price..." min="1" max="9999">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="status_task" class="control-label">task status</label>
+                    <select class="form-control" name="status_task">
+                        <option value="" selected>Choose a status</option>
+                        <option value="open">open</option>
+                        <option value="offered">offered</option>
+                        <option value="accepted">accepted</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="control-label">assignee</label>
+                    <input class="form-control" type="text" name="assignee" placeholder="Search tasks by assignee...">
+                </div>
+                
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-default btn-block">Submit!</button>
                 </div>
