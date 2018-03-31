@@ -5,28 +5,23 @@
         <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
         You are currently at:
         <a class="breadcrumb-item" href="/">Home</a> >
-        <span class="breadcrumb-item active"> Profile</span>
+        <span class="breadcrumb-item active"><%=targetUser%>'s Profile</span>
     </nav>
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/profile/<%=currentUser.username%>/tasks" class="btn btn-info btn-sm">Your tasks</a>
-        <a href="/profile/<%=currentUser.username%>/offers" class="btn btn-info btn-sm">Your offers</a>
+        <h1><span class="fa fa-anchor"></span> <%=targetUser%>'s Profile Page</h1>
+        <a href="/profile/<%=targetUser%>/tasks" class="btn btn-info btn-sm"><%=targetUser%>'s tasks</a>
+        <a href="/profile/<%=targetUser%>/offers" class="btn btn-info btn-sm"><%=targetUser%>'s offers</a>
         <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
         <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
-    <% if (typeof prevUrl != 'undefined') { %>
-        <div class="row text-center">
-            <a href="<%=prevUrl%>" class="btn btn-success btn-lg">Back to where you were!</a>
-        </div>
-    <% } %>
     <br>
     <div class="row">
 
         <!-- LOCAL INFORMATION -->
             <div class="well">
-                <h3><span class="fa fa-user"></span> User Profile</h3>
+                <h3><span class="fa fa-user"></span> <%=targetUser%>'s Profile</h3>
 
                 <p>
                     <strong>id</strong>: <%= user.id %><br>
@@ -35,10 +30,6 @@
                 </p>
 
             </div>
-        </div>
-
-        <div class="row">
-                <a href="/logout" class="btn btn-warning btn-sm pull-right">Logout</a>
         </div>
 
     </div>

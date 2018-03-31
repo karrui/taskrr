@@ -96,6 +96,7 @@ exports.VIEW_PERSON_LOGIN = `
             person.id,
             person.username,
             person.password,
+            person.email,
             person.role
 	    FROM person
     )

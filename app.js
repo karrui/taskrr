@@ -203,14 +203,28 @@ app.get('/profile', isLoggedIn, function(req, res) {
     });
 });
 
-// Task related starts here
+app.get('/profile/:username', function(req, res) {
+    var promise = executer.getUserByName(req.params['username'])
+    .then(results => {
+        var user = results.rows[0];
+        res.render('view_profile', {
+            user: user,
+            targetUser: req.params['username'],
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    })
+})
 
-app.get('/profile/tasks', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksByRequester(req.user.username)
+// Task related starts here
+app.get('/profile/:username/tasks', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks", {
             loggedIn: loggedIn,
+            targetUser: req.params['username'],
             tasks: tasks
         });
     })
@@ -219,12 +233,13 @@ app.get('/profile/tasks', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/tasks/open', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithOpenStatusByRequester(req.user.username)
+app.get('/profile/:username/tasks/open', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOpenStatusByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks_open", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
@@ -232,12 +247,13 @@ app.get('/profile/tasks/open', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/tasks/offered', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithOfferedStatusByRequester(req.user.username)
+app.get('/profile/:username/tasks/offered', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOfferedStatusByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks_offered", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
@@ -245,12 +261,13 @@ app.get('/profile/tasks/offered', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithAcceptedStatusByRequester(req.user.username)
+app.get('/profile/:username/tasks/accepted', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithAcceptedStatusByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks_accepted", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
@@ -259,12 +276,13 @@ app.get('/profile/tasks/accepted', isLoggedIn, function(req, res) {
 });
 
 // Offers related starts here
-app.get('/profile/offers', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithOffersByOfferAssignee(req.user.username)
+app.get('/profile/:username/offers', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_offers", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
@@ -272,12 +290,13 @@ app.get('/profile/offers', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/offers/pending', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithPendingOffersByOfferAssignee(req.user.username)
+app.get('/profile/:username/offers/pending', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithPendingOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_offers_pending", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
@@ -285,12 +304,13 @@ app.get('/profile/offers/pending', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/offers/accepted', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithAcceptedOffersByOfferAssignee(req.user.username)
+app.get('/profile/:username/offers/accepted', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithAcceptedOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_offers_accepted", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
@@ -298,12 +318,13 @@ app.get('/profile/offers/accepted', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/offers/rejected', isLoggedIn, function(req, res) {
-    var promise = executer.getTasksWithRejectedOffersByOfferAssignee(req.user.username)
+app.get('/profile/:username/offers/rejected', isLoggedIn, function(req, res) {
+    var promise = executer.getTasksWithRejectedOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
         res.render("user_offers_rejected", {
-            tasks: tasks
+            tasks: tasks,
+            targetUser: req.params['username'],
         });
     })
     .catch(err => {
