@@ -324,7 +324,7 @@
                   <div class="panel-body alert-warning">
                     <a href="/profile/<%=offer.assignee%>">Your</a> offer of $
                     <%= offer.price %> at
-                    <%= new Date(offer.offered_dt + 'Z') %> was rejected.
+                    <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %> was rejected.
                   </div>
                   </div>
                 <% } else if (offer.status_offer == 'rejected') { %>
