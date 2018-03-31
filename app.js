@@ -219,7 +219,7 @@ app.get('/profile/:username', function(req, res) {
 })
 
 // Task related starts here
-app.get('/profile/:username/tasks', isLoggedIn, function(req, res) {
+app.get('/profile/:username/tasks', function(req, res) {
     var promise = executer.getTasksByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -234,7 +234,7 @@ app.get('/profile/:username/tasks', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/:username/tasks/open', isLoggedIn, function(req, res) {
+app.get('/profile/:username/tasks/open', function(req, res) {
     var promise = executer.getTasksWithOpenStatusByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -248,7 +248,7 @@ app.get('/profile/:username/tasks/open', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/:username/tasks/offered', isLoggedIn, function(req, res) {
+app.get('/profile/:username/tasks/offered', function(req, res) {
     var promise = executer.getTasksWithOfferedStatusByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -262,7 +262,7 @@ app.get('/profile/:username/tasks/offered', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/:username/tasks/accepted', isLoggedIn, function(req, res) {
+app.get('/profile/:username/tasks/accepted', function(req, res) {
     var promise = executer.getTasksWithAcceptedStatusByRequester(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -277,7 +277,7 @@ app.get('/profile/:username/tasks/accepted', isLoggedIn, function(req, res) {
 });
 
 // Offers related starts here
-app.get('/profile/:username/offers', isLoggedIn, function(req, res) {
+app.get('/profile/:username/offers', function(req, res) {
     var promise = executer.getTasksWithOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -291,7 +291,7 @@ app.get('/profile/:username/offers', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/:username/offers/pending', isLoggedIn, function(req, res) {
+app.get('/profile/:username/offers/pending', function(req, res) {
     var promise = executer.getTasksWithPendingOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -305,7 +305,7 @@ app.get('/profile/:username/offers/pending', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/:username/offers/accepted', isLoggedIn, function(req, res) {
+app.get('/profile/:username/offers/accepted', function(req, res) {
     var promise = executer.getTasksWithAcceptedOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;
@@ -319,7 +319,7 @@ app.get('/profile/:username/offers/accepted', isLoggedIn, function(req, res) {
     });
 });
 
-app.get('/profile/:username/offers/rejected', isLoggedIn, function(req, res) {
+app.get('/profile/:username/offers/rejected', function(req, res) {
     var promise = executer.getTasksWithRejectedOffersByOfferAssignee(req.params['username'])
     .then(results => {
         var tasks = results.rows;

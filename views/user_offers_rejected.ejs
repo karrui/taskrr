@@ -54,7 +54,7 @@
                     <p><label>Task original price:</label> $<%= task.task_price %></p>
                     <p><label><a href="/profile/<%=targetUser%>"><%=targetUser%></a> offered:</label> $<%= task.offer_price %></p>
                     <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
-                    <% if (currentUser.username == targetUser) { %>
+                    <% if (loggedIn && currentUser.username == targetUser) { %>
                     <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
                     <% } %>
                 </div>
