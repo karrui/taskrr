@@ -24,7 +24,7 @@
         <% } %>
     </h1>
     
-    <header class="jumbotron">
+    <header class="row jumbotron">
         <div class="container">
             <h1>Tasks</h1>
             <p>Not sure what to work on? Choose one from here!</p>
@@ -40,45 +40,16 @@
     </header>
 
     <div class="row">
-        <form action="/search/task/" method="GET">
-            <div class="input-group col-md-6 col-sm-offset-3">
-                <input type="text" class="form-control" name="search" placeholder="Search for tasks...">
-                <div class="input-group-btn">
-                    <button class="btn btn-default" type="submit">Go!</button>
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li><a href="#">Advanced Search...</a></li>
-                        </ul>
-                </div><!-- /btn-group -->
-            </div><!-- /input-group -->
-        </form>
-    </div>
-    <br>
-
-    <!--Each Task has:-->
-    <!-- * id-->
-    <!-- * DISPLAYED - title-->
-    <!-- * DISPLAYED - description-->
-    <!-- * category_id-->
-    <!-- * location-->
-    <!-- * DISPLAYED - requester-->
-    <!-- * start_dt-->
-    <!-- * end_dt-->
-    <!-- * DISPLAYED - price-->
-    <!-- * status_task-->
-    <!-- * assignee-->
-    
-    <div class="row">
         <% tasks.forEach(function(task) { %>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title"><%= task.title %></h3>
                 </div>
                 <div class="panel-body">
-                    <p>Description: <%= task.description %></p>
-                    <p>Start: <%= task.start_dt %></p>
-                    <p>End: <%= task.end_dt %></p>
-                    <p>Status: 
+                    <p><label>Description:</label> <%= task.description %></p>
+                    <p><label>Start:</label> <%= moment(task.start_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
+                    <p><label>End:</label> <%= moment(task.end_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
+                    <p><label>Status:</label>
                         <% if (task.status_task === 'accepted') { %>
                             <span class="label label-success lb-md">
                                 <%= task.status_task %>
@@ -93,18 +64,18 @@
                             </span>
                         <% } %>
                     </p>
-                    <p>Starting offer: $<%= task.price %></p>
+                    <p><label>Location:</label> <%= task.location %></p>
+                    <p><label>Starting offer:</label> $<%= task.price %></p>
                     <% if (loggedIn && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
                         <form action="/delete/task/<%=task.id%>" method="POST">
-                        <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
-                        <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
-                        
+                            <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
+                            <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
                             <input type="hidden" name="id" value="<%=task.id%>" readonly>
                             <button class="btn btn-danger pull-right" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete task" data-message="Are you sure you want to delete this task?">
-                                <i class="glyphicon glyphicon-trash"></i>
+                            <i class="glyphicon glyphicon-trash"></i>
                             </button>
                         </form>
-            
+
                         <!-- Modal Dialog -->
                         <div class="modal fade" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
                             <div class="modal-dialog">

@@ -5,12 +5,15 @@
 /* TABLE OF CONTENTS
     1. Table
     2. View
-    3. Functions
+    3. Function
     ├── 3.1. Create
     ├── 3.2. Insert
     ├── 3.3. Update
     ├── 3.4. Delete
+    ├── 3.5. Select
+    ├── 3.6. Helper
     4. Function calls for Create
+    5. Extension
 */
 
 //======================================================================================================================
@@ -160,7 +163,7 @@ exports.VIEW_ALL_OFFER = `
 `
 
 //======================================================================================================================
-// 3. Functions
+// 3. Function
 
 // ======================================================
 // 3.1. Create
@@ -525,6 +528,225 @@ exports.FUNCTION_DELETE_OFFER_BY_ASSIGNEE_AND_TASK_ID = `
     ;
 `
 
+// ======================================================
+// 3.5. Select
+exports.FUNCTION_TASK_BASIC_SEARCH = `
+    CREATE OR REPLACE FUNCTION get_tasks_with_basic_search (
+        _search_string    TEXT            DEFAULT NULL
+    )
+    RETURNS SETOF task AS
+    $BODY$
+    BEGIN
+        if _search_string = '' THEN
+            _search_string = NULL;
+        END if;
+
+        RETURN QUERY
+        SELECT
+            task.id,
+            task.title,
+            task.description,
+            task.category_id,
+            task.location,
+            task.requester,
+            task.start_dt,
+            task.end_dt,
+            task.price,
+            task.status_task,
+            task.assignee
+        FROM
+            task,
+            (
+                SELECT unnest(string_to_array(coalesce($1, ' '), ' ')) AS word
+            ) AS sub
+        WHERE 1=1
+            AND task.title ILIKE '%' || sub.word || '%'
+            OR task.description ILIKE '%' || sub.word || '%'
+        GROUP BY
+            task.id
+        HAVING
+            count(task.id) IS NOT DISTINCT FROM array_length(string_to_array(coalesce($1, ' '), ' '), 1)
+        ORDER BY
+            task.id DESC
+        ;
+    END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+exports.FUNCTION_TASK_ADVANCED_SEARCH = `
+    CREATE OR REPLACE FUNCTION get_tasks_with_advanced_search (
+        _search_string    TEXT            DEFAULT NULL,
+        _category_id      TEXT            DEFAULT NULL,
+        _location         TEXT            DEFAULT NULL,
+        _requester        TEXT            DEFAULT NULL,
+        _start_dt         TEXT            DEFAULT NULL,
+        _min_price        TEXT            DEFAULT NULL,
+        _max_price        TEXT            DEFAULT NULL,
+        _status_task      TEXT            DEFAULT NULL,
+        _assignee         TEXT            DEFAULT NULL
+    )
+    RETURNS SETOF task AS
+    $BODY$
+    BEGIN
+        if _search_string = '' THEN
+            _search_string = NULL;
+        END if;
+        if _category_id = '' THEN
+            _category_id = NULL;
+        END if;
+        if _location = '' THEN
+            _location = NULL;
+        END if;
+        if _requester = '' THEN
+            _requester = NULL;
+        END if;
+        if _start_dt = '' THEN
+            _start_dt = NULL;
+        END if;
+        if _min_price = '' THEN
+            _min_price = NULL;
+        END if;
+        if _max_price = '' THEN
+            _max_price = NULL;
+        END if;
+        if _status_task = '' THEN
+            _status_task = NULL;
+        END if;
+        if _assignee = '' THEN
+            _assignee = NULL;
+        END if;
+
+        RETURN QUERY
+        SELECT
+            task.id,
+            task.title,
+            task.description,
+            task.category_id,
+            task.location,
+            task.requester,
+            task.start_dt,
+            task.end_dt,
+            task.price,
+            task.status_task,
+            task.assignee
+        FROM
+            task,
+            (
+                SELECT unnest(string_to_array(coalesce(_search_string, ' '), ' ')) AS word
+            ) AS sub
+        WHERE 1=1
+            AND ( -- If the title/description contains all the words
+                task.title ILIKE '%' || sub.word || '%'
+                OR task.description ILIKE '%' || sub.word || '%'
+            )
+            AND task.category_id = coalesce(CAST(_category_id AS NUMERIC(6, 2)), task.category_id)
+
+            -- If location matches more than 40%
+            AND (
+                get_matching_percent(task.location, _location) >= 0.4
+                OR task.location ILIKE '%' || coalesce(_location, '') || '%'
+            )
+
+            -- If requester matches more than 80%
+            AND get_matching_percent(task.requester, _requester) >= 0.8
+
+            -- If start_dt
+            AND task.start_dt::DATE = coalesce(_start_dt, to_char(task.start_dt, 'YYYY-MM-DD'))::DATE
+
+            -- If price >= min_price
+            AND task.price >= coalesce(CAST(_min_price AS NUMERIC(6, 2)), 0)
+
+            -- If price <= max_price
+            AND task.price <= coalesce(CAST(_max_price AS NUMERIC(6, 2)), 9999.99)
+
+            -- Same task status
+            AND task.status_task = coalesce(_status_task, task.status_task)
+
+            -- If assignee matches more than 80%
+            AND get_matching_percent(coalesce(task.assignee, ''), _assignee) >= 0.8
+
+        GROUP BY
+            task.id
+        HAVING
+            count(task.id) IS NOT DISTINCT FROM array_length(string_to_array(coalesce(_search_string, ' '), ' '), 1)
+        ORDER BY
+            task.id DESC
+
+        ;
+    END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
+// ======================================================
+// 3.6. Helper
+
+exports.FUNCTION_DROP_ALL_FUNCTIONS = `
+    CREATE OR REPLACE FUNCTION information_schema.f_delfunc(_sch text)
+        RETURNS void AS
+    $func$
+    DECLARE
+        _sql text;
+    BEGIN
+        SELECT INTO _sql
+            string_agg(format('DROP FUNCTION %s(%s);'
+                          , p.oid::regproc
+                          , pg_get_function_identity_arguments(p.oid))
+                   , E'\n')
+        FROM   pg_proc      p
+        JOIN   pg_namespace ns ON ns.oid = p.pronamespace
+        WHERE  ns.nspname = _sch;
+
+        IF _sql IS NOT NULL THEN
+            --  RAISE NOTICE '%', _sql;  -- for debugging
+            EXECUTE _sql;
+        END IF;
+    END
+    $func$
+    LANGUAGE plpgsql
+    ;
+`
+
+exports.FUNCTION_GET_STRING_MATCHING_PERCENT = `
+    CREATE OR REPLACE FUNCTION get_matching_percent(
+        _string_a    TEXT DEFAULT NULL,
+        _string_b    TEXT DEFAULT NULL
+    )
+    RETURNS NUMERIC(3, 2) AS
+    $BODY$
+        BEGIN
+            if _string_a IS NOT NULL THEN
+                _string_a = LOWER(_string_a);
+            END if;
+            if _string_b IS NOT NULL THEN
+                _string_b = LOWER(_string_b);
+            END if;
+
+            RETURN
+            CASE
+                WHEN (_string_a IS NULL OR _string_b IS NULL) THEN 1.00
+                WHEN (CHAR_LENGTH(_string_a) >= CHAR_LENGTH(_string_b)) THEN (
+                    round(
+                        (char_length(_string_a)-levenshtein(_string_a, _string_b)::NUMERIC) / char_length(_string_a), 2)
+                )
+                WHEN CHAR_LENGTH(_string_b) > CHAR_LENGTH(_string_a) THEN (
+                    round(
+                        (char_length(_string_b)-levenshtein(_string_a, _string_b)::NUMERIC) / char_length(_string_b), 2)
+                )
+            END AS _percent
+        ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
 //======================================================================================================================
 // 4. Function calls for Create
 
@@ -544,4 +766,10 @@ exports.INDEX_TABLE_OFFER = `
     SELECT
         create_index_table_offer()
     ;
+`
+//======================================================================================================================
+// 5. Extension
+
+exports.EXTENSION_FUZZYSTRMATCH = `
+    CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
 `
