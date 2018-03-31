@@ -99,7 +99,7 @@
               <% if (loggedIn && currentUser.username == task.requester) { %>
                 You!
               <% } else { %>
-                <%= task.requester %>
+                <a href="/profile/<%=task.requester%>"><%= task.requester %></a>
               <% } %>
             </p>
           </div>
