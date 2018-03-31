@@ -369,7 +369,8 @@ exports.USER_BY_ID = `
         view_person_login.id,
         view_person_login.username,
         view_person_login.password,
-        view_person_login.role
+        view_person_login.role,
+        view_person_login.email
     FROM view_person_login
     WHERE 1=1
         AND view_person_login.id = $1
@@ -381,7 +382,8 @@ exports.USER_BY_NAME = `
         view_person_login.id,
         view_person_login.username,
         view_person_login.password,
-        view_person_login.role
+        view_person_login.role,
+        view_person_login.email
     FROM view_person_login
     WHERE 1=1
         AND view_person_login.username = $1

@@ -98,7 +98,7 @@
                         <a class="btn btn-info" href="/tasks/<%=task.id%>">Help with this task!</a>
                     <% } %>
                 </div>
-                <div class="panel-footer">Requested by: <%= task.requester %></div>
+                <div class="panel-footer">Requested by: <a href="/profile/<%=task.requester%>"><%= task.requester %></a></div>
             </div>
         <% }); %>
     </div>

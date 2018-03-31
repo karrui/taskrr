@@ -99,7 +99,7 @@
               <% if (loggedIn && currentUser.username == task.requester) { %>
                 You!
               <% } else { %>
-                <%= task.requester %>
+                <a href="/profile/<%=task.requester%>"><%= task.requester %></a>
               <% } %>
             </p>
           </div>
@@ -141,7 +141,7 @@
                   </div>
               </div>
           <% } else { %>
-            You have accepted this task! Contact <%=task.assignee%> to finalize details.
+            You have accepted this task! Contact <a href="/profile/<%=task.assignee%>"><%=task.assignee%></a> to finalize details.
         <% } } %>
 
         <% if (task.status_task != 'accepted') { %>
@@ -232,7 +232,7 @@
                 </div>
                 <% } else if (offer.status_offer != 'rejected') { %>
                   <div class="panel-body">
-                    <%= offer.assignee %> offered $
+                    <a href="/profile/<%=offer.assignee%>"><%= offer.assignee %></a> offered $
                     <%= offer.price %> at
                     <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %>
                   </div>
@@ -301,9 +301,9 @@
               <h3>Accepted offer:</h3>
               <div class="panel panel-default">
                 <div class="panel-body alert-success">
-                  <%=task.requester%> accepted offer of $
+                  <a href="/profile/<%=task.requester%>"><%=task.requester%></a> accepted offer of $
                   <%= acceptedOffer.price %> by 
-                  <%= acceptedOffer.assignee %>
+                  <a href="/profile/<%=acceptedOffer.assignee%>"><%= acceptedOffer.assignee %></a>
                 </div>
               </div>
             </div>
@@ -322,15 +322,15 @@
                 <% if (loggedIn && currentUser.username == offer.assignee && offer.status_offer == 'rejected') { %>
                   <div class="panel panel-default">
                   <div class="panel-body alert-warning">
-                    Your offer of $
+                    <a href="/profile/<%=offer.assignee%>">Your</a> offer of $
                     <%= offer.price %> at
-                    <%= new Date(offer.offered_dt + 'Z') %> was rejected.
+                    <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %> was rejected.
                   </div>
                   </div>
                 <% } else if (offer.status_offer == 'rejected') { %>
                   <div class="panel panel-default">
                   <div class="panel-body">
-                    <%= offer.assignee %>'s offer of $
+                    <a href="/profile/<%=offer.assignee%>"><%= offer.assignee %>'s</a> offer of $
                     <%= offer.price %> at
                     <%= new Date(offer.offered_dt + 'Z') %> was rejected.
                   </div>

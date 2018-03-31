@@ -5,26 +5,26 @@
       <a class="breadcrumb-item" href="javascript:history.back()">
         < Back</a> | You are currently at:
           <a class="breadcrumb-item" href="/">Home</a> >
-          <a class="breadcrumb-item" href="/profile">Profile</a> >
-          <span class="breadcrumb-item active"> My tasks</span>
+          <a class="breadcrumb-item" href="/profile/<%=targetUser%>"><%=targetUser%>'s Profile</a> >
+          <span class="breadcrumb-item active"> <%=targetUser%>'s tasks</span>
     </nav>
 
     <div class="page-header text-center">
       <h1>
-        <span class="fa fa-anchor"></span> Profile Page</h1>
-      <a href="/profile/tasks" class="btn btn-sm btn-primary active">Your tasks</a>
-      <a href="/profile/offers" class="btn btn-info btn-sm">Your offers</a>
+        <span class="fa fa-anchor"></span><%=targetUser%>'s Profile Page</h1>
+      <a href="/profile/<%=targetUser%>/tasks" class="btn btn-sm btn-primary active"><%=targetUser%>'s tasks</a>
+      <a href="/profile/<%=targetUser%>/offers" class="btn btn-info btn-sm"><%=targetUser%>'s offers</a>
       <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
       <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
     <div class="page-header text-center">
       <h1>
-        <span class="fa fa-anchor"></span> Current tasks</h1>
-      <a href="/profile/tasks" class="btn btn-default btn-sm">All your tasks</a>
-      <a href="/profile/tasks/open" class="btn btn-primary btn-sm">Open tasks</a>
-      <a href="/profile/tasks/offered" class="btn btn-default btn-sm">Offered tasks</a>
-      <a href="/profile/tasks/accepted" class="btn btn-default btn-sm">Accepted tasks</a>
+        <span class="fa fa-anchor"></span> <%=targetUser%>'s tasks</h1>
+      <a href="/profile/<%=targetUser%>/tasks" class="btn btn-default btn-sm">All tasks</a>
+      <a href="/profile/<%=targetUser%>/tasks/open" class="btn btn-primary active btn-sm">Open tasks</a>
+      <a href="/profile/<%=targetUser%>/tasks/offered" class="btn btn-default btn-sm">Offered tasks</a>
+      <a href="/profile/<%=targetUser%>/tasks/accepted" class="btn btn-default btn-sm">Accepted tasks</a>
     </div>
 
     <div class="row">
@@ -44,19 +44,19 @@
             <p><label>End:</label> <%= moment(task.end_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
             <p>
               <label>Status:</label>
-              <% if (task.status_task === 'accepted') { %>
-                <span class="label label-success lb-md">
+                <% if (task.status_task === 'accepted') { %>
+                  <span class="label label-success lb-md">
                   <%= task.status_task %>
-                </span>
+                  </span>
                 <% } else if (task.status_task === 'offered') { %>
                   <span class="label label-info lb-md">
                     <%= task.status_task %>
                   </span>
-                  <% } else { %>
-                    <span class="label label-warning lb-md">
-                      <%= task.status_task %>
-                    </span>
-                    <% } %>
+                <% } else { %>
+                  <span class="label label-warning lb-md">
+                    <%= task.status_task %>
+                  </span>
+                <% } %>
             </p>
             <p>
               <label>Location:</label>
@@ -68,13 +68,14 @@
             </p>
             <form action="/delete/task/<%=task.id%>" method="POST">
               <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
-              <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
+              <% if (loggedIn && task.status_task != 'accepted' && currentUser.username == targetUser) { %>
+                <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
 
-              <input type="hidden" name="id" value="<%=task.id%>" readonly>
-              <button class="btn btn-danger pull-right" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete task"
-                data-message="Are you sure you want to delete this task?">
-                <i class="glyphicon glyphicon-trash"></i>
-              </button>
+                <input type="hidden" name="id" value="<%=task.id%>" readonly>
+                <button class="btn btn-danger pull-right" type="button" data-toggle="modal" data-target="#confirmDelete" data-title="Delete task"
+                  data-message="Are you sure you want to delete this task?">
+                  <i class="glyphicon glyphicon-trash"></i>
+                </button>
             </form>
 
             <!-- Modal Dialog -->
@@ -95,6 +96,7 @@
                 </div>
               </div>
             </div>
+            <% } %>
           </div>
         </div>
         <% }); %>
