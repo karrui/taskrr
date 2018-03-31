@@ -24,7 +24,7 @@
             <a href="/profile/<%=targetUser%>/offers/pending" class="btn btn-default btn-sm">Pending offers</a>
             <a href="/profile/<%=targetUser%>/offers/rejected" class="btn btn-default btn-sm">Rejected offers</a>
         </div>
-    
+
     <div class="row">
         <% tasks.forEach(function(task) { %>
             <div class="panel panel-default">
@@ -32,10 +32,10 @@
                     <h3 class="panel-title"><%= task.title %></h3>
                 </div>
                 <div class="panel-body">
-                    <p>Description: <%= task.description %></p>
-                    <p>Start: <%= task.start_dt %></p>
-                    <p>End: <%= task.end_dt %></p>
-                    <p>Status: 
+                    <p><label>Description:</label> <%= task.description %></p>
+                    <p><label>Start:</label> <%= moment(task.start_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
+                    <p><label>End:</label> <%= moment(task.end_dt).format('dddd, DD MMMM YYYY, h:mm A') %></p>
+                    <p><label>Status:</label> 
                             <% if (task.status_task === 'accepted') { %>
                                 <span class="label label-success lb-md">
                                     <%= task.status_task %>
@@ -50,14 +50,15 @@
                                 </span>
                             <% } %>
                         </p>
-                    <p>Task original price: $<%= task.task_price %></p>
-                    <p><%=targetUser%> offered: $<%= task.offer_price %></p>
+                    <p><label>Location:</label> <%=task.location%></p>
+                    <p><label>Task original price:</label> $<%= task.task_price %></p>
+                    <p><label><a href="/profile/<%=targetUser%>"><%=targetUser%></a> offered:</label> $<%= task.offer_price %></p>
                     <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                     <% if (currentUser.username == targetUser) { %>
                     <a href="/tasks/<%=task.id%>">Go to task details to edit/ remove your offer</a>
                     <% } %>
                 </div>
-                <div class="panel-footer">Requested by: <%= task.requester %></div>
+                <div class="panel-footer">Requested by: <a href="/profile/<%=task.requester%>"><%= task.requester %></a></div>
             </div>
             
             <% }); %>
