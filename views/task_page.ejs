@@ -96,7 +96,7 @@
           <div class="col-md-12">
             <h3>Requester:</h3>
             <p class="requester">
-              <% if (loggedIn && currentUser.username == task.requester) { %>
+              <% if (typeof currentUser != 'undefined' && currentUser.username == task.requester) { %>
                 You!
               <% } else { %>
                 <a href="/profile/<%=task.requester%>"><%= task.requester %></a>
@@ -112,7 +112,7 @@
           </div>
         <% } %>
 
-        <% if (loggedIn && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
+        <% if (typeof currentUser != 'undefined' && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
           <% if (task.status_task != 'accepted' || currentUser.role == 'admin') { %>
             <form action="/delete/task/<%=task.id%>" method="POST">
               <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
@@ -155,11 +155,11 @@
               </div>
             <% } %>
             <div class="offers">
-              <% if (!loggedIn) { %>
+              <% if (typeof currentUser == 'undefined') { %>
                 <a class="btn btn-info" href="/login">Login to offer!</a>
                 <a href="/signup">Or sign up now!</a>
-              <% } else if (loggedIn && typeof offerByUser != 'undefined') { %>
-              <% } else if (loggedIn && currentUser.username != task.requester && currentUser.role != 'admin') { %>
+              <% } else if (typeof currentUser != 'undefined' && typeof offerByUser != 'undefined') { %>
+              <% } else if (typeof currentUser != 'undefined' && currentUser.username != task.requester && currentUser.role != 'admin') { %>
                 <form action="/new/offer/<%=task.id%>" method="POST">
                   <div class="form-group">
                     <div id="offer_info" style="display:none;" class="input-group">
@@ -180,7 +180,7 @@
           <% } else { %>
             <% offers.forEach(function(offer) { %>
               <div class="panel panel-default">
-              <% if (loggedIn && currentUser.username == offer.assignee && offer.status_offer != 'rejected') { %>
+              <% if (typeof currentUser != 'undefined' && currentUser.username == offer.assignee && offer.status_offer != 'rejected') { %>
                 <div class="panel-body alert-success">
                   You offered $
                   <%= offer.price %> at
@@ -237,7 +237,7 @@
                     <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %>
                   </div>
                 <% } %>
-              <% if (loggedIn && currentUser.username == task.requester && offer.status_offer != 'rejected') { %>
+              <% if (typeof currentUser != 'undefined' && currentUser.username == task.requester && offer.status_offer != 'rejected') { %>
                 <div class="panel-footer">
                   <!-- Accept offer button -->
                   <form class="form-inline" style="display: inline-block;" action="/accept/offer/<%=task.id%>" method="POST">
@@ -255,7 +255,7 @@
                     <input type="submit" class="btn btn-danger btn-xs" value="Reject offer">
                   </form>
                 </div>
-              <% } else if (loggedIn && currentUser.role == 'admin') { %>
+              <% } else if (typeof currentUser != 'undefined' && currentUser.role == 'admin') { %>
                 <div class="panel-footer">
                   <!-- Delete offer -->
                   <form style="display: inline-block;" action="/delete/offer/<%=task.id%>" method="POST">
@@ -319,7 +319,7 @@
               <p>None :)</p>
             <% } else { %>
               <% offers.forEach(function(offer) { %>
-                <% if (loggedIn && currentUser.username == offer.assignee && offer.status_offer == 'rejected') { %>
+                <% if (typeof currentUser != 'undefined' && currentUser.username == offer.assignee && offer.status_offer == 'rejected') { %>
                   <div class="panel panel-default">
                   <div class="panel-body alert-warning">
                     <a href="/profile/<%=offer.assignee%>">Your</a> offer of $

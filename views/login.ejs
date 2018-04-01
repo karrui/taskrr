@@ -4,7 +4,7 @@
 
 <div class="col-sm-6 col-sm-offset-3">
 
-        <% if (loggedIn) { %>
+        <% if (typeof currentUser != 'undefined') { %>
             <h1>You are already logged in.</h1>
             <p>Click <a href="javascript:history.back()">here</a> to go back.</p>
         <% } else { %>

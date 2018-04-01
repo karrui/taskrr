@@ -60,7 +60,6 @@ app.use(express.static(__dirname + '/public'));
 // =====================================
 // PASSPORT (AUTH) FUNCTIONS ===========
 // =====================================
-var loggedIn = false;
 require('./config/passport')(passport); // pass passport for configuration
 
 // required for passport
@@ -74,7 +73,6 @@ app.use(passport.session()); // persistent login sessions
 
 app.use(function(req,res,next){
     res.locals.currentUser = req.user;
-    res.locals.loggedIn = loggedIn;
     res.locals.prevUrl = req.session.returnTo;
     res.locals.moment = moment;
     next();
@@ -118,7 +116,6 @@ app.get("/", function(req, res) {
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
     if (req.isAuthenticated()) {
-        loggedIn = true;
         return next();
     }
     // if they aren't redirect them to the login page
@@ -200,7 +197,6 @@ function signup_validation(req, res, next){
 app.get('/profile', isLoggedIn, function(req, res) {
     res.render('profile', {
         user : req.user, // get the user out of session and pass to template
-        loggedIn: loggedIn
     });
 });
 
@@ -224,7 +220,6 @@ app.get('/profile/:username/tasks', function(req, res) {
     .then(results => {
         var tasks = results.rows;
         res.render("user_tasks", {
-            loggedIn: loggedIn,
             targetUser: req.params['username'],
             tasks: tasks
         });
@@ -338,7 +333,6 @@ app.get('/profile/:username/offers/rejected', function(req, res) {
 // =====================================
 app.get('/logout', function(req, res) {
     req.logout();
-    loggedIn = false;
     res.redirect('/');
 });
 
@@ -380,7 +374,7 @@ app.get("/tasks/:id", redirection, function(req, res) {
             promise = executer.getAcceptedOfferByTaskId(task.id)
             .then(results => {
                 var acceptedOffer = results.rows[0];
-                if (loggedIn) {
+                if (res.locals.currentUser != null) {
                     promise = executer.getOffersByAssigneeAndTaskId(req.user.username, task.id)
                     .then(results => {
                         var offerByUser = results.rows[0];

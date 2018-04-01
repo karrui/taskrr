@@ -29,7 +29,7 @@
             <h1>Tasks</h1>
             <p>Not sure what to work on? Choose one from here!</p>
             <p>
-                <% if (loggedIn) { %>
+                <% if (typeof currentUser != 'undefined') { %>
                     <a class="btn btn-primary btn-lg" href="/tasks/new">Add new tasks</a>
                 <% } else { %>
                     <a class="btn btn-primary btn-lg" href="/login">Login to add new tasks!</a>
@@ -66,7 +66,7 @@
                     </p>
                     <p><label>Location:</label> <%= task.location %></p>
                     <p><label>Starting offer:</label> $<%= task.price %></p>
-                    <% if (loggedIn && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
+                    <% if (typeof currentUser != 'undefined' && (currentUser.username == task.requester || currentUser.role == 'admin')) { %>
                         <form action="/delete/task/<%=task.id%>" method="POST">
                             <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
                             <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>

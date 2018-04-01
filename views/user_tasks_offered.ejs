@@ -68,7 +68,7 @@
             </p>
             <form action="/delete/task/<%=task.id%>" method="POST">
               <a class="btn btn-info" href="/tasks/<%=task.id%>">Task Details</a>
-              <% if (loggedIn && task.status_task != 'accepted' && currentUser.username == targetUser) { %>
+              <% if (typeof currentUser != 'undefined' && task.status_task != 'accepted' && currentUser.username == targetUser) { %>
                 <a class="btn btn-warning" href="/edit/task/<%= task.id %>">Edit this task!</a>
 
                 <input type="hidden" name="id" value="<%=task.id%>" readonly>
