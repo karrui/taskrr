@@ -648,7 +648,16 @@ app.get("/search/", function(req, res) {
     });
 });
 
-
+//admin side
+app.get("/search/", function(req, res) {
+    //var labels = ['label 1', 'label 2'];
+    //var data = ['data1', 'data2'];
+    var toChartData = executer.getChartData()
+    .then(results => {
+        var chartingDataSet = results.row;
+        res.render("admin", {chartingDataSet: chartingDataSet});
+    })
+});
 // =====================================
 // MISC APIs ===========================
 // =====================================
