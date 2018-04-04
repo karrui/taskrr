@@ -652,11 +652,14 @@ app.get("/search/", function(req, res) {
 app.get("/search/", function(req, res) {
     //var labels = ['label 1', 'label 2'];
     //var data = ['data1', 'data2'];
-    var toChartData = executer.getChartData()
+    var toChartData = executer.getNoOfTasksByCategory()
     .then(results => {
         var chartingDataSet = results.row;
         res.render("admin", {chartingDataSet: chartingDataSet});
     })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
 });
 // =====================================
 // MISC APIs ===========================

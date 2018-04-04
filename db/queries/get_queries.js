@@ -12,6 +12,26 @@ exports.ALL_CATEGORIES = `
     ;
 `
 
+//Returns 3 out put - id, name, count
+exports.NUMBER_OF_TASK_BY_CATEGORY = `
+    SELECT
+    view_all_category.id,
+    view_all_category.name,
+    xTmp.no_task
+    FROM view_all_category
+    INNER JOIN (
+        SELECT 
+            view_all_task.category_id,
+            count(*) AS no_task
+        FROM view_all_task
+        GROUP BY
+            view_all_task.category_id
+        ) xTmp
+    ON         xTmp.category_id = view_all_category.id
+    ;
+
+`
+
 exports.ALL_TASKS = `
     SELECT
         view_all_task.id,

@@ -49,6 +49,7 @@ async function execute(query, args) {
     ├── 6.2. Category
     ├── 6.3. Task
     ├── 6.4. Offer
+    ├── 6.5. Charts
 
 */
 
@@ -482,4 +483,12 @@ exports.getOffersByAssignee = async function getOffersByAssignee(assignee) {
 exports.getAcceptedOfferByTaskId = async function getAcceptedOfferByTaskId(task_id) {
     console.log('Attempting to get accepted offer by task_id: %s', task_id);
     return execute(queries.get.ACCEPTED_OFFER_BY_TASKID, [task_id]);
+}
+
+// ======================================================
+// 6.5. Charts
+
+exports.getNoOfTasksByCategory = async function getNoOfTasksByCategory() {
+    console.log('Attempting to get number of tasks by category ID');
+    return execute(queries.get.NUMBER_OF_TASK_BY_CATEGORY);
 }
