@@ -584,12 +584,11 @@ app.post("/reject/offer/:id", isLoggedIn, function(req, res) {
 // =====================================
 // CATEGORIES APIs =====================
 // =====================================
-var allCategories;
 app.get("/categories", redirection, function(req, res) {
     var promise = executer.getCategories()
     .then(results => {
-        allCategories = results.rows;
-        res.render("categories", { categories: allCategories });
+        var categories = results.rows;
+        res.render("categories", { categories: categories });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -597,13 +596,15 @@ app.get("/categories", redirection, function(req, res) {
 });
 
 app.get("/categories/:id", redirection, function(req, res) {
-    var promise = executer.getTasksByCategoryId(req.params['id'])
+    var promise = executer.getCategories()
     .then(results => {
-        var tasks = results.rows;
-        if (allCategories != null) {
-            var categoryName = allCategories[req.params['id'] - 1].name;
-        }
-        res.render("tasks", { tasks: tasks, categoryName: categoryName });
+        var categories = results.rows;
+        promise = executer.getTasksByCategoryId(req.params['id'])
+        .then(results => {
+            var tasks = results.rows;
+            var categoryName = categories[req.params['id'] - 1].name;
+            res.render("tasks", { tasks: tasks, categoryName: categoryName });
+        })
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
@@ -638,11 +639,21 @@ app.get("/search/", function(req, res) {
     var max_price = req.query.max_price;
     var status_task = req.query.status_task;
     var assignee = req.query.assignee;
-    
-    var promise = executer.getTasksByAdvancedSearch(search_string, category_id, location, requester, start_dt, min_price, max_price, status_task, assignee)
+
+    var categories;
+
+    var promise = executer.getCategories()
+    .then(results => {
+        categories = results.rows;
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+
+    promise = executer.getTasksByAdvancedSearch(search_string, category_id, location, requester, start_dt, min_price, max_price, status_task, assignee)
     .then(results => {
         var tasks = results.rows;
-        res.render("tasks", { tasks: tasks });
+        res.render("tasks", { tasks: tasks, categories: categories });
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
