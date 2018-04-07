@@ -654,7 +654,7 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             -- If requester matches more than 80%
             AND get_matching_percent(task.requester, _requester) >= 0.8
 
-            -- If start_dt
+            -- Same task.start_dt, if NULL
             AND task.start_dt::DATE = coalesce(_start_dt, to_char(task.start_dt, 'YYYY-MM-DD'))::DATE
 
             -- If price >= min_price
@@ -663,7 +663,7 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             -- If price <= max_price
             AND task.price <= coalesce(CAST(_max_price AS NUMERIC(6, 2)), 9999.99)
 
-            -- Same task status
+            -- Same task.status, if NULL
             AND task.status_task = coalesce(_status_task, task.status_task)
 
             -- If assignee matches more than 80%
