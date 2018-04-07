@@ -410,7 +410,8 @@ app.post("/tasks", isLoggedIn, function(req, res) {
 
     var promise = executer.addTask(title, description, category_id, location, requester, start_dt, end_dt, price)
     .then(function() {
-        res.redirect('/profile/tasks'); // to user's projects page
+        var redirectUrl = "/profile/" + req.user.username + "/tasks";
+        res.redirect(redirectUrl); // to user's projects page
     })
     .catch(err => {
         req.flash('message', err.message);

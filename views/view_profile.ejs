@@ -1,39 +1,67 @@
-<% include ./partials/header %> 
+<% include ./partials/header %>
 
-<div class="container">
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
-        You are currently at:
-        <a class="breadcrumb-item" href="/">Home</a> >
-        <span class="breadcrumb-item active"><%=targetUser%>'s Profile</span>
-    </nav>
+    <div class="container">
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="javascript:history.back()">
+                < Back</a> | You are currently at:
+                    <a class="breadcrumb-item" href="/">Home</a> >
+                    <span class="breadcrumb-item active">
+                        <%=targetUser%>'s Profile</span>
+        </nav>
 
-    <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> <%=targetUser%>'s Profile Page</h1>
-        <a href="/profile/<%=targetUser%>/tasks" class="btn btn-info btn-sm"><%=targetUser%>'s tasks</a>
-        <a href="/profile/<%=targetUser%>/offers" class="btn btn-info btn-sm"><%=targetUser%>'s offers</a>
-        <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
-        <a href="/categories" class="btn btn-default btn-sm">All categories</a>
-    </div>
+        <% if (typeof user == 'undefined') { %>
+            <div class="col-md-12 text-center">
+                <h1>
+                    Oops!</h1>
+                <h2>
+                    Seems like the user "<%=targetUser%>" does not exist!</h2>
+                <div>
+                    <a href="/" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-home"></span>
+                        Home </a>
+                </div>
+            </div>
+        <% } else { %>
 
-    <br>
-    <div class="row">
+        <div class="page-header text-center">
+            <h1>
+                <span class="fa fa-anchor"></span>
+                <%=targetUser%>'s Profile Page</h1>
+            <a href="/profile/<%=targetUser%>/tasks" class="btn btn-info btn-sm">
+                <%=targetUser%>'s tasks</a>
+            <a href="/profile/<%=targetUser%>/offers" class="btn btn-info btn-sm">
+                <%=targetUser%>'s offers</a>
+            <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
+            <a href="/categories" class="btn btn-default btn-sm">All categories</a>
+        </div>
 
-        <!-- LOCAL INFORMATION -->
+        <br>
+        <div class="row">
+            <!-- LOCAL INFORMATION -->
             <div class="well">
-                <h3><span class="fa fa-user"></span> <%=targetUser%>'s Profile</h3>
+                <h3>
+                    <span class="fa fa-user"></span>
+                    <%=targetUser%>'s Profile</h3>
 
                 <p>
-                    <strong>id</strong>: <%= user.id %><br>
-                    <strong>username</strong>: <a href="/profile/<%=user.username%>"><%= user.username %></a><br>
-                    <strong>email</strong>: <%=user.email %><br>
+                    <strong>id</strong>:
+                    <%= user.id %>
+                        <br>
+                        <strong>username</strong>:
+                        <a href="/profile/<%=user.username%>">
+                            <%= user.username %>
+                        </a>
+                        <br>
+                        <strong>email</strong>:
+                        <%=user.email %>
+                            <br>
                 </p>
 
             </div>
         </div>
 
+        <% } %>
+
     </div>
 
-</div>
-
-<% include ./partials/footer %> 
+    <% include ./partials/footer %>
