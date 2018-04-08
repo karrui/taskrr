@@ -492,3 +492,9 @@ exports.getNoOfTasksByCategory = async function getNoOfTasksByCategory() {
     console.log('Attempting to get number of tasks by category ID');
     return execute(queries.get.NUMBER_OF_TASK_BY_CATEGORY);
 }
+
+exports.getTotalNoOfTasks = async function getTotalNoOfTasks() {
+    // body...
+     console.log('Attempting to total number of tasks');
+    return execute(queries.get.TOTAL_NUMBER_OF_TASKS);
+}

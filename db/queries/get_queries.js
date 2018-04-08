@@ -31,6 +31,12 @@ exports.NUMBER_OF_TASK_BY_CATEGORY = `
     ;
 
 `
+exports.TOTAL_NUMBER_OF_TASKS = `
+    SELECT
+    COUNT(*)
+    FROM view_all_task
+    ;
+`
 
 exports.ALL_TASKS = `
     SELECT

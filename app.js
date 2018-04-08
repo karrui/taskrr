@@ -655,7 +655,11 @@ app.get("/search/", function(req, res) {
     var toChartData = executer.getNoOfTasksByCategory()
     .then(results => {
         var chartingDataSet = results.row;
-        res.render("admin", {chartingDataSet: chartingDataSet});
+        var countingTasks = executer.getTotalNoOfTasks()
+        .then(results => {
+            var countedTasks = results;
+            res.render("admin", {chartingDataSet: chartingDataSet, countedTasks: countedTasks});
+        })
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
