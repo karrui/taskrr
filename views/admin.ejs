@@ -21,8 +21,13 @@
                 <h1>Total Number of Tasks to date:</h1>
                 <h2><%=countedTasks.count%>;</h2>
                 </div>
-                
-            <div id="myChart"></div>
+            <div class="container">
+                <h1>Total Number of users to date:</h1>
+                <h2><%=countUser.count%>;</h2>
+                </div>
+            <canvas id="myChart"></canvas>
+            <canvas id="pieCHart"></canvas>
+
             <!-- Not initializing your chart until the document is-->
        <!-- window.onload = function() {
           <!-- N put chart.js code here
@@ -48,6 +53,11 @@
         var ctx = document.getElementById("myChart").getContext("2d");
         //var myNewChart = new Chart(ctx).Line(data);
     </script>-->
+ 
+        </div>
+
+</div>
+ <!--  //bar chart-->
     <script>
         var canvas = document.getElementById('myChart');
         var labelsD = <%=chartingDataSet.label%>;
@@ -68,7 +78,54 @@
       ]
     };
     </script>
-        </div>
-
-</div>
+    <!--pie chart-->
+    <script>
+    window.onload = function() {
+        var ctx = document.getElementById("myChart");
+        window.myDoughnut = new Chart(ctx, config);
+    }
+    
+    var dataset = <%=chartingDataSet.dataset%>;        
+    var labelsD = <%=chartingDataSet.label%>;
+    var config = {
+    type: 'doughnut',
+    data: {
+        labels: <%- JSON.stringify(labelsD); %>,,
+        datasets: [{
+            label: 'How each category is performing',
+            data: <%- JSON.stringify(dataset); %>,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+				legend: {
+					position: 'top',
+				},
+        title: {
+					display: true,
+					text: 'Performance by category'
+    },
+    animation: {
+					animateScale: true,
+					animateRotate: true
+				}
+});
+    </script>
 <% include partials/footer %>

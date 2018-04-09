@@ -38,6 +38,13 @@ exports.TOTAL_NUMBER_OF_TASKS = `
     ;
 `
 
+exports.TOTAL_NUMBER_OF_USERS =`
+    SELECT
+    COUNT(*)
+    FROM view_person_login
+    ;
+`
+
 exports.ALL_TASKS = `
     SELECT
         view_all_task.id,

@@ -658,7 +658,13 @@ app.get("/search/", function(req, res) {
         var countingTasks = executer.getTotalNoOfTasks()
         .then(results => {
             var countedTasks = results;
-            res.render("admin", {chartingDataSet: chartingDataSet, countedTasks: countedTasks});
+            var countUsers = executer.getTotalNoOfUsers()
+            .then(results => {
+                var countUser = results;
+                res.render("admin", {chartingDataSet: chartingDataSet, countedTasks: countedTasks, countUser: countUser});
+                
+            })
+            
         })
     })
     .catch(err => {

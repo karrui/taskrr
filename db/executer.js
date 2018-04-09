@@ -498,3 +498,9 @@ exports.getTotalNoOfTasks = async function getTotalNoOfTasks() {
      console.log('Attempting to total number of tasks');
     return execute(queries.get.TOTAL_NUMBER_OF_TASKS);
 }
+
+exports.getTotalNoOfUsers = async function getTotalNoOfUsers() {
+    // body...
+     console.log('Attempting to total number of users');
+    return execute(queries.get.TOTAL_NUMBER_OF_USERS);
+}
