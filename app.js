@@ -649,7 +649,7 @@ app.get("/search/", function(req, res) {
 });
 
 //admin side
-app.get("/search/", function(req, res) {
+app.get("/admin", function(req, res) {
     //var labels = ['label 1', 'label 2'];
     //var data = ['data1', 'data2'];
     var toChartData = executer.getNoOfTasksByCategory()
