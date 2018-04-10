@@ -26,69 +26,24 @@
                 <h1>Total Number of users to date:</h1>
                 <h2><%=countUser%></h2>
                 </div>
-            <canvas id="myChart"></canvas>
-            <canvas id="pieChart"></canvas>
-
-            <!-- Not initializing your chart until the document is-->
-       <!-- window.onload = function() {
-          <!-- N put chart.js code here
-        }-->
- <!--       <canvas id="myChart"></canvas>
-    <script>
-        var data = {
-            labels: [],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: {{chartData}}
-                }
-            ]
-        };
-
-        var ctx = document.getElementById("myChart").getContext("2d");
-        //var myNewChart = new Chart(ctx).Line(data);
-    </script>-->
+            <canvas id="barChart"></canvas>
 
         </div>
         <% } %>
 </div>
- <!--  //bar chart-->
- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
- <canvas id="myChart" width="400" height="400"></canvas>
- <script>
-    var bar_chart_canvas = document.getElementById('myChart').getContext('2d');
-    var data_bar = {
-        labels: <%-labels%>,
-        datasets: [
-        {
-          label: "My First dataset",
-          backgroundColor: "rgba(255,99,132,0.2)",
-          borderColor: "rgba(255,99,132,1)",
-          borderWidth: 2,
-          hoverBackgroundColor: "rgba(255,99,132,0.4)",
-          hoverBorderColor: "rgba(255,99,132,1)",
-          data: <%-data%>,
-        }
-      ]
-    };
 
-</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
 <!--pie chart-->
 <script>
 
     window.onload = function() {
-        var ctx = document.getElementById("pieChart");
+        var ctx = document.getElementById("barChart");
         window.myDoughnut = new Chart(ctx, config);
     };
     
     var config = {
-        type: 'doughnut',
+        type: 'horizontalBar',
         data: {
             labels: <%-labels%>,
             datasets: [{
@@ -120,6 +75,7 @@
         options: {
             responsive: true,
             legend: {
+                display:false,
                 position: 'top',
             },
             title: {
