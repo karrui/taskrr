@@ -26,11 +26,15 @@
                 <h1>Total Number of users to date:</h1>
                 <h2><%=countUser%></h2>
                 </div>
-            <div class="container">
+                <div class="container">
                 <canvas id="lineChart"></canvas>
                 </div>
-            <canvas id="barChart"></canvas>
-
+                <div class="container">
+                <canvas id="DualLineChart"></canvas>
+                </div>
+                <div class="container">
+                <canvas id="pieChart"></canvas>
+                </div>
         </div>
         <% } %>
 </div>
@@ -41,7 +45,7 @@
 <script>
 
     window.onload = function() {
-        var ctx = document.getElementById("barChart");
+        var ctx = document.getElementById("pieChart");
         window.myDoughnut = new Chart(ctx, config);
     };
     
@@ -103,10 +107,10 @@
     var config = {
         type: 'line',
         data: {
-            labels: <%-labels%>,
+            labels: <%-userCountLabel%>,
             datasets: [{
                 label: 'Total number of users in a given month',
-                data: <%-data%>,
+                data: <%-userCountData%>,
             }]
         },
         options: {
@@ -122,4 +126,40 @@
         }
     };
 </script>
+<!--Dual line chart-->
+<script>
+
+    window.onload = function() {
+        var ctx = document.getElementById("DualLineChart");
+        window.myLine = new Chart(ctx, config);
+    };
+    
+    var config = {
+        type: 'line',
+        data: {
+            labels: <%-taskCountLabel%>,
+            datasets: [{
+                label: 'Tasks',
+                data: <%-taskCountData%>,
+                backgroundColor: "rgba(255,153,0,0.4)"
+            },{
+                label: 'Offers',
+                data: <%-offerCountData%>,
+                backgroundColor: "rgba(153,255,51,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of tasks and offers in a given month"
+            },
+        }
+    };
+</script>
+
 <% include partials/footer %>

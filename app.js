@@ -686,18 +686,42 @@ app.get("/admin", function(req, res) {
             return obj.usercount;
             });
             
-                promise = executer.getTotalNoOfTasks()
+            promise = executer.getTotalTasksByMonth()
+            .then(results => {
+             
+                var taskCountLabel = results.rows.map(function(obj) {
+                return obj.MONTH;
+                });
+                var taskCountData = results.rows.map(function(obj) {
+                return obj.taskCount;
+                });
+                
+                promise = executer.getTotalOffersByMonth()
                 .then(results => {
-                var countedTasks = results.rows[0].count;
-                promise = executer.getTotalNoOfUsers()
-                .then(results => {
-                    var countUser = results.rows[0].count;
-                    res.render("admin", {countedTasks: countedTasks, countUser: countUser,
-                                        labels: labels, data: dataset, 
-                                        userCountLabel: userCountLabel, userCountData: userCountData
-                        });
+                    
+                var offerCountData = results.rows.map(function(obj) {
+                return obj.offerCount;
+                });
+                    
+                    promise = executer.getTotalNoOfTasks()
+                    .then(results => {
+                    var countedTasks = results.rows[0].count;
+                    promise = executer.getTotalNoOfUsers()
+                    .then(results => {
+                        var countUser = results.rows[0].count;
+                        res.render("admin", {countedTasks: countedTasks, countUser: countUser,
+                                            labels: labels, data: dataset, 
+                                            userCountLabel: userCountLabel, userCountData: userCountData,
+                                            taskCountLabel: taskCountLabel, taskCountData: taskCountData, offerCountData: offerCountData
+                            });
+                        })
                     })
+                    
                 })
+             
+                
+            })
+                
         })
     })
     .catch(err => {

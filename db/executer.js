@@ -509,3 +509,13 @@ exports.getTotalUsersByMonth = async function getTotalUsersByMonth(){
          console.log('Attempting to total number of users by month');
     return execute(queries.get.TOTAL_NUMBER_OF_USERS_BY_MONTH);
 }
+
+exports.getTotalTasksByMonth = async function getTotalTasksByMonth(){
+    console.log('Attempting to total tasks by month');
+    return execute(queries.get.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH);
+}
+
+exports.getTotalOffersByMonth = async function getTotalOffersByMonth(){
+    console.log('Attempting to total offers by month');
+    return execute(queries.get.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH);
+}
