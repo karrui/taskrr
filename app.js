@@ -675,18 +675,29 @@ app.get("/admin", function(req, res) {
 
         var labels = JSON.stringify(labelArray)
         var dataset = JSON.stringify(dataArray)
-
-        promise = executer.getTotalNoOfTasks()
+        
+        promise = executer.getTotalUsersByMonth()
         .then(results => {
-            var countedTasks = results.rows[0].count;
-            promise = executer.getTotalNoOfUsers()
-            .then(results => {
-                var countUser = results.rows[0].count;
-                res.render("admin", {countedTasks: countedTasks, countUser: countUser,
-                                    labels: labels, data: dataset
-                });
-            })
-
+            
+            var userCountLabel = results.rows.map(function(obj) {
+            return obj.MONTH;
+            });
+            var userCountData = results.rows.map(function(obj) {
+            return obj.usercount;
+            });
+            
+                promise = executer.getTotalNoOfTasks()
+                .then(results => {
+                var countedTasks = results.rows[0].count;
+                promise = executer.getTotalNoOfUsers()
+                .then(results => {
+                    var countUser = results.rows[0].count;
+                    res.render("admin", {countedTasks: countedTasks, countUser: countUser,
+                                        labels: labels, data: dataset, 
+                                        userCountLabel: userCountLabel, userCountData: userCountData
+                        });
+                    })
+                })
         })
     })
     .catch(err => {

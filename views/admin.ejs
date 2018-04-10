@@ -26,6 +26,9 @@
                 <h1>Total Number of users to date:</h1>
                 <h2><%=countUser%></h2>
                 </div>
+            <div class="container">
+                <canvas id="lineChart"></canvas>
+                </div>
             <canvas id="barChart"></canvas>
 
         </div>
@@ -86,6 +89,36 @@
                 animateScale: true,
                 animateRotate: true
             }
+        }
+    };
+</script>
+<!--line chart-->
+<script>
+
+    window.onload = function() {
+        var ctx = document.getElementById("lineChart");
+        window.myLine = new Chart(ctx, config);
+    };
+    
+    var config = {
+        type: 'line',
+        data: {
+            labels: <%-labels%>,
+            datasets: [{
+                label: 'Total number of users in a given month',
+                data: <%-data%>,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of users in a given month"
+            },
         }
     };
 </script>

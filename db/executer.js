@@ -504,3 +504,8 @@ exports.getTotalNoOfUsers = async function getTotalNoOfUsers() {
      console.log('Attempting to total number of users');
     return execute(queries.get.TOTAL_NUMBER_OF_USERS);
 }
+
+exports.getTotalUsersByMonth = async function getTotalUsersByMonth(){
+         console.log('Attempting to total number of users by month');
+    return execute(queries.get.TOTAL_NUMBER_OF_USERS_BY_MONTH);
+}
