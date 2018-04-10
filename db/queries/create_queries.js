@@ -21,44 +21,44 @@
 
 exports.TABLE_PERSON = `
     CREATE TABLE IF NOT EXISTS person (
-        id               SERIAL             PRIMARY KEY,
-        username         VARCHAR(25)        UNIQUE NOT NULL,
-	    password         CHAR(60)  		    NOT NULL,
-	    email            TEXT 		    	UNIQUE NOT NULL,
-	    created_dt 	     TIMESTAMP 		    NOT NULL,
-	    role 			 VARCHAR(10) 	    DEFAULT 'member' NOT NULL
+        id          SERIAL          PRIMARY KEY,
+        username    VARCHAR(25)     UNIQUE NOT NULL,
+        password    CHAR(60)        NOT NULL,
+        email       TEXT            UNIQUE NOT NULL,
+        created_dt  TIMESTAMP       NOT NULL,
+        role        VARCHAR(10)     DEFAULT 'member' NOT NULL
     )
     ;
 `
 
 exports.TABLE_CATEGORY = `
     CREATE TABLE IF NOT EXISTS category (
-	    id			     SERIAL	       		PRIMARY KEY,
-	    name			 TEXT		      	UNIQUE NOT NULL
+        id          SERIAL          PRIMARY KEY,
+        name        TEXT            UNIQUE NOT NULL
     )
     ;
 `
 
 exports.TABLE_TASK_STATUS = `
     CREATE TABLE IF NOT EXISTS task_status (
-	    status	    	 VARCHAR(8)		    PRIMARY KEY
+        status      VARCHAR(8)      PRIMARY KEY
     )
     ;
 `
 
 exports.TABLE_TASK = `
     CREATE TABLE IF NOT EXISTS task (
-	    id 			     SERIAL			    PRIMARY KEY,
-	    title 		     TEXT 			    NOT NULL,
-	    description	     TEXT		       	NOT NULL,
-	    category_id	     INTEGER			NOT NULL 					REFERENCES category (id) ON UPDATE CASCADE,
-	    location		 TEXT			    NOT NULL,
-	    requester		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
-	    start_dt		 TIMESTAMP		    NOT NULL,
-	    end_dt		     TIMESTAMP		    NOT NULL,
-	    price			 NUMERIC(6, 2)		NOT NULL,
-	    status_task	     VARCHAR(8)	       	DEFAULT 'open' NOT NULL		REFERENCES task_status (status) ON UPDATE CASCADE,
-	    assignee		 VARCHAR(25)		DEFAULT NULL 				REFERENCES person (username) ON DELETE SET NULL,
+        id          SERIAL          PRIMARY KEY,
+        title       TEXT            NOT NULL,
+        description TEXT            NOT NULL,
+        category_id INTEGER         NOT NULL REFERENCES category (id) ON UPDATE CASCADE,
+        location    TEXT            NOT NULL,
+        requester   VARCHAR(25)     NOT NULL REFERENCES person (username) ON DELETE CASCADE,
+        start_dt    TIMESTAMP       NOT NULL,
+        end_dt      TIMESTAMP       NOT NULL,
+        price       NUMERIC(6, 2)   NOT NULL,
+        status_task VARCHAR(8)      DEFAULT 'open' NOT NULL REFERENCES task_status (status) ON UPDATE CASCADE,
+        assignee    VARCHAR(25)     DEFAULT NULL REFERENCES person (username) ON DELETE SET NULL,
         CHECK (start_dt <= end_dt),
         CHECK (price >= 0 and price < 10000)
     )
@@ -67,19 +67,19 @@ exports.TABLE_TASK = `
 
 exports.TABLE_OFFER_STATUS = `
     CREATE TABLE IF NOT EXISTS offer_status (
-        status           VARCHAR(8)         PRIMARY KEY
+        status      VARCHAR(8)      PRIMARY KEY
     )
     ;
 `
 
 exports.TABLE_OFFER = `
     CREATE TABLE IF NOT EXISTS offer (
-	    id		         SERIAL		      	PRIMARY KEY,
-	    task_id		     INTEGER			NOT NULL					REFERENCES task (id) ON DELETE CASCADE,
-	    price			 NUMERIC(6, 2)		NOT NULL,
-	    assignee		 VARCHAR(25)		NOT NULL					REFERENCES person (username) ON DELETE CASCADE,
-	    offered_dt	     TIMESTAMP		    NOT NULL,
-	    status_offer	 VARCHAR(8)		    DEFAULT 'pending' NOT NULL  REFERENCES offer_status (status) ON UPDATE CASCADE,
+        id              SERIAL          PRIMARY KEY,
+        task_id         INTEGER         NOT NULL REFERENCES task (id) ON DELETE CASCADE,
+        price           NUMERIC(6, 2)   NOT NULL,
+        assignee        VARCHAR(25)     NOT NULL REFERENCES person (username) ON DELETE CASCADE,
+        offered_dt      TIMESTAMP       NOT NULL,
+        status_offer    VARCHAR(8)      DEFAULT 'pending' NOT NULL REFERENCES offer_status (status) ON UPDATE CASCADE,
         UNIQUE (task_id, assignee),
         CHECK (price >= 0 and price < 10000)
     )
@@ -92,13 +92,13 @@ exports.TABLE_OFFER = `
 // This view is for user login check
 exports.VIEW_PERSON_LOGIN = `
     CREATE OR REPLACE VIEW view_person_login AS (
-	    SELECT
+        SELECT
             person.id,
             person.username,
             person.password,
             person.email,
             person.role
-	    FROM person
+        FROM person
     )
     ;
 `
@@ -106,20 +106,20 @@ exports.VIEW_PERSON_LOGIN = `
 // This view is for Admin management, not showing person.password
 exports.VIEW_PERSON_ALL_INFO = `
     CREATE OR REPLACE VIEW view_person_all_info AS (
-	    SELECT
+        SELECT
             person.id,
             person.username,
             person.email,
             person.created_dt,
             person.role
-	    FROM person
+        FROM person
     )
     ;
 `
 
 exports.VIEW_ALL_TASK = `
     CREATE OR REPLACE VIEW view_all_task AS (
-	    SELECT
+        SELECT
             task.id,
             task.title,
             task.description,
@@ -132,7 +132,7 @@ exports.VIEW_ALL_TASK = `
             task.price,
             task.status_task,
             task.assignee
-	    FROM task
+        FROM task
         INNER JOIN category
             ON category.id = task.category_id
     )
@@ -654,7 +654,7 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             -- If requester matches more than 80%
             AND get_matching_percent(task.requester, _requester) >= 0.8
 
-            -- If start_dt
+            -- Same task.start_dt, if NULL
             AND task.start_dt::DATE = coalesce(_start_dt, to_char(task.start_dt, 'YYYY-MM-DD'))::DATE
 
             -- If price >= min_price
@@ -663,7 +663,7 @@ exports.FUNCTION_TASK_ADVANCED_SEARCH = `
             -- If price <= max_price
             AND task.price <= coalesce(CAST(_max_price AS NUMERIC(6, 2)), 9999.99)
 
-            -- Same task status
+            -- Same task.status, if NULL
             AND task.status_task = coalesce(_status_task, task.status_task)
 
             -- If assignee matches more than 80%
@@ -696,9 +696,9 @@ exports.FUNCTION_DROP_ALL_FUNCTIONS = `
     BEGIN
         SELECT INTO _sql
             string_agg(format('DROP FUNCTION %s(%s);'
-                          , p.oid::regproc
-                          , pg_get_function_identity_arguments(p.oid))
-                   , E'\n')
+                        , p.oid::regproc
+                        , pg_get_function_identity_arguments(p.oid))
+                    , E'\n')
         FROM   pg_proc      p
         JOIN   pg_namespace ns ON ns.oid = p.pronamespace
         WHERE  ns.nspname = _sch;
