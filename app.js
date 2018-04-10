@@ -637,7 +637,7 @@ app.get("/search/", function(req, res) {
     var max_price = req.query.max_price;
     var status_task = req.query.status_task;
     var assignee = req.query.assignee;
-    
+
     var promise = executer.getTasksByAdvancedSearch(search_string, category_id, location, requester, start_dt, min_price, max_price, status_task, assignee)
     .then(results => {
         var tasks = results.rows;
@@ -649,22 +649,36 @@ app.get("/search/", function(req, res) {
 });
 
 //admin side
-app.get("/search/", function(req, res) {
+app.get("/admin/", function(req, res) {
     //var labels = ['label 1', 'label 2'];
     //var data = ['data1', 'data2'];
     var toChartData = executer.getNoOfTasksByCategory()
     .then(results => {
-        var chartingDataSet = results.row;
+        var chartingDataSet = {};
+        var labelArray = results.rows.map(function(obj) {
+            return obj.name;
+        });
+        var dataArray = results.rows.map(function(obj) {
+            return obj.no_task;
+        });
+
+        //var chartingDataSet.label = Object.keys(obj);
+        console.log(labelArray);
+        console.log(dataArray);
+        chartingDataSet.label = labelArray;
+        chartingDataSet.dataset = dataArray;
+
+        console.log();
         var countingTasks = executer.getTotalNoOfTasks()
         .then(results => {
-            var countedTasks = results;
+            var countedTasks = results.rows[0].count;
             var countUsers = executer.getTotalNoOfUsers()
             .then(results => {
-                var countUser = results;
+                var countUser = results.rows[0].count;
                 res.render("admin", {chartingDataSet: chartingDataSet, countedTasks: countedTasks, countUser: countUser});
-                
+
             })
-            
+
         })
     })
     .catch(err => {

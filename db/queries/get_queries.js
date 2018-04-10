@@ -20,7 +20,7 @@ exports.NUMBER_OF_TASK_BY_CATEGORY = `
     xTmp.no_task
     FROM view_all_category
     INNER JOIN (
-        SELECT 
+        SELECT
             view_all_task.category_id,
             count(*) AS no_task
         FROM view_all_task
@@ -29,7 +29,6 @@ exports.NUMBER_OF_TASK_BY_CATEGORY = `
         ) xTmp
     ON         xTmp.category_id = view_all_category.id
     ;
-
 `
 exports.TOTAL_NUMBER_OF_TASKS = `
     SELECT

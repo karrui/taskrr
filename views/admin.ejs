@@ -1,7 +1,7 @@
 <% include partials/header %>
 
 <div class="container">
-    <% if (currentUser.username != role.admin)  { %>
+        <% if (1!==1)  { %>
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-center">
@@ -10,7 +10,8 @@
                     <div>
                         <a href="/" class="btn btn-primary">
                             <span class="glyphicon glyphicon-home"></span>
-                            Home </a>
+                            Home
+                        </a>
                     </div>
                 </div>
             </div>
@@ -53,79 +54,81 @@
         var ctx = document.getElementById("myChart").getContext("2d");
         //var myNewChart = new Chart(ctx).Line(data);
     </script>-->
- 
-        </div>
 
+        </div>
+        <% } %>
 </div>
  <!--  //bar chart-->
     <script>
-        var canvas = document.getElementById('myChart');
+        var bar_chart_canvas = document.getElementById('myChart').getContext('2d');
         var labelsD = <%=chartingDataSet.label%>;
         var dataset = <%=chartingDataSet.dataset%>;
-        var data = {
-        //labels: 
-        labels: <%- JSON.stringify(labelsD); %>,
-        datasets: [
-        {
-          label: "My First dataset",
-          backgroundColor: "rgba(255,99,132,0.2)",
-          borderColor: "rgba(255,99,132,1)",
-          borderWidth: 2,
-          hoverBackgroundColor: "rgba(255,99,132,0.4)",
-          hoverBorderColor: "rgba(255,99,132,1)",
-          data: <%- JSON.stringify(dataset); %>,
-        }
-      ]
-    };
+        var data_bar = {
+            labels: JSON.stringify(labelsD),
+            datasets: [
+            {
+              label: "My First dataset",
+              backgroundColor: "rgba(255,99,132,0.2)",
+              borderColor: "rgba(255,99,132,1)",
+              borderWidth: 2,
+              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBorderColor: "rgba(255,99,132,1)",
+              data: JSON.stringify(dataset),
+            }
+          ]
+        };
+
     </script>
     <!--pie chart-->
     <script>
-    window.onload = function() {
-        var ctx = document.getElementById("myChart");
-        window.myDoughnut = new Chart(ctx, config);
-    }
-    
-    var dataset = <%=chartingDataSet.dataset%>;        
-    var labelsD = <%=chartingDataSet.label%>;
-    var config = {
-    type: 'doughnut',
-    data: {
-        labels: <%- JSON.stringify(labelsD); %>,,
-        datasets: [{
-            label: 'How each category is performing',
-            data: <%- JSON.stringify(dataset); %>,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-				legend: {
-					position: 'top',
-				},
-        title: {
-					display: true,
-					text: 'Performance by category'
-    },
-    animation: {
-					animateScale: true,
-					animateRotate: true
-				}
-});
+
+        window.onload = function() {
+            var ctx = document.getElementById("myChart");
+            window.myDoughnut = new Chart(ctx, config);
+        };
+
+        var dataset = <%=chartingDataSet.dataset%>;
+        var labelsD = <%=chartingDataSet.label%>;
+        var config = {
+            type: 'doughnut',
+            data: {
+                labels: JSON.stringify(labelsD),
+                datasets: [{
+                    label: 'How each category is performing',
+                    data: JSON.stringify(dataset),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+        		legend: {
+        			position: 'top',
+        		},
+                title: {
+        			display: true,
+        			text: 'Performance by category'
+                },
+                animation: {
+            		animateScale: true,
+            		animateRotate: true
+            	}
+            }
+        };
     </script>
 <% include partials/footer %>
