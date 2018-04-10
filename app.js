@@ -662,13 +662,9 @@ app.get("/admin/", function(req, res) {
             return obj.no_task;
         });
 
-        //var chartingDataSet.label = Object.keys(obj);
-        console.log(labelArray);
-        console.log(dataArray);
         chartingDataSet.label = labelArray;
         chartingDataSet.dataset = dataArray;
 
-        console.log();
         var countingTasks = executer.getTotalNoOfTasks()
         .then(results => {
             var countedTasks = results.rows[0].count;
