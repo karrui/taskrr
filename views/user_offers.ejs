@@ -17,7 +17,7 @@
         <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
-    <div class="page-header text-center">
+    <div id="offerLinks" class="page-header text-center">
             <h1><span class="fa fa-anchor"></span> <%=targetUser%>'s offers</h1>
             <a href="/profile/<%=targetUser%>/offers" class="btn btn-primary active btn-sm">All offers</a>
             <a href="/profile/<%=targetUser%>/offers/accepted" class="btn btn-default btn-sm">Accepted offers</a>
@@ -25,7 +25,7 @@
             <a href="/profile/<%=targetUser%>/offers/rejected" class="btn btn-default btn-sm">Rejected offers</a>
         </div>
 
-    <div class="row">
+    <div id="offers" class="row">
         <% tasks.forEach(function(task) { %>
             <div class="panel panel-default">
                 <div class="panel-heading">

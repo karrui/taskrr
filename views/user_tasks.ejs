@@ -17,7 +17,7 @@
       <a href="/categories" class="btn btn-default btn-sm">All categories</a>
     </div>
 
-    <div class="page-header text-center">
+    <div id="taskLinks"class="page-header text-center">
       <h1>
         <span class="fa fa-anchor"></span> <%=targetUser%>'s tasks</h1>
       <a href="/profile/<%=targetUser%>/tasks" class="btn btn-primary active btn-sm">All tasks</a>
@@ -26,7 +26,7 @@
       <a href="/profile/<%=targetUser%>/tasks/accepted" class="btn btn-default btn-sm">Accepted tasks</a>
     </div>
 
-    <div class="row">
+    <div id="tasks" class="row">
       <% tasks.forEach(function(task) { %>
         <div class="panel panel-default">
           <div class="panel-heading">
