@@ -648,13 +648,13 @@ app.get("/search/", function(req, res) {
     });
 });
 
-//admin side
+// =====================================
+// ADMIN APIs ==========================
+// =====================================
 app.get("/admin", function(req, res) {
-    //var labels = ['label 1', 'label 2'];
-    //var data = ['data1', 'data2'];
-    var toChartData = executer.getNoOfTasksByCategory()
+    // getNoOfTasksByCategory returns 3 things - cat_id, cat_name, count
+    var promise = executer.getNoOfTasksByCategory()
     .then(results => {
-        var chartingDataSet = {};
         var labelArray = results.rows.map(function(obj) {
             return obj.name;
         });
@@ -662,17 +662,18 @@ app.get("/admin", function(req, res) {
             return obj.no_task;
         });
 
-        chartingDataSet.label = labelArray;
-        chartingDataSet.dataset = dataArray;
+        var labels = JSON.stringify(labelArray)
+        var dataset = JSON.stringify(dataArray)
 
-        var countingTasks = executer.getTotalNoOfTasks()
+        promise = executer.getTotalNoOfTasks()
         .then(results => {
             var countedTasks = results.rows[0].count;
-            var countUsers = executer.getTotalNoOfUsers()
+            promise = executer.getTotalNoOfUsers()
             .then(results => {
                 var countUser = results.rows[0].count;
-                res.render("admin", {chartingDataSet: chartingDataSet, countedTasks: countedTasks, countUser: countUser});
-
+                res.render("admin", {countedTasks: countedTasks, countUser: countUser,
+                                    labels: labels, data: dataset
+                });
             })
 
         })
