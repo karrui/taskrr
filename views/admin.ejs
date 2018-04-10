@@ -18,23 +18,33 @@
         </div>
         <% } else { %>
         <div class="container">
-            <div class="container">
-                <h1>Total Number of Tasks to date:</h1>
-                <h2><%=countedTasks%></h2>
+            <div class="row">
+                <div class="col">
+                    <div class="container">
+                        <h1 align="center">Total Number of users to date:</h1>
+                        <h2 align="center"><%=countUser%></h2>
+                        </div>
+                        <br>
+                        <div class="container">
+                        <canvas id="lineChart"></canvas>
+                        </div>
                 </div>
-            <div class="container">
-                <h1>Total Number of users to date:</h1>
-                <h2><%=countUser%></h2>
+                <div class="col">
+                     <div class="container">
+                        <h1 align="center">Total Number of Tasks to date:</h1>
+                        <h2 align="center"><%=countedTasks%></h2>
+                        </div>
+                        <br>
+                    <div class="container">
+                        <canvas id="pieChart"></canvas>
+                        </div>
+                        <br>
+                    <div class="container">
+                        <canvas id="DualLineChart"></canvas>
+                        </div>
+                    
                 </div>
-                <div class="container">
-                <canvas id="lineChart"></canvas>
-                </div>
-                <div class="container">
-                <canvas id="DualLineChart"></canvas>
-                </div>
-                <div class="container">
-                <canvas id="pieChart"></canvas>
-                </div>
+        </div>
         </div>
         <% } %>
 </div>
