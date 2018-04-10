@@ -728,6 +728,43 @@ app.get("/admin", function(req, res) {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
     });
 });
+
+app.get("/admin_users", function(req, res) {
+    var promise = executer.getUserData()
+    .then(results => {
+    var userData = results.rows;
+        res.render("admin_users", {   
+            userData: userData
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    });
+});
+
+app.post("/delete/user/:id", isLoggedIn, function(req, res) {
+    var user_id = req.body.task_id;
+   /* var assignee = req.body.username;
+
+    // extra check
+    if (assignee != res.locals.currentUser.username && res.locals.currentUser.role != 'admin') {
+        req.flash('message', "Oops, you tried to do something you shouldn't have!")
+        var redirectUrl = "/tasks/" + task_id;
+        res.redirect(redirectUrl); // back to page to display errors
+    }*/
+
+    var promise = executer.deleteUserByUserId(user_id)
+    .then(function() {
+        req.flash('user_success', "User successfully deleted!");
+        var redirectUrl = "/admin_user";
+        res.redirect(redirectUrl);  // back to task page
+    })
+    .catch(err => {
+        req.flash('message', err.message)
+        var redirectUrl = "/admin_user";
+        res.redirect(redirectUrl); // back to page to display errors
+    })
+});
 // =====================================
 // MISC APIs ===========================
 // =====================================

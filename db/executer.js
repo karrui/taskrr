@@ -369,6 +369,10 @@ exports.deleteOfferByAssigneeAndTaskId = async function deleteOfferByAssigneeAnd
     return execute(queries.delete.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
 }
 
+exports.deleteUserByUserId = async function deleteUserByUserId(user_id){
+    console.log('Attempting to delete user \"%s\" by \"%s\"', user_id, user_id);
+    return execute(queries.delete.USER_BY_USER_ID, [user_id]);
+}
 //==================================================================================================================================================
 // 6. Select
 
@@ -383,6 +387,11 @@ exports.getUserById = async function getUserById(id) {
 exports.getUserByName = async function getUserByName(username) {
     console.log('Attempting to find user by name: ' + username);
     return execute(queries.get.USER_BY_NAME, [username]);
+}
+
+exports.getUserData = async function getUserData(){
+    console.log('Attempting to retrieve all user data');
+    return execute(queries.get.ALL_USER_INFO);
 }
 // ======================================================
 // 6.2. Category

@@ -30,3 +30,9 @@ exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
         delete_offer_by_assignee_and_task_id($1, $2)
     ;
 `
+
+exports.USER_BY_USER_ID = `
+    SELECT
+    delete_user_by_user_id($1)
+    ;
+`

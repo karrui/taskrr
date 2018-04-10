@@ -40,7 +40,7 @@ exports.TOTAL_NUMBER_OF_TASKS = `
 exports.TOTAL_NUMBER_OF_USERS =`
     SELECT
     COUNT(*)
-    FROM view_person_login
+    FROM view_person_all_info
     ;
 `
 
@@ -123,6 +123,18 @@ ORDER BY
 MONTHS;
 `
 */
+
+exports.ALL_USER_INFO = `
+    SELECT
+    view_person_all_info.id,
+    view_person_all_info.username,
+    view_person_all_info.email,
+    view_person_all_info.created_dt,
+    view_person_all_info.role
+    FROM view_person_all_info
+    ORDER BY
+    view_person_all_info.id;
+`
 
 exports.ALL_TASKS = `
     SELECT
