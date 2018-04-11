@@ -504,20 +504,23 @@ exports.getNoOfTasksByCategory = async function getNoOfTasksByCategory() {
 }
 
 exports.getTotalNoOfTasks = async function getTotalNoOfTasks() {
-    // body...
-     console.log('Attempting to total number of tasks');
+    console.log('Attempting to total number of tasks');
     return execute(queries.get.TOTAL_NUMBER_OF_TASKS);
 }
 
 exports.getTotalNoOfUsers = async function getTotalNoOfUsers() {
-    // body...
-     console.log('Attempting to total number of users');
+    console.log('Attempting to total number of users');
     return execute(queries.get.TOTAL_NUMBER_OF_USERS);
 }
 
 exports.getTotalUsersByMonth = async function getTotalUsersByMonth(){
-         console.log('Attempting to total number of users by month');
+    console.log('Attempting to total number of users by month');
     return execute(queries.get.TOTAL_NUMBER_OF_USERS_BY_MONTH);
+}
+
+exports.getTotalUsersByDate = async function getTotalUsersByDate(){
+    console.log('Attempting to total number of users by date');
+    return execute(queries.get.TOTAL_NUMBER_OF_USERS_BY_DATE_IN_1_MONTH);
 }
 
 exports.getTotalTasksByMonth = async function getTotalTasksByMonth(){
@@ -525,7 +528,17 @@ exports.getTotalTasksByMonth = async function getTotalTasksByMonth(){
     return execute(queries.get.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH);
 }
 
+exports.getTotalTasksByDate = async function getTotalTasksByDate(){
+    console.log('Attempting to total tasks by date');
+    return execute(queries.get.TOTAL_NUMBER_OF_TASKS_CREATED_BY_DATE_IN_1_MONTH);
+}
+
 exports.getTotalOffersByMonth = async function getTotalOffersByMonth(){
     console.log('Attempting to total offers by month');
     return execute(queries.get.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH);
+}
+
+exports.getTotalOffersByDate = async function getTotalOffersByDate(){
+    console.log('Attempting to total offers by date');
+    return execute(queries.get.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_DATE_IN_1_MONTH);
 }

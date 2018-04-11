@@ -664,79 +664,143 @@ app.get("/search/", function(req, res) {
 // =====================================
 app.get("/admin", function(req, res) {
     // getNoOfTasksByCategory returns 3 things - cat_id, cat_name, count
+    var labels = [];
+    var dataset = [];
+    var userCountLabel = [];
+    var userCountData = [];
+    var userCountLabel_date = [];
+    var userCountData_date = [];
+    var taskCountLabel = [];
+    var taskCountData = [];
+    var taskCountLabel_date = [];
+    var taskCountData_date = [];
+    var offerCountData = [];
+    var offerCountLabel = [];
+    var offerCountData_date = [];
+    var offerCountLabel_date = [];
+    var countedTasks = 0;
+    var countUser = 0;
+
     var promise = executer.getNoOfTasksByCategory()
-    .then(results => {
-        var labelArray = results.rows.map(function(obj) {
-            return obj.name;
-        });
-        var dataArray = results.rows.map(function(obj) {
-            return obj.no_task;
-        });
-
-        var labels = JSON.stringify(labelArray);
-        var dataset = JSON.stringify(dataArray);
-
-        promise = executer.getTotalUsersByMonth()
         .then(results => {
-
-            var userCountLabel = results.rows.map(function(obj) {
-                return obj.month;
+            results.rows.map(function(obj) {
+                labels.push(obj.name);
+                dataset.push(obj.no_task);
             });
-            var userCountData = results.rows.map(function(obj) {
-                return obj.usercount;
-            });
-
-            promise = executer.getTotalTasksByMonth()
-            .then(results => {
-
-                var taskCountLabel = results.rows.map(function(obj) {
-                    return obj.month;
-                });
-                var taskCountData = results.rows.map(function(obj) {
-                    return obj.taskcount;
-                });
-
-                promise = executer.getTotalOffersByMonth()
-                .then(results => {
-                    var offerCountData = results.rows.map(function(obj) {
-                        return obj.offercount;
-                    });
-                    var offerCountLabel = results.rows.map(function(obj) {
-                        return obj.month;
-                    });
-
-                    promise = executer.getTotalNoOfTasks()
-                    .then(results => {
-                        var countedTasks = results.rows[0].count;
-                        promise = executer.getTotalNoOfUsers()
-                        .then(results => {
-                            var countUser = results.rows[0].count;
-                            userCountLabel = JSON.stringify(userCountLabel);
-                            userCountData = JSON.stringify(userCountData);
-                            taskCountLabel = JSON.stringify(taskCountLabel);
-                            taskCountData = JSON.stringify(taskCountData);
-                            offerCountData = JSON.stringify(offerCountData);
-                            offerCountLabel = JSON.stringify(offerCountLabel);
-
-                            res.render("admin", {countedTasks: countedTasks, countUser: countUser,
-                                                labels: labels, data: dataset,
-                                                userCountLabel: userCountLabel, userCountData: userCountData,
-                                                taskCountLabel: taskCountLabel, taskCountData: taskCountData,
-                                                offerCountData: offerCountData, offerCountLabel: offerCountLabel
-                                });
-                            })
-                    })
-
-                })
-
-
-            })
-
         })
-    })
-    .catch(err => {
-        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
-    });
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalUsersByMonth()
+        .then(results => {
+            results.rows.map(function(obj) {
+                userCountLabel.push(obj.month);
+                userCountData.push(obj.usercount);
+            });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalTasksByMonth()
+        .then(results => {
+            results.rows.map(function(obj) {
+                taskCountLabel.push(obj.month);
+                taskCountData.push(obj.taskcount);
+            });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalOffersByMonth()
+        .then(results => {
+            results.rows.map(function(obj) {
+                offerCountData.push(obj.offercount);
+                offerCountLabel.push(obj.month);
+            });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    //// By date
+    promise = executer.getTotalUsersByDate()
+        .then(results => {
+            results.rows.map(function(obj) {
+                userCountLabel_date.push(obj.date);
+                userCountData_date.push(obj.usercount);
+            });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalTasksByDate()
+        .then(results => {
+            results.rows.map(function(obj) {
+                taskCountLabel_date.push(obj.date);
+                taskCountData_date.push(obj.taskcount);
+            });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalOffersByDate()
+        .then(results => {
+            results.rows.map(function(obj) {
+                offerCountLabel_date.push(obj.date);
+                offerCountData_date.push(obj.offercount);
+            });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalNoOfTasks()
+        .then(results => {
+            countedTasks = results.rows[0].count;
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
+    promise = executer.getTotalNoOfUsers()
+        .then(results => {
+            countUser = results.rows[0].count;
+
+            labels = JSON.stringify(labels);
+            dataset = JSON.stringify(dataset);
+            userCountLabel = JSON.stringify(userCountLabel);
+            userCountData = JSON.stringify(userCountData);
+            taskCountLabel = JSON.stringify(taskCountLabel);
+            taskCountData = JSON.stringify(taskCountData);
+            offerCountData = JSON.stringify(offerCountData);
+            offerCountLabel = JSON.stringify(offerCountLabel);
+
+            userCountLabel_date = JSON.stringify(userCountLabel_date);
+            userCountData_date = JSON.stringify(userCountData_date);
+            taskCountLabel_date = JSON.stringify(taskCountLabel_date);
+            taskCountData_date = JSON.stringify(taskCountData_date);
+            offerCountLabel_date = JSON.stringify(offerCountLabel_date);
+            offerCountData_date = JSON.stringify(offerCountData_date);
+
+            res.render("admin", {countedTasks: countedTasks, countUser: countUser,
+                                labels: labels, data: dataset,
+                                userCountLabel: userCountLabel, userCountData: userCountData,
+                                taskCountLabel: taskCountLabel, taskCountData: taskCountData,
+                                offerCountData: offerCountData, offerCountLabel: offerCountLabel,
+                                userCountLabel_date: userCountLabel_date, userCountData_date: userCountData_date,
+                                taskCountLabel_date: taskCountLabel_date, taskCountData_date: taskCountData_date,
+                                offerCountData_date: offerCountData_date, offerCountLabel_date: offerCountLabel_date
+                });
+        })
+        .catch(err => {
+            res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+        });
+
 });
 
 app.get("/admin_users", function(req, res) {

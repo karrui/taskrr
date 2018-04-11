@@ -30,7 +30,10 @@
                     </div>
                     <br>
                     <div class="container">
-                        <canvas id="lineChart"></canvas>
+                        <canvas id="userMonthLineChart"></canvas>
+                    </div>
+                    <div class="container">
+                        <canvas id="userDateLineChart"></canvas>
                     </div>
                 </div>
                 <div class="col">
@@ -44,11 +47,19 @@
                     </div>
                     <br>
                     <div class="container">
-                        <canvas id="taskLineChart"></canvas>
+                        <canvas id="taskMonthLineChart"></canvas>
                     </div>
                     <br>
                     <div class="container">
-                        <canvas id="offerLineChart"></canvas>
+                        <canvas id="taskDateLineChart"></canvas>
+                    </div>
+                    <br>
+                    <div class="container">
+                        <canvas id="offerMonthLineChart"></canvas>
+                    </div>
+                    <br>
+                    <div class="container">
+                        <canvas id="offerDateLineChart"></canvas>
                     </div>
                 </div>
         </div>
@@ -65,14 +76,20 @@
         var ctx_doughnut = document.getElementById("doughnutChart");
         window.myDoughnut = new Chart(ctx_doughnut, config_doughnut);
 
-        var ctx_line = document.getElementById("lineChart");
-        window.myLine = new Chart(ctx_line, config_line);
+        var ctx_user_month = document.getElementById("userMonthLineChart");
+        window.userMonthLine = new Chart(ctx_user_month, config_user_month);
+        var ctx_user_date = document.getElementById("userDateLineChart");
+        window.userDateLine = new Chart(ctx_user_date, config_user_date);
 
-        var ctx_task_line = document.getElementById("taskLineChart");
-        window.myTaskLine = new Chart(ctx_task_line, config_task_line);
+        var ctx_task_month = document.getElementById("taskMonthLineChart");
+        window.taskMonthLine = new Chart(ctx_task_month, config_task_month);
+        var ctx_task_date = document.getElementById("taskDateLineChart");
+        window.TaskDateLine = new Chart(ctx_task_date, config_task_date);
 
-        var ctx_offer_line = document.getElementById("offerLineChart");
-        window.myOfferLine = new Chart(ctx_offer_line, config_offer_line);
+        var ctx_offer_month = document.getElementById("offerMonthLineChart");
+        window.OfferMonthLine = new Chart(ctx_offer_month, config_offer_month);
+        var ctx_offer_date = document.getElementById("offerDateLineChart");
+        window.OfferDateLine = new Chart(ctx_offer_date, config_offer_date);
     };
 
     var config_doughnut = {
@@ -122,7 +139,7 @@
         }
     };
 
-    var config_line = {
+    var config_user_month = {
         type: 'line',
         data: {
             labels: <%-userCountLabel%>,
@@ -144,8 +161,30 @@
         }
     };
 
+    var config_user_date = {
+        type: 'line',
+        data: {
+            labels: <%-userCountLabel_date%>,
+            datasets: [{
+                label: 'Total number of users in the last 30 days',
+                data: <%-userCountData_date%>,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of users in the last 30 days"
+            },
+        }
+    };
+
     //
-    var config_task_line = {
+    var config_task_month = {
         type: 'line',
         data: {
             labels: <%-taskCountLabel%>,
@@ -167,9 +206,31 @@
             },
         }
     };
+    var config_task_date = {
+        type: 'line',
+        data: {
+            labels: <%-taskCountLabel_date%>,
+            datasets: [{
+                label: 'Tasks',
+                data: <%-taskCountData_date%>,
+                backgroundColor: "rgba(255,153,0,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of tasks in the last 30 days"
+            },
+        }
+    };
 
     //
-    var config_offer_line = {
+    var config_offer_month = {
         type: 'line',
         data: {
             labels: <%-offerCountLabel%>,
@@ -187,7 +248,29 @@
             },
             title: {
                 display: true,
-                text: "Total number of tasks for the past 6 months"
+                text: "Total number of offers for the past 6 months"
+            },
+        }
+    };
+    var config_offer_date = {
+        type: 'line',
+        data: {
+            labels: <%-offerCountLabel_date%>,
+            datasets: [{
+                label: 'Offers',
+                data: <%-offerCountData_date%>,
+                backgroundColor: "rgba(153,255,51,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of offers in the last 30 days"
             },
         }
     };

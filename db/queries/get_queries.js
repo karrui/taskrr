@@ -44,9 +44,9 @@ exports.TOTAL_NUMBER_OF_USERS =`
     ;
 `
 
-exports.TOTAL_NUMBER_OF_USERS_BY_MONTH=`
+exports.TOTAL_NUMBER_OF_USERS_BY_MONTH = `
     SELECT
-        to_char(date_trunc('month',view_person_all_info.created_dt), 'MM/YY') AS month,
+        to_char(date_trunc('month', view_person_all_info.created_dt), 'MM/YY') AS month,
         count(*) AS usercount
     FROM view_person_all_info
     WHERE
@@ -58,7 +58,22 @@ exports.TOTAL_NUMBER_OF_USERS_BY_MONTH=`
     ;
 `
 
-exports.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH=`
+exports.TOTAL_NUMBER_OF_USERS_BY_DATE_IN_1_MONTH = `
+    SELECT
+        to_char(date_trunc('day', view_person_all_info.created_dt), 'DD/MM/YY') AS date,
+        count(*) AS usercount
+    FROM
+        view_person_all_info
+    WHERE
+        view_person_all_info.created_dt::DATE > (CURRENT_DATE - INTERVAL '1 month')
+    GROUP BY
+        date_trunc('day', view_person_all_info.created_dt)
+    ORDER BY
+        date_trunc('day', view_person_all_info.created_dt)
+    ;
+`
+
+exports.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH = `
     SELECT
         to_char(date_trunc('month',view_all_task.start_dt), 'MM/YY') AS month,
         count(*) AS taskcount
@@ -73,9 +88,24 @@ exports.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH=`
     ;
 `
 
-exports.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH=`
+exports.TOTAL_NUMBER_OF_TASKS_CREATED_BY_DATE_IN_1_MONTH = `
     SELECT
-        to_char(date_trunc('month',view_all_offer.offered_dt), 'MM/YY') AS month,
+        to_char(date_trunc('day',view_all_task.start_dt), 'DD/MM/YY') AS date,
+        count(*) AS taskcount
+    FROM
+        view_all_task
+    WHERE
+        view_all_task.start_dt::DATE > (CURRENT_DATE - INTERVAL '1 month')
+    GROUP BY
+        date_trunc('day', view_all_task.start_dt)
+    ORDER BY
+        date_trunc('day', view_all_task.start_dt)
+    ;
+`
+
+exports.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH = `
+    SELECT
+        to_char(date_trunc('month', view_all_offer.offered_dt), 'MM/YY') AS month,
         count(*) AS offerCount
   	FROM
   	    view_all_offer
@@ -84,7 +114,22 @@ exports.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH=`
     GROUP BY
         date_trunc('month', view_all_offer.offered_dt)
     ORDER BY
-        date_trunc('month', view_all_offer.offered_dt) 
+        date_trunc('month', view_all_offer.offered_dt)
+    ;
+`
+
+exports.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_DATE_IN_1_MONTH = `
+    SELECT
+        to_char(date_trunc('day', view_all_offer.offered_dt), 'DD/MM/YY') AS date,
+        count(*) AS offerCount
+    FROM
+        view_all_offer
+    WHERE
+        view_all_offer.offered_dt::DATE > (CURRENT_DATE - INTERVAL '1 month')
+    GROUP BY
+        date_trunc('day', view_all_offer.offered_dt)
+    ORDER BY
+        date_trunc('day', view_all_offer.offered_dt)
     ;
 `
 
