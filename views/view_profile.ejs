@@ -57,6 +57,12 @@
                             <br>
                 </p>
 
+                <a href="/profile/<%=user.username%>/tasks" class="btn btn-success btn-sm"><%=numTasks%> task(s) created</a>
+                <a href="/profile/<%=user.username%>/offers/accepted" class="btn btn-default btn-sm"><%=numOffers.accepted_count%> accepted offer(s)</a>
+                <a href="/profile/<%=user.username%>/offers/pending" class="btn btn-default btn-sm"><%=numOffers.pending_count%> pending offer(s)</a>
+                <a href="/profile/<%=user.username%>/offers/rejected" class="btn btn-default btn-sm"><%=numOffers.rejected_count%> rejected offer(s)</a>
+
+
             </div>
         </div>
 
