@@ -23,7 +23,15 @@
             <%=categoryName%>
         <% } %>
     </h1>
-    
+    <% if (typeof currentUser != 'undefined' && currentUser.role == 'admin') { %>
+        <div class="container">
+                <div class="page-header text-center">
+                <h1><span class="fa fa-anchor"></span> Admin Dashboard</h1>
+                <a class="btn btn-info" href="/admin_users">Manage Users</a>
+                <a class="btn btn-primary" href="/tasks">Manage Tasks</a>
+                <a class="btn btn-default" href="/admin">Back to dashboard</a>
+                </div>
+    <% } else { %>
     <header class="row jumbotron">
         <div class="container">
             <h1>Tasks</h1>
@@ -38,6 +46,7 @@
             </p>
         </div>
     </header>
+    <% } %>
 
     <div class="row">
         <% tasks.forEach(function(task) { %>

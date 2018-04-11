@@ -1,27 +1,19 @@
 <% include partials/header %>
 
 <div class="container">
-        <% if (1!==1)  { %>
+        <nav class="breadcrumb">
+                <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+                You are currently at:
+                <a class="breadcrumb-item" href="/">Home</a> >
+                <a class="breadcrumb-item" href="/profile">Profile</a> >
+                <span class="breadcrumb-item active"> Admin Dashboard</span>
+            </nav>
         <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h1>
-                        You aren't authorized to access here!!</h1>
-                    <div>
-                        <a href="/" class="btn btn-primary">
-                            <span class="glyphicon glyphicon-home"></span>
-                            Home
-                        </a>
-                    </div>
+                <div class="page-header text-center">
+                <h1><span class="fa fa-anchor"></span> Admin Dashboard</h1>
+                <a class="btn btn-info" href="/admin_users">Manage Users</a>
+                <a class="btn btn-info" href="/tasks">Manage Tasks</a>
                 </div>
-            </div>
-        </div>
-        <% } else { %>
-        <div class="container">
-            <a class="btn btn-primary" href="/admin_users">Manage Users</a>
-            <a class="btn btn-primary" href="/tasks">Manage Tasks</a>
-        </div>
-        <div class="container">
             <!-- user section -->
             <div>
                 <div class="container">
@@ -68,7 +60,6 @@
                 </div>
             </div>
         </div>
-        <% } %>
 </div>
 
 
