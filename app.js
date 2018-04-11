@@ -129,7 +129,7 @@ function isAdmin(req, res, next) {
     }
 
     // not admin
-    res.redirect('/404');
+    res.render('404');
 }
 
 // save previous returnTo so user can seamlessly join back
@@ -813,7 +813,7 @@ app.get("/admin", isAdmin, function(req, res) {
 
 });
 
-app.get("/admin_users", function(req, res) {
+app.get("/admin/users", isAdmin, function(req, res) {
     var promise = executer.getUserData()
     .then(results => {
         var userData = results.rows;
