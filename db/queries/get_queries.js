@@ -389,3 +389,62 @@ exports.USER_BY_NAME = `
         AND view_person_login.username = $1
     ;
 `
+
+exports.NUMBER_OF_TASKS_BY_USERNAME = `
+    select coalesce(count(*), 0) as count
+    from view_all_task
+    where view_all_task.requester = $1
+    ;
+`
+
+// returns count of each offer_status
+exports.NUMBER_OF_OFFERS_BY_USERNAME = `
+    SELECT pending_count, accepted_count, rejected_count
+    FROM
+        (SELECT
+            coalesce(count(*),0) as accepted_count
+            FROM view_all_offer
+            WHERE view_all_offer.status_offer = 'accepted'
+                AND view_all_offer.assignee = $1
+        ) AS offer_accepted,
+        (SELECT
+            coalesce(count(*),0) as rejected_count
+            FROM view_all_offer
+            WHERE view_all_offer.status_offer = 'rejected'
+                AND view_all_offer.assignee = $1
+        ) AS offer_rejected,
+        (SELECT
+            coalesce(count(*),0) as pending_count
+            FROM view_all_offer
+            WHERE view_all_offer.status_offer = 'pending'
+                AND view_all_offer.assignee = $1
+        ) AS offer_pending
+    ;
+`
+exports.NUMBER_OF_ACCEPTED_OFFERS_BY_USERNAME = `
+SELECT COALESCE(
+    (SELECT *
+        FROM
+            (SELECT
+                view_all_offer.assignee, count(*)
+                FROM view_all_offer
+                WHERE view_all_offer.status_offer = 'accepted'
+                GROUP BY view_all_offer.assignee
+            ) AS offer_accepted_count,
+            (SELECT
+                view_all_offer.assignee, count(*)
+                FROM view_all_offer
+                WHERE view_all_offer.status_offer = 'rejected'
+                GROUP BY view_all_offer.assignee
+            ) AS offer_rejected_count,
+            (SELECT
+               view_all_offer.assignee, count(*)
+                FROM view_all_offer
+                WHERE view_all_offer.status_offer = 'pending'
+                GROUP BY view_all_offer.assignee
+            ) AS offer_pending_count,
+        WHERE 1 = 1
+            AND offer_pending_count.assignee = $1
+    ), 0) as num_accepted_offers
+    ;
+`

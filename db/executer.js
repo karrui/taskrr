@@ -461,8 +461,17 @@ exports.getTasksByAdvancedSearch = async function getTasksByAdvancedSearch(searc
                                                     requester, start_dt, min_price, max_price,
                                                     status_task, assignee]);
 }
+
+exports.getNumTasksByUsername = async function getNumTasksByUsername(username) {
+    console.log('Attempting to get number of tasks by username: \"%s\"', username);
+    return execute(queries.get.NUMBER_OF_TASKS_BY_USERNAME, [username]);
+}
 // ======================================================
 // 6.4. Offer
+exports.getNumOffersByUsername = async function getNumAcceptedOffersByUsername(username) {
+    console.log('Attempting to get number of all offers by username: \"%s\"', username);
+    return execute(queries.get.NUMBER_OF_OFFERS_BY_USERNAME, [username]);
+}
 
 exports.getOffersByTaskId = async function getOffersByTaskId(task_id) {
     console.log('Attempting to get offers by its task_id: %s', task_id);

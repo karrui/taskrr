@@ -195,19 +195,44 @@ function signup_validation(req, res, next){
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
 app.get('/profile', isLoggedIn, function(req, res) {
-    res.render('profile', {
-        user : req.user, // get the user out of session and pass to template
+    var numTasks;
+    var promise = executer.getNumTasksByUsername(req.user.username)
+    .then(results => {
+        numTasks = results.rows[0].count;
     });
+    promise = executer.getNumOffersByUsername(req.user.username)
+    .then(results => {
+        var numOffers = results.rows[0];
+        res.render('profile', {
+            user : req.user, // get the user out of session and pass to template
+            numOffers: numOffers,
+            numTasks: numTasks
+        });
+    })
+    .catch(err => {
+        res.status(500).render('500', { title: "Sorry, internal server error", message: err });
+    })
 });
 
 app.get('/profile/:username', function(req, res) {
-    var promise = executer.getUserByName(req.params['username'])
+    var numTasks;
+    var promise = executer.getNumTasksByUsername(req.params['username'])
+    .then(results => {
+        numTasks = results.rows[0].count;
+    });
+    promise = executer.getUserByName(req.params['username'])
     .then(results => {
         var user = results.rows[0];
-        res.render('view_profile', {
-            user: user,
-            targetUser: req.params['username'],
-        });
+        promise = executer.getNumOffersByUsername(req.params['username'])
+        .then(results => {
+            var numOffers = results.rows[0];
+            res.render('view_profile', {
+                user : user,
+                targetUser: req.params['username'],
+                numOffers: numOffers,
+                numTasks: numTasks
+            });
+        })
     })
     .catch(err => {
         res.status(500).render('500', { title: "Sorry, internal server error", message: err });
