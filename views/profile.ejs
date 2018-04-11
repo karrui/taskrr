@@ -11,10 +11,6 @@
         <div class="page-header text-center">
             <h1>
                 <span class="fa fa-anchor"></span> Profile Page</h1>
-            <a href="/profile/<%=currentUser.username%>/tasks" class="btn btn-info btn-sm">Your tasks</a>
-            <a href="/profile/<%=currentUser.username%>/offers" class="btn btn-info btn-sm">Your offers</a>
-            <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
-            <a href="/categories" class="btn btn-default btn-sm">All categories</a>
             <% if (user.role == 'admin') { %>
                 <br><br>
                 <a href="/admin" class="btn btn-danger btn-lg">Admin Powers</a>
