@@ -22,47 +22,51 @@
             <a class="btn btn-primary" href="/tasks">Manage Tasks</a>
         </div>
         <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="container">
-                        <h1 align="center">Total Number of users to date:</h1>
-                        <h2 align="center"><%=countUser%></h2>
-                    </div>
-                    <br>
-                    <div class="container">
-                        <canvas id="userMonthLineChart"></canvas>
-                    </div>
-                    <div class="container">
-                        <canvas id="userDateLineChart"></canvas>
-                    </div>
+            <!-- user section -->
+            <div>
+                <div class="container">
+                    <h1 align="center">Users Information</h1>
+                    <h3 align="center">Total Number of users to date: <%=countUser%></h3>
                 </div>
-                <div class="col">
-                     <div class="container">
-                        <h1 align="center">Total Number of Tasks to date:</h1>
-                        <h2 align="center"><%=countedTasks%></h2>
-                    </div>
-                    <br>
-                    <div class="container">
-                        <canvas id="doughnutChart"></canvas>
-                    </div>
-                    <br>
-                    <div class="container">
-                        <canvas id="taskMonthLineChart"></canvas>
-                    </div>
-                    <br>
-                    <div class="container">
+                <div class="col-lg-6">
+                    <canvas id="userMonthLineChart"></canvas>
+                </div>
+                <div class="col-lg-6">
+                    <canvas id="userDateLineChart"></canvas>
+                </div>
+            </div>
+            <!-- task section -->
+            <div>
+                <div class="container">
+                    <h1 align="center">Tasks Information</h1>
+                    <h3 align="center">Total Number of Tasks to date: <%=countedTasks%></h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
                         <canvas id="taskDateLineChart"></canvas>
                     </div>
-                    <br>
-                    <div class="container">
+                    <div class="col-lg-4">
+                        <canvas id="taskMonthLineChart"></canvas>
+                    </div>
+                    <div class="col-lg-4">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- offer section -->
+            <div>
+                <div class="container">
+                    <h1 align="center">Offers Information</h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
                         <canvas id="offerMonthLineChart"></canvas>
                     </div>
-                    <br>
-                    <div class="container">
+                    <div class="col-lg-6">
                         <canvas id="offerDateLineChart"></canvas>
                     </div>
                 </div>
-        </div>
+            </div>
         </div>
         <% } %>
 </div>

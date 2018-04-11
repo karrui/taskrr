@@ -122,6 +122,16 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
+// route middleware to make sure a user is admin
+function isAdmin(req, res, next) {
+    if (typeof res.locals.currentUser != 'undefined' && res.locals.currentUser.role == 'admin') {
+        return next();
+    }
+
+    // not admin
+    res.redirect('/404');
+}
+
 // save previous returnTo so user can seamlessly join back
 function redirection(req, res, next) {
     req.session.returnTo = req.originalUrl;
@@ -662,7 +672,7 @@ app.get("/search/", function(req, res) {
 // =====================================
 // ADMIN APIs ==========================
 // =====================================
-app.get("/admin", function(req, res) {
+app.get("/admin", isAdmin, function(req, res) {
     // getNoOfTasksByCategory returns 3 things - cat_id, cat_name, count
     var labels = [];
     var dataset = [];
