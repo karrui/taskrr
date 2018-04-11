@@ -49,6 +49,7 @@ async function execute(query, args) {
     ├── 6.2. Category
     ├── 6.3. Task
     ├── 6.4. Offer
+    ├── 6.5. Charts
 
 */
 
@@ -86,6 +87,7 @@ exports.createAllFunctions = async function createAllFunctions() {
     execute(queries.create.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID);
     execute(queries.create.FUNCTION_DELETE_ONE_TASK_BY_TASK_ID);
     execute(queries.create.FUNCTION_DELETE_OFFER_BY_ASSIGNEE_AND_TASK_ID);
+    execute(queries.create.FUNCTION_DELETE_USER_BY_ID);
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);
@@ -368,6 +370,10 @@ exports.deleteOfferByAssigneeAndTaskId = async function deleteOfferByAssigneeAnd
     return execute(queries.delete.OFFER_BY_ASSIGNEE_AND_TASKID, [assignee, task_id]);
 }
 
+exports.deleteUserByUserId = async function deleteUserByUserId(user_id){
+    console.log('Attempting to delete user \"%s\" by \"%s\"', user_id, user_id);
+    return execute(queries.delete.USER_BY_USER_ID, [user_id]);
+}
 //==================================================================================================================================================
 // 6. Select
 
@@ -382,6 +388,11 @@ exports.getUserById = async function getUserById(id) {
 exports.getUserByName = async function getUserByName(username) {
     console.log('Attempting to find user by name: ' + username);
     return execute(queries.get.USER_BY_NAME, [username]);
+}
+
+exports.getUserData = async function getUserData(){
+    console.log('Attempting to retrieve all user data');
+    return execute(queries.get.ALL_USER_INFO);
 }
 // ======================================================
 // 6.2. Category
@@ -491,4 +502,52 @@ exports.getOffersByAssignee = async function getOffersByAssignee(assignee) {
 exports.getAcceptedOfferByTaskId = async function getAcceptedOfferByTaskId(task_id) {
     console.log('Attempting to get accepted offer by task_id: %s', task_id);
     return execute(queries.get.ACCEPTED_OFFER_BY_TASKID, [task_id]);
+}
+
+// ======================================================
+// 6.5. Charts
+
+exports.getNoOfTasksByCategory = async function getNoOfTasksByCategory() {
+    console.log('Attempting to get number of tasks by category ID');
+    return execute(queries.get.NUMBER_OF_TASK_BY_CATEGORY);
+}
+
+exports.getTotalNoOfTasks = async function getTotalNoOfTasks() {
+    console.log('Attempting to total number of tasks');
+    return execute(queries.get.TOTAL_NUMBER_OF_TASKS);
+}
+
+exports.getTotalNoOfUsers = async function getTotalNoOfUsers() {
+    console.log('Attempting to total number of users');
+    return execute(queries.get.TOTAL_NUMBER_OF_USERS);
+}
+
+exports.getTotalUsersByMonth = async function getTotalUsersByMonth(){
+    console.log('Attempting to total number of users by month');
+    return execute(queries.get.TOTAL_NUMBER_OF_USERS_BY_MONTH);
+}
+
+exports.getTotalUsersByDate = async function getTotalUsersByDate(){
+    console.log('Attempting to total number of users by date');
+    return execute(queries.get.TOTAL_NUMBER_OF_USERS_BY_DATE_IN_1_MONTH);
+}
+
+exports.getTotalTasksByMonth = async function getTotalTasksByMonth(){
+    console.log('Attempting to total tasks by month');
+    return execute(queries.get.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH);
+}
+
+exports.getTotalTasksByDate = async function getTotalTasksByDate(){
+    console.log('Attempting to total tasks by date');
+    return execute(queries.get.TOTAL_NUMBER_OF_TASKS_CREATED_BY_DATE_IN_1_MONTH);
+}
+
+exports.getTotalOffersByMonth = async function getTotalOffersByMonth(){
+    console.log('Attempting to total offers by month');
+    return execute(queries.get.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH);
+}
+
+exports.getTotalOffersByDate = async function getTotalOffersByDate(){
+    console.log('Attempting to total offers by date');
+    return execute(queries.get.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_DATE_IN_1_MONTH);
 }

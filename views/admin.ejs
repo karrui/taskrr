@@ -1,0 +1,277 @@
+<% include partials/header %>
+
+<div class="container">
+        <nav class="breadcrumb">
+                <a class="breadcrumb-item" href="javascript:history.back()">< Back</a> |
+                You are currently at:
+                <a class="breadcrumb-item" href="/">Home</a> >
+                <a class="breadcrumb-item" href="/profile">Profile</a> >
+                <span class="breadcrumb-item active"> Admin Dashboard</span>
+            </nav>
+        <div class="container">
+                <div class="page-header text-center">
+                <h1><span class="fa fa-anchor"></span> Admin Dashboard</h1>
+                <a class="btn btn-info" href="/admin/users">Manage Users</a>
+                <a class="btn btn-info" href="/tasks">Manage Tasks</a>
+                </div>
+            <!-- user section -->
+            <div>
+                <div class="container">
+                    <h1 align="center">Users Information</h1>
+                    <h3 align="center">Total Number of users to date: <%=countUser%></h3>
+                </div>
+                <div class="col-lg-6">
+                    <canvas id="userMonthLineChart"></canvas>
+                </div>
+                <div class="col-lg-6">
+                    <canvas id="userDateLineChart"></canvas>
+                </div>
+            </div>
+            <!-- task section -->
+            <div>
+                <div class="container">
+                    <h1 align="center">Tasks Information</h1>
+                    <h3 align="center">Total Number of Tasks to date: <%=countedTasks%></h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <canvas id="taskDateLineChart"></canvas>
+                    </div>
+                    <div class="col-lg-6">
+                        <canvas id="taskMonthLineChart"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- offer section -->
+            <div>
+                <div class="container">
+                    <h1 align="center">Offers Information</h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <canvas id="offerMonthLineChart"></canvas>
+                    </div>
+                    <div class="col-lg-6">
+                        <canvas id="offerDateLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<!--doughnut chart-->
+<script>
+
+    window.onload = function() {
+        var ctx_doughnut = document.getElementById("doughnutChart");
+        window.myDoughnut = new Chart(ctx_doughnut, config_doughnut);
+
+        var ctx_user_month = document.getElementById("userMonthLineChart");
+        window.userMonthLine = new Chart(ctx_user_month, config_user_month);
+        var ctx_user_date = document.getElementById("userDateLineChart");
+        window.userDateLine = new Chart(ctx_user_date, config_user_date);
+
+        var ctx_task_month = document.getElementById("taskMonthLineChart");
+        window.taskMonthLine = new Chart(ctx_task_month, config_task_month);
+        var ctx_task_date = document.getElementById("taskDateLineChart");
+        window.TaskDateLine = new Chart(ctx_task_date, config_task_date);
+
+        var ctx_offer_month = document.getElementById("offerMonthLineChart");
+        window.OfferMonthLine = new Chart(ctx_offer_month, config_offer_month);
+        var ctx_offer_date = document.getElementById("offerDateLineChart");
+        window.OfferDateLine = new Chart(ctx_offer_date, config_offer_date);
+    };
+
+    var config_doughnut = {
+        type: 'horizontalBar',
+        data: {
+            labels: <%-labels%>,
+            datasets: [{
+                label: 'Number of tasks in category',
+                data: <%-data%>,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(185, 31, 202, 0.2)',
+                    'rgba(202, 31, 134, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(185, 31, 202, 1)',
+                    'rgba(202, 31, 134, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Number of tasks in each category"
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    };
+
+    var config_user_month = {
+        type: 'line',
+        data: {
+            labels: <%-userCountLabel%>,
+            datasets: [{
+                label: 'Total number of users in a given month',
+                data: <%-userCountData%>,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of users in a given month"
+            },
+        }
+    };
+
+    var config_user_date = {
+        type: 'line',
+        data: {
+            labels: <%-userCountLabel_date%>,
+            datasets: [{
+                label: 'Total number of users in the last 30 days',
+                data: <%-userCountData_date%>,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of users in the last 30 days"
+            },
+        }
+    };
+
+    //
+    var config_task_month = {
+        type: 'line',
+        data: {
+            labels: <%-taskCountLabel%>,
+            datasets: [{
+                label: 'Tasks',
+                data: <%-taskCountData%>,
+                backgroundColor: "rgba(255,153,0,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of tasks for the past 6 months"
+            },
+        }
+    };
+    var config_task_date = {
+        type: 'line',
+        data: {
+            labels: <%-taskCountLabel_date%>,
+            datasets: [{
+                label: 'Tasks',
+                data: <%-taskCountData_date%>,
+                backgroundColor: "rgba(255,153,0,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of tasks in the last 30 days"
+            },
+        }
+    };
+
+    //
+    var config_offer_month = {
+        type: 'line',
+        data: {
+            labels: <%-offerCountLabel%>,
+            datasets: [{
+                label: 'Offers',
+                data: <%-offerCountData%>,
+                backgroundColor: "rgba(153,255,51,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of offers for the past 6 months"
+            },
+        }
+    };
+    var config_offer_date = {
+        type: 'line',
+        data: {
+            labels: <%-offerCountLabel_date%>,
+            datasets: [{
+                label: 'Offers',
+                data: <%-offerCountData_date%>,
+                backgroundColor: "rgba(153,255,51,0.4)"
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display:false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: "Total number of offers in the last 30 days"
+            },
+        }
+    };
+
+</script>
+
+<% include partials/footer %>
