@@ -47,16 +47,57 @@
                                 <%=user.email %>
                                     <br>
                         </p>
-
+                        <a href="/logout" class="btn btn-warning btn-sm pull-right">Logout</a>
                     </div>
+                    
                 </div>
 
                 <div class="row">
-                    <a href="/logout" class="btn btn-warning btn-sm pull-right">Logout</a>
                 </div>
 
+                <div class="page-header text-center">
+                    <h1><span class="fa fa-anchor"></span>Tasks and Offers</h1>
+                    <button id="taskButton" class="btn btn-primary btn-sm profile-btn">Your tasks</button>
+                    <button id="offerButton" class="btn btn-info btn-sm profile-btn">Your offers</button>
+                    <a href="/tasks" class="btn btn-default btn-sm">All tasks</a>
+                    <a href="/categories" class="btn btn-default btn-sm">All categories</a>
+                </div>
+                <div id="links"></div>
+                <div id='viewing'></div>
+
     </div>
 
     </div>
+
+    <script>
+        $(document).ready( function() {
+            var taskUrl = '/profile/<%=user.username%>/tasks #tasks'
+            var taskLinkUrl = '/profile/<%=user.username%>/tasks #taskLinks'
+            $('#links').load(taskLinkUrl);
+            $('#viewing').load(taskUrl);
+        });
+    </script>
+
+<script>
+    $(document).ready( function() {
+        var taskUrl = '/profile/<%=user.username%>/tasks #tasks'
+        var taskLinkUrl = '/profile/<%=user.username%>/tasks #taskLinks'
+
+        var offerUrl = '/profile/<%=user.username%>/offers #offers'
+        var offerLinkUrl = '/profile/<%=user.username%>/offers #offerLinks'
+        $("#taskButton").click(function(){
+            $('.profile-btn').removeClass('btn-primary').addClass('btn-info');
+            $(this).removeClass('btn-info').addClass('btn-primary');
+            $('#viewing').load(taskUrl);
+            $('#links').load(taskLinkUrl);
+        });
+        $("#offerButton").click(function(){
+            $('.profile-btn').removeClass('btn-primary').addClass('btn-info');
+            $(this).removeClass('btn-info').addClass('btn-primary');
+            $('#viewing').load(offerUrl);
+            $('#links').load(offerLinkUrl);
+        });
+    });
+    </script>
 
     <% include ./partials/footer %>
