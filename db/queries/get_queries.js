@@ -48,11 +48,11 @@ exports.TOTAL_NUMBER_OF_USERS_BY_MONTH=`
     SELECT
     count(*) AS usercount,
     to_char(view_person_all_info.created_dt, 'MM/YY') AS MONTH
-    FROM 
+    FROM
     view_person_all_info
     WHERE
     view_person_all_info.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
-    GROUP BY 
+    GROUP BY
     view_person_all_info.created_dt
     ORDER BY
     view_person_all_info.created_dt
@@ -63,29 +63,29 @@ exports.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH=`
     SELECT
    	count(*) AS taskCount,
 	to_char(view_all_task.start_dt, 'MM/YY') AS MONTH
-	FROM 
+	FROM
     view_all_task
     WHERE
-    view_all_task.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
-    GROUP BY 
-    view_all_task.created_dt
+    view_all_task.start_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
+    GROUP BY
+    view_all_task.start_dt
     ORDER BY
-    view_all_task.created_dt
+    view_all_task.start_dt
 ;
 `
 
 exports.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH=`
     SELECT
   	count(*) AS offerCount,
-  	to_char(view_all_offer.start_dt, 'MM/YY') AS MONTH
-  	FROM 
+  	to_char(view_all_offer.offered_dt, 'MM/YY') AS MONTH
+  	FROM
   	view_all_offer
   	WHERE
-    view_all_offer.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
-    GROUP BY 
-    view_all_offer.created_dt
+    view_all_offer.offered_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
+    GROUP BY
+    view_all_offer.offered_dt
     ORDER BY
-    view_all_offer.created_dt
+    view_all_offer.offered_dt
 ;
 `
 
@@ -94,11 +94,11 @@ WITH tasksByMonth AS (
 	SELECT
    	count(*) AS taskCount,
    	to_char(view_all_task.start_dt, 'MM/YY') AS MONTH
-   	FROM 
+   	FROM
     view_all_task
     WHERE
     view_all_task.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
-    GROUP BY 
+    GROUP BY
     view_all_task.created_dt
     ORDER BY
     view_all_task.created_dt),
@@ -106,11 +106,11 @@ WITH tasksByMonth AS (
     SELECT
   	count(*) AS offerCount,
   	to_char(view_all_offer.start_dt, 'MM/YY') AS MONTH
-  	FROM 
+  	FROM
     view_all_offer
     WHERE
     view_all_offer.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
-    GROUP BY 
+    GROUP BY
     view_all_offer.created_dt
     ORDER BY
     view_all_offer.created_dt)
@@ -119,7 +119,7 @@ offersByMonth.offerCount as offerCount,
 tasksByMonth.MONTH as MONTHS,
 FROM tasksByMonth, offersByMonth
 WHERE tasksByMonth.MONTH = offersByMonth.MONTH
-ORDER BY 
+ORDER BY
 MONTHS;
 `
 */
