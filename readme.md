@@ -154,6 +154,7 @@ Option parameters:
 - **Platform:** node
 - **Framework**: express
 - **Testing Framework**: pytest
+- **Continuous Integration Platform**: Semaphore CI
 - **Template Engine**: ejs
 - **CSS Framework**: bootstrap
 - **CSS Preprocessor**: css
