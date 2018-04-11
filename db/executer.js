@@ -87,6 +87,7 @@ exports.createAllFunctions = async function createAllFunctions() {
     execute(queries.create.FUNCTION_UPDATE_TASK_UPON_REJECTING_OFFER_BY_TASK_ID);
     execute(queries.create.FUNCTION_DELETE_ONE_TASK_BY_TASK_ID);
     execute(queries.create.FUNCTION_DELETE_OFFER_BY_ASSIGNEE_AND_TASK_ID);
+    execute(queries.create.FUNCTION_DELETE_USER_BY_ID);
     execute(queries.create.FUNCTION_CREATE_INDEX_PERSON);
     execute(queries.create.FUNCTION_CREATE_INDEX_TASK);
     execute(queries.create.FUNCTION_CREATE_INDEX_OFFER);

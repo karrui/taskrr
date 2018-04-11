@@ -529,6 +529,24 @@ exports.FUNCTION_DELETE_OFFER_BY_ASSIGNEE_AND_TASK_ID = `
     ;
 `
 
+exports.FUNCTION_DELETE_USER_BY_ID = `
+    CREATE OR REPLACE FUNCTION delete_user_by_user_id (
+        _user_id       INTEGER
+    )
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            DELETE FROM person
+            WHERE 1=1
+                AND id = _user_id
+            ;
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE
+    COST 100
+    ;
+`
+
 // ======================================================
 // 3.5. Select
 exports.FUNCTION_TASK_BASIC_SEARCH = `

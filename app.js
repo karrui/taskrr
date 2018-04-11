@@ -675,34 +675,34 @@ app.get("/admin", function(req, res) {
 
         var labels = JSON.stringify(labelArray)
         var dataset = JSON.stringify(dataArray)
-        
+
         promise = executer.getTotalUsersByMonth()
         .then(results => {
-            
+
             var userCountLabel = results.rows.map(function(obj) {
             return obj.MONTH;
             });
             var userCountData = results.rows.map(function(obj) {
             return obj.usercount;
             });
-            
+
             promise = executer.getTotalTasksByMonth()
             .then(results => {
-             
+
                 var taskCountLabel = results.rows.map(function(obj) {
                 return obj.MONTH;
                 });
                 var taskCountData = results.rows.map(function(obj) {
                 return obj.taskCount;
                 });
-                
+
                 promise = executer.getTotalOffersByMonth()
                 .then(results => {
-                    
+
                 var offerCountData = results.rows.map(function(obj) {
                 return obj.offerCount;
                 });
-                    
+
                     promise = executer.getTotalNoOfTasks()
                     .then(results => {
                     var countedTasks = results.rows[0].count;
@@ -710,18 +710,18 @@ app.get("/admin", function(req, res) {
                     .then(results => {
                         var countUser = results.rows[0].count;
                         res.render("admin", {countedTasks: countedTasks, countUser: countUser,
-                                            labels: labels, data: dataset, 
+                                            labels: labels, data: dataset,
                                             userCountLabel: userCountLabel, userCountData: userCountData,
                                             taskCountLabel: taskCountLabel, taskCountData: taskCountData, offerCountData: offerCountData
                             });
                         })
                     })
-                    
+
                 })
-             
-                
+
+
             })
-                
+
         })
     })
     .catch(err => {
@@ -732,8 +732,8 @@ app.get("/admin", function(req, res) {
 app.get("/admin_users", function(req, res) {
     var promise = executer.getUserData()
     .then(results => {
-    var userData = results.rows;
-        res.render("admin_users", {   
+        var userData = results.rows;
+        res.render("admin_users", {
             userData: userData
         });
     })

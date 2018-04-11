@@ -33,6 +33,6 @@ exports.OFFER_BY_ASSIGNEE_AND_TASKID = `
 
 exports.USER_BY_USER_ID = `
     SELECT
-    delete_user_by_user_id($1)
+        delete_user_by_user_id($1)
     ;
 `
