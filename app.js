@@ -818,7 +818,9 @@ app.get("/admin/users", isAdmin, function(req, res) {
     .then(results => {
         var userData = results.rows;
         res.render("admin_users", {
-            userData: userData
+            userData: userData,
+            message: req.flash('message'),
+            success: req.flash('success'),
         });
     })
     .catch(err => {
@@ -827,25 +829,23 @@ app.get("/admin/users", isAdmin, function(req, res) {
 });
 
 app.post("/delete/user/:id", isLoggedIn, function(req, res) {
-    var user_id = req.body.task_id;
-   /* var assignee = req.body.username;
-
+    var user_id = req.body.id;
     // extra check
-    if (assignee != res.locals.currentUser.username && res.locals.currentUser.role != 'admin') {
+    if (res.locals.currentUser.role != 'admin') {
         req.flash('message', "Oops, you tried to do something you shouldn't have!")
-        var redirectUrl = "/tasks/" + task_id;
+        var redirectUrl = "/tasks/";
         res.redirect(redirectUrl); // back to page to display errors
-    }*/
+    }
 
     var promise = executer.deleteUserByUserId(user_id)
     .then(function() {
-        req.flash('user_success', "User successfully deleted!");
-        var redirectUrl = "/admin_user";
-        res.redirect(redirectUrl);  // back to task page
+        req.flash('success', "User successfully deleted!");
+        var redirectUrl = "/admin/users";
+        res.redirect(redirectUrl);  // back to admin page
     })
     .catch(err => {
         req.flash('message', err.message)
-        var redirectUrl = "/admin_user";
+        var redirectUrl = "/admin/users";
         res.redirect(redirectUrl); // back to page to display errors
     })
 });
