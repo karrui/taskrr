@@ -421,30 +421,3 @@ exports.NUMBER_OF_OFFERS_BY_USERNAME = `
         ) AS offer_pending
     ;
 `
-exports.NUMBER_OF_ACCEPTED_OFFERS_BY_USERNAME = `
-SELECT COALESCE(
-    (SELECT *
-        FROM
-            (SELECT
-                view_all_offer.assignee, count(*)
-                FROM view_all_offer
-                WHERE view_all_offer.status_offer = 'accepted'
-                GROUP BY view_all_offer.assignee
-            ) AS offer_accepted_count,
-            (SELECT
-                view_all_offer.assignee, count(*)
-                FROM view_all_offer
-                WHERE view_all_offer.status_offer = 'rejected'
-                GROUP BY view_all_offer.assignee
-            ) AS offer_rejected_count,
-            (SELECT
-               view_all_offer.assignee, count(*)
-                FROM view_all_offer
-                WHERE view_all_offer.status_offer = 'pending'
-                GROUP BY view_all_offer.assignee
-            ) AS offer_pending_count,
-        WHERE 1 = 1
-            AND offer_pending_count.assignee = $1
-    ), 0) as num_accepted_offers
-    ;
-`
