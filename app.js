@@ -701,6 +701,9 @@ app.get("/admin", function(req, res) {
                     var offerCountData = results.rows.map(function(obj) {
                         return obj.offercount;
                     });
+                    var offerCountLabel = results.rows.map(function(obj) {
+                        return obj.month;
+                    });
 
                     promise = executer.getTotalNoOfTasks()
                     .then(results => {
@@ -713,12 +716,13 @@ app.get("/admin", function(req, res) {
                             taskCountLabel = JSON.stringify(taskCountLabel);
                             taskCountData = JSON.stringify(taskCountData);
                             offerCountData = JSON.stringify(offerCountData);
+                            offerCountLabel = JSON.stringify(offerCountLabel);
 
                             res.render("admin", {countedTasks: countedTasks, countUser: countUser,
                                                 labels: labels, data: dataset,
                                                 userCountLabel: userCountLabel, userCountData: userCountData,
                                                 taskCountLabel: taskCountLabel, taskCountData: taskCountData,
-                                                offerCountData: offerCountData
+                                                offerCountData: offerCountData, offerCountLabel: offerCountLabel
                                 });
                             })
                     })

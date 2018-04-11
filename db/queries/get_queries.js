@@ -15,9 +15,9 @@ exports.ALL_CATEGORIES = `
 //Returns 3 out put - id, name, count
 exports.NUMBER_OF_TASK_BY_CATEGORY = `
     SELECT
-    view_all_category.id,
-    view_all_category.name,
-    xTmp.no_task
+        view_all_category.id,
+        view_all_category.name,
+        xTmp.no_task
     FROM view_all_category
     INNER JOIN (
         SELECT
@@ -27,66 +27,65 @@ exports.NUMBER_OF_TASK_BY_CATEGORY = `
         GROUP BY
             view_all_task.category_id
         ) xTmp
-    ON         xTmp.category_id = view_all_category.id
+    ON xTmp.category_id = view_all_category.id
     ;
 `
 exports.TOTAL_NUMBER_OF_TASKS = `
     SELECT
-    COUNT(*)
+        COUNT(*)
     FROM view_all_task
     ;
 `
 
 exports.TOTAL_NUMBER_OF_USERS =`
     SELECT
-    COUNT(*)
+        COUNT(*)
     FROM view_person_all_info
     ;
 `
 
 exports.TOTAL_NUMBER_OF_USERS_BY_MONTH=`
     SELECT
-    count(*) AS usercount,
-    to_char(view_person_all_info.created_dt, 'MM/YY') AS MONTH
-    FROM
-    view_person_all_info
+        to_char(date_trunc('month',view_person_all_info.created_dt), 'MM/YY') AS month,
+        count(*) AS usercount
+    FROM view_person_all_info
     WHERE
-    view_person_all_info.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
+        view_person_all_info.created_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
     GROUP BY
-    view_person_all_info.created_dt
+        date_trunc('month', view_person_all_info.created_dt)
     ORDER BY
-    view_person_all_info.created_dt
-;
+        date_trunc('month',view_person_all_info.created_dt)
+    ;
 `
 
 exports.TOTAL_NUMBER_OF_TASKS_CREATED_BY_MONTH=`
     SELECT
-   	count(*) AS taskCount,
-	to_char(view_all_task.start_dt, 'MM/YY') AS MONTH
+        to_char(date_trunc('month',view_all_task.start_dt), 'MM/YY') AS month,
+        count(*) AS taskcount
 	FROM
-    view_all_task
+        view_all_task
     WHERE
-    view_all_task.start_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
+        view_all_task.start_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
     GROUP BY
-    view_all_task.start_dt
+        date_trunc('month', view_all_task.start_dt)
     ORDER BY
-    view_all_task.start_dt
-;
+        date_trunc('month', view_all_task.start_dt)
+    ;
 `
 
 exports.TOTAL_NUMBER_OF_OFFERS_CREATED_BY_MONTH=`
     SELECT
-  	count(*) AS offerCount,
-  	to_char(view_all_offer.offered_dt, 'MM/YY') AS MONTH
+        to_char(date_trunc('month',view_all_offer.offered_dt), 'MM/YY') AS month,
+        count(*) AS offerCount
   	FROM
-  	view_all_offer
+  	    view_all_offer
   	WHERE
-    view_all_offer.offered_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
+        view_all_offer.offered_dt::DATE > (CURRENT_DATE - INTERVAL '6 months')
     GROUP BY
-    view_all_offer.offered_dt
+        date_trunc('month', view_all_offer.offered_dt)
     ORDER BY
-    view_all_offer.offered_dt
-;
+        date_trunc('month', view_all_offer.offered_dt) 
+    ;
 `
 
 /*exports.TOTAL_NUMBER_OF_TASKS_AND_OFFERS_BY_MONTH=`
