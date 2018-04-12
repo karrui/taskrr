@@ -32,7 +32,7 @@ var bodyParser       = require('body-parser');
 var session          = require('express-session');
 var flash            = require('connect-flash');
 var expressValidator = require('express-validator');
-var moment           = require('moment');
+var moment           = require('moment-timezone');
 
 // =====================================
 // APP SETUP ===========================

@@ -184,7 +184,7 @@
                 <div class="panel-body alert-success">
                   You offered $
                   <%= offer.price %> at
-                  <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %>
+                  <%= moment(offer.offered_dt + 'Z').tz('Asia/Singapore').format('dddd, DD MMMM YYYY, h:mm A') %>
                 </div>
                 <div class="panel-footer">
                     <!-- Edit offer -->
@@ -234,7 +234,7 @@
                   <div class="panel-body">
                     <a href="/profile/<%=offer.assignee%>"><%= offer.assignee %></a> offered $
                     <%= offer.price %> at
-                    <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %>
+                    <%= moment(offer.offered_dt + 'Z').tz('Asia/Singapore').format('dddd, DD MMMM YYYY, h:mm A') %>
                   </div>
                 <% } %>
               <% if (typeof currentUser != 'undefined' && currentUser.username == task.requester && offer.status_offer != 'rejected') { %>
@@ -324,7 +324,7 @@
                   <div class="panel-body alert-warning">
                     <a href="/profile/<%=offer.assignee%>">Your</a> offer of $
                     <%= offer.price %> at
-                    <%= moment(new Date(offer.offered_dt + 'Z')).format('dddd, DD MMMM YYYY, h:mm A') %> was rejected.
+                    <%= moment(offer.offered_dt + 'Z').tz('Asia/Singapore').format('dddd, DD MMMM YYYY, h:mm A') %> was rejected.
                   </div>
                   </div>
                 <% } else if (offer.status_offer == 'rejected') { %>
@@ -332,7 +332,7 @@
                   <div class="panel-body">
                     <a href="/profile/<%=offer.assignee%>"><%= offer.assignee %>'s</a> offer of $
                     <%= offer.price %> at
-                    <%= new Date(offer.offered_dt + 'Z') %> was rejected.
+                    <%= moment(offer.offered_dt + 'Z').tz('Asia/Singapore').format('dddd, DD MMMM YYYY, h:mm A') %> was rejected.
                   </div>
                   </div>
                 <% } %>
