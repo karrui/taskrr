@@ -1,6 +1,8 @@
 # Taskrr - a Task Sourcing Web Application
 [![Build Status](https://semaphoreci.com/api/v1/karrui/taskrr-3/branches/master/shields_badge.svg)](https://semaphoreci.com/karrui/taskrr-3)
 
+## Demo it here at http://128.199.75.94/
+
 ## Module Project for CS2102, NUS School of Computing
 This is a task matching application (e.g., https://www.taskrabbit.com) to facilitate users to hire temporary help to complete certain tasks.  
 Tasks are general chores as such washing a car at Kent Vales car park on Sunday or delivering a parcel on Tuesday between 17:00 and 19:00.  
@@ -33,12 +35,8 @@ AND MORE !!!
 * Categories page that lists all categories
 * Tasks page that lists all tasks
 
-### DDL
+## DDL
 Refer to [here](./docs/sql.md) for the documentation for the Database Schema and ER diagram.
-
-## Routes and APIs:
-Refer to [here](./docs/api.md) for the documentation for the API.
-
 
 # Getting started
 ## Prerequisites
