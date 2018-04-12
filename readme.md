@@ -40,6 +40,7 @@ Refer to [here](./docs/sql.md) for the documentation for the Database Schema and
 
 # Getting started
 ## Prerequisites
+Note: This app requires at least npm version 8 due to async functions.
 This app uses NodeJS. Install NodeJS via your terminal with
 
 ```
