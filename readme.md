@@ -2,7 +2,7 @@
 [![Build Status](https://semaphoreci.com/api/v1/karrui/taskrr-3/branches/master/shields_badge.svg)](https://semaphoreci.com/karrui/taskrr-3)
 
 ## Module Project for CS2102, NUS School of Computing
-This web application is in the top-10 projects for CS2102, AY17/18 Semester 2.
+This web application is in the top 10 over 44 projects for CS2102, AY17/18 Semester 2.
 
 It is a task matching application (e.g., https://www.taskrabbit.com) to facilitate users to hire temporary help to complete certain tasks.  
 Tasks are general chores as such washing a car at Kent Vales car park on Sunday or delivering a parcel on Tuesday between 17:00 and 19:00.  
