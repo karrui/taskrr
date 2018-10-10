@@ -66,3 +66,4 @@ typings/
 
 # Confidential info for testing
 test/pytest.ini
+.DS_Store
